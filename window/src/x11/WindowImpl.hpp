@@ -30,7 +30,7 @@ namespace storm::window {
 
 			//BLC
 			bool pollEvent(storm::window::Event &event, void *native_event) noexcept override;
-			void waitEvent() noexcept override;
+			bool waitEvent(Event &event, void *native_event) noexcept override;
 
 			void setTitle(const std::string &title)              noexcept override;
 			void setVideoSettings(const storm::window::VideoSettings &settings) noexcept override;

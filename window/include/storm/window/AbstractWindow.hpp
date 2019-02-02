@@ -23,7 +23,7 @@ namespace storm::window {
 
 			//BLC
 			virtual bool pollEvent(Event &event, void *native_event = nullptr) noexcept;
-			virtual void waitEvent() noexcept = 0;
+			virtual bool waitEvent(Event &event, void *native_event = nullptr) noexcept = 0;
 
 			virtual void setTitle(const std::string &title)              noexcept = 0;
 			virtual void setVideoSettings(const VideoSettings &settings) noexcept = 0;

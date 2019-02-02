@@ -2,6 +2,8 @@
 
 #include <X11/keysym.h>
 
+/////////////////////////////////////
+/////////////////////////////////////
 storm::window::Key x11keyToStormKey(xcb_keysym_t key) {
 	using namespace storm::window;
 
@@ -114,6 +116,8 @@ storm::window::Key x11keyToStormKey(xcb_keysym_t key) {
 	return Key::UNKNOW;
 }
 
+/////////////////////////////////////
+/////////////////////////////////////
 storm::window::MouseButton x11MouseButtonToStormMouseButton(xcb_button_t button) {
 	switch(button) {
 		case XCB_BUTTON_INDEX_1: return storm::window::MouseButton::LEFT;

@@ -23,7 +23,7 @@ namespace storm::window {
 			void display() noexcept;
 
 			inline bool pollEvent(Event &event, void *native_event = nullptr) noexcept { return m_impl->pollEvent(event, native_event); }
-			inline void waitEvent() noexcept { m_impl->waitEvent(); }
+			inline bool waitEvent(Event &event, void *native_event = nullptr) noexcept { return m_impl->waitEvent(event, native_event); }
 
 			inline void setTitle(const std::string &title) noexcept { m_impl->setTitle(title); }
 			inline void setVideoSettings(const VideoSettings &settings) noexcept  { m_impl->setVideoSettings(settings); }

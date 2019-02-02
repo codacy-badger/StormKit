@@ -11,7 +11,7 @@ int main() {
 
 	while(window.isOpen()) {
 		Event event;
-		while(window.pollEvent(event)) {
+		while(window.waitEvent(event)) {
 			if(event.type == EventType::Closed || (event.type == EventType::KeyPressed && event.keyEvent.key == Key::ESCAPE))
 				window.close();
 			else if(event.type == EventType::KeyPressed) {

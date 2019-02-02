@@ -21,6 +21,19 @@ bool AbstractWindow::pollEvent(Event &event, [[maybe_unused]] void *native_event
 
 /////////////////////////////////////
 /////////////////////////////////////
+bool AbstractWindow::waitEvent(Event &event, [[maybe_unused]] void *native_event) noexcept {
+	auto has_event = !m_events.empty();
+
+	if(has_event) {
+		event = m_events.front();
+		m_events.pop();
+	}
+
+	return has_event;
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
 void AbstractWindow::mouseDownEvent(MouseButton button, std::int16_t x, std::int16_t y) noexcept {
 	Event event;
 	event.type = EventType::MouseButtonPushed;
