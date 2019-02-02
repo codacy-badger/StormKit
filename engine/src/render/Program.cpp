@@ -1,0 +1,45 @@
+// Copyright (C) 2019 Arthur LAURENT <arthur.laurent4@gmail.com>
+// This file is subject to the license terms in the LICENSE file
+// found in the top-level of this distribution
+
+#include <storm/engine/render/Program.hpp>
+#include <storm/engine/vulkan/ProgramImpl.hpp>
+
+using namespace storm::engine;
+
+/////////////////////////////////////
+/////////////////////////////////////
+Program::Program(const Device &device)
+	: m_impl{device} {
+
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+Program::~Program() = default;
+
+/////////////////////////////////////
+/////////////////////////////////////
+Program::Program(Program &&) = default;
+
+/////////////////////////////////////
+/////////////////////////////////////
+Program &Program::operator=(Program &&) = default;
+
+/////////////////////////////////////
+/////////////////////////////////////
+void Program::addShaderModule(const Shader &module) {
+	m_impl->addShaderModule(module);
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+const std::vector<const Shader *> &Program::shaderModules() const noexcept {
+	return m_impl->shaderModules();
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+void Program::link() {
+	m_impl->link();
+}

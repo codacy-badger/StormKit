@@ -1,0 +1,11 @@
+get_filename_component(Reflection_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+find_dependency(StormKit REQUIRED COMPONENTS core)
+
+if(NOT TARGET StormKit::reflection)
+    include("${Core_CMAKE_DIR}/StormKitReflectionTargets.cmake")
+endif()
+
+set(StormKitReflection_LIBRARIES StormKit::reflection)
+

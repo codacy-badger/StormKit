@@ -1,0 +1,10 @@
+get_filename_component(SharedTools_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+find_dependency(StormKit REQUIRED COMPONENTS core)
+
+if(NOT TARGET StormKit::tools)
+    include("${Core_CMAKE_DIR}/StormKitSharedToolsTargets.cmake")
+endif()
+
+set(StormKitSharedTools_LIBRARIES StormKit::tools)
+

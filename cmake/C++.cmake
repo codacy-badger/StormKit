@@ -1,0 +1,36 @@
+include(CheckIncludeFileCXX)
+
+set(CXX_HEADER_NEEDED iostream exception string sstream stdexcept cfloat algorithm)
+set(CXX14_HEADER_NEEDED type_traits memory random functional regex)
+set(CXX17_HEADER_NEEDED any optional filesystem variant)
+set(CXX17_HEADER_EXP_NEEDED)
+
+foreach(INCLUDE_FILE IN LISTS CXX_HEADER_NEEDED)
+	string(TOUPPER ${INCLUDE_FILE} INCLUDE_FILE_UPPER)
+	check_include_file_cxx("${INCLUDE_FILE}" HAVE_${INCLUDE_FILE_UPPER})
+
+	if(NOT HAVE_${INCLUDE_FILE_UPPER})
+		message(FATAL_ERROR "Error: Can't find ${INCLUDE_FILE} standard include file")
+	endif(NOT HAVE_${INCLUDE_FILE_UPPER})
+endforeach()
+
+foreach(INCLUDE_FILE IN LISTS CXX14_HEADER_NEEDED)
+	string(TOUPPER ${INCLUDE_FILE} INCLUDE_FILE_UPPER)
+	check_include_file_cxx("${INCLUDE_FILE}" HAVE_${INCLUDE_FILE_UPPER})
+	if(NOT HAVE_${INCLUDE_FILE_UPPER})
+		message(FATAL_ERROR "Error: Can't find ${INCLUDE_FILE} standard include file")
+	endif(NOT HAVE_${INCLUDE_FILE_UPPER})
+endforeach()
+
+foreach(INCLUDE_FILE IN LISTS CXX17_HEADER_NEEDED)
+	string(TOUPPER ${INCLUDE_FILE} INCLUDE_FILE_UPPER)
+	check_include_file_cxx("${INCLUDE_FILE}" HAVE_${INCLUDE_FILE_UPPER})
+	if(NOT HAVE_${INCLUDE_FILE_UPPER})
+		list(APPEND CXX17_HEADER_EXP_NEEDED experimental/${INCLUDE_FILE})
+	endif()
+endforeach()
+
+foreach(INCLUDE_FILE IN LISTS CXX17_HEADER_EXP_NEEDED)
+	string(TOUPPER ${INCLUDE_FILE} INCLUDE_FILE_UPPER)
+	check_include_file_cxx("${INCLUDE_FILE}" HAVE_${INCLUDE_FILE_UPPER})
+endforeach()
