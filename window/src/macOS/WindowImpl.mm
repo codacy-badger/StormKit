@@ -58,8 +58,11 @@ bool WindowImpl::pollEvent(storm::window::Event &event, [[maybe_unused]] void *n
 	return AbstractWindow::pollEvent(event);
 }
 
-void WindowImpl::waitEvent() noexcept {
-	[m_controller processEvent];
+bool WindowImpl::waitEvent(storm::window::Event &event, [[maybe_unused]] void *native_event) noexcept {;
+	while(!AbstractWindow::waitEvent(event, native_event))
+		[m_controller processEvent];
+	
+	return true;
 }
 
 void WindowImpl::setTitle(const std::string &title) noexcept {

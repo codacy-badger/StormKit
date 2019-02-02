@@ -21,9 +21,8 @@ class STORM_PRIVATE WindowImpl : public storm::window::AbstractWindow {
 		void close() noexcept override;
 		void display() noexcept override;
 
-		//BLC
 		bool pollEvent(storm::window::Event &event, void *native_event) noexcept override;
-		void waitEvent() noexcept override;
+		bool waitEvent(storm::window::Event &event, [[maybe_unused]] void *native_event) noexcept override;
 
 		void setTitle(const std::string &title)              noexcept override;
 		void setVideoSettings(const storm::window::VideoSettings &settings) noexcept override;
