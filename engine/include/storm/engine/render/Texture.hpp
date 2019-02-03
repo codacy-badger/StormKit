@@ -6,6 +6,7 @@
 
 #include <storm/engine/render/ForwardDeclarations.hpp>
 #include <storm/engine/render/Utils.hpp>
+#include <storm/engine/render/Types.hpp>
 
 #include <storm/image/Image.hpp>
 
@@ -13,12 +14,19 @@
 #include <storm/core/Memory.hpp>
 
 namespace storm::engine {
+	struct TextureDescription {
+		std::size_t mip_level;
+		Format      format;
+		uvec3       size;
+	};
+
 	class TextureImpl;
 	class Texture {
 		public:
 			Unique_Object(Texture)
 			
 			explicit Texture(const Device &device, const image::Image &image);
+			explicit Texture(const Device &device, TextureDescription description);
 			~Texture();
 			
 			Texture(Texture &&);
