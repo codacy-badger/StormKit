@@ -15,12 +15,15 @@ namespace storm::engine {
 	class TextureImpl : public core::NonCopyable {
 		public:
 			explicit TextureImpl(const Device &device, const image::Image &image);
+			explicit TextureImpl(const Device &device, TextureDescription description);
 			~TextureImpl();
 			
 			TextureImpl(TextureImpl &&);
 			
 			inline const BackedVkTexture &backedVkTexture() const noexcept;
 		private:
+			void initialise();
+
 			BackedVkTexture m_texture;
 			
 			image::Image m_image;
