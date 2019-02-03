@@ -22,12 +22,7 @@ namespace storm::engine {
 
 			RenderGraph(RenderGraph &&);
 			RenderGraph &operator=(RenderGraph &&);
-			struct TaskBuilder {
-				TaskBuilder();
 
-				RenderGraph    &graph;
-				RenderTaskBase &render_task;
-			};
 			template <typename RenderTaskData>
 			RenderTask<RenderTaskData> &addRenderPass(const std::string name,
 													  typename RenderTask<RenderTaskData>::SetupFunction setup_func,
