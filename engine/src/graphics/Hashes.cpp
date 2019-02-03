@@ -2,14 +2,20 @@
 // This file is subject to the license terms in the LICENSE file
 // found in the top-level of this distribution
 
+#include <storm/core/Types.hpp>
+
+#include <storm/engine/render/Hashes.hpp>
+#include <storm/engine/render/Shader.hpp>
+#include <storm/engine/render/BindingState.hpp>
+
 #include <storm/engine/graphics/Hashes.hpp>
-#include <storm/engine/graphics/Material.hpp>
+#include <storm/engine/graphics/Vertex.hpp>
+/*#include <storm/engine/graphics/Material.hpp>
 #include <storm/engine/graphics/DirectionalLight.hpp>
 #include <storm/engine/graphics/Drawable.hpp>
 #include <storm/engine/graphics/Geometry.hpp>
 #include <storm/engine/graphics/Transform.hpp>
-#include <storm/engine/graphics/RendererCommandBufferCacheKey.hpp>
-#include <storm/engine/render/Hashes.hpp>
+#include <storm/engine/graphics/RendererCommandBufferCacheKey.hpp>*/
 
 #include <storm/core/TypeTraits.hpp>
 
@@ -23,15 +29,21 @@ static auto uint32_t_hasher = std::hash<std::uint32_t>{};
 static auto ptrdiff_t_hasher = std::hash<std::ptrdiff_t>{};
 static auto size_t_hasher = std::hash<std::size_t>{};
 static auto float_hasher = std::hash<float>{};
-static auto color_hasher = std::hash<RGBColorF>{};
-static auto geometry_hasher = std::hash<Geometry>{};
-static auto program_ptr_hasher = std::hash<Program*>{};
-static auto pipeline_hasher = std::hash<PipelineState>{};
 static auto vec2_hasher = std::hash<vec2>{};
 static auto vec3_hasher = std::hash<vec3>{};
 static auto vec4_hasher = std::hash<vec4>{};
 static auto mat4_hasher = std::hash<mat4>{};
 static auto quat_hasher = std::hash<quat>{};
+static auto color_hasher = std::hash<RGBColorF>{};
+
+/*
+ *static auto geometry_hasher = std::hash<Geometry>{};
+ * static auto material_hasher = std::hash<Material>{};
+static auto drawable_hasher = std::hash<Drawable>{};
+static auto directional_light_hasher = std::hash<DirectionalLight>{};
+static auto transform_hasher = std::hash<Transform>{};
+static auto renderer_command_buffer_key_hasher = std::hash<RendererCommandBufferCacheKey>{};*/
+
 static auto vertex_p_vec_hasher = std::hash<VertexArray<Vertex_P>>{};
 static auto vertex_p_hasher = std::hash<Vertex_P>{};
 static auto vertex_p_c_vec_hasher = std::hash<VertexArray<Vertex_P_C>>{};
@@ -46,18 +58,16 @@ static auto uniform_buffer_ptr_hasher = std::hash<UniformBuffer*>{};
 static auto texture_ptr_hasher = std::hash<Texture*>{};
 static auto stage_hasher = std::hash<Shader::Stage>{};
 static auto bindings_hasher = std::hash<std::vector<Binding>>{};
+
 static auto bindings_state_hasher = std::hash<BindingState>{};
-static auto material_hasher = std::hash<Material>{};
-static auto drawable_hasher = std::hash<Drawable>{};
-static auto directional_light_hasher = std::hash<DirectionalLight>{};
-static auto transform_hasher = std::hash<Transform>{};
-static auto renderer_command_buffer_key_hasher = std::hash<RendererCommandBufferCacheKey>{};
+static auto program_ptr_hasher = std::hash<Program*>{};
+static auto pipeline_hasher = std::hash<PipelineState>{};
 static auto uniform_buffer_binding_hasher = std::hash<UniformBufferBinding>{};
 static auto texture_binding_hasher = std::hash<TextureBinding>{};
 static auto binding_state_hasher = std::hash<BindingState>{};
 
 namespace std {
-	std::size_t hash<Material>::operator()(const Material& obj) const {
+	/*std::size_t hash<Material>::operator()(const Material& obj) const {
 		auto hash = color_hasher(obj.m_ambiant);
 		hash_combine(hash, color_hasher(obj.m_diffuse));
 		hash_combine(hash, color_hasher(obj.m_specular));
@@ -143,7 +153,7 @@ namespace std {
 	
 	bool equal_to<Transform>::operator()(const Transform &first, const Transform &second) const noexcept { 
 		return transform_hasher(first) == transform_hasher(second);
-	}
+	}*/
 	
 	std::size_t hash<Vertex_P>::operator()(const Vertex_P& obj) const {
 		auto hash = vec3_hasher(obj.position);
@@ -190,7 +200,7 @@ namespace std {
 		return vertex_p_c_uv_hasher(first) == vertex_p_c_uv_hasher(second);
 	}
 	
-	std::size_t hash<RendererCommandBufferCacheKey>::operator()(const RendererCommandBufferCacheKey& obj) const {
+	/*std::size_t hash<RendererCommandBufferCacheKey>::operator()(const RendererCommandBufferCacheKey& obj) const {
 		auto hash = size_t_hasher(obj.vertex_count);
 		hash_combine(hash, size_t_hasher(obj.instance_count));
 		hash_combine(hash, size_t_hasher(obj.index_count));
@@ -201,7 +211,7 @@ namespace std {
 	
 	bool equal_to<RendererCommandBufferCacheKey>::operator()(const RendererCommandBufferCacheKey &first, const RendererCommandBufferCacheKey &second) const noexcept { 
 		return renderer_command_buffer_key_hasher(first) == renderer_command_buffer_key_hasher(second);
-	}
+	}*/
 	
 	std::size_t hash<storm::engine::UniformBufferBinding>::operator()(const storm::engine::UniformBufferBinding& obj) const {
 		auto hash = size_t_hasher(obj.size);
