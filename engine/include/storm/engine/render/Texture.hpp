@@ -31,6 +31,8 @@ namespace storm::engine {
 			
 			Texture(Texture &&);
 			Texture &operator=(Texture &&);
+
+			const image::Image &image() const noexcept;
 			
 			IMPLEMENTATION(TextureImpl)
 		private:

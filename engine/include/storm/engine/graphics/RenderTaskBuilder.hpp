@@ -24,10 +24,10 @@ namespace storm::engine {
 			Resource *create(std::string name, ResourceDescription &&description);
 
 			template <typename Resource>
-			Resource *write(Resource &resource);
+			Resource *write(Resource *resource);
 
 			template <typename Resource>
-			Resource *read(Resource &resource);
+			Resource *read(Resource *resource);
 		private:
 			const Device   &m_device;
 			RenderTaskBase &m_task;

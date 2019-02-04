@@ -22,7 +22,7 @@ namespace storm::engine {
 
 			Resource(const Device &device, std::string name,
 					 ResourceDescription &&description, RenderTaskBase *creator);
-			Resource(std::string name, ResourceDescription &&description, ResourceType &resource);
+			Resource(std::string name, ResourceDescription &&description, ResourceType *resource);
 
 			Resource(Resource &&);
 			Resource &operator=(Resource &&);

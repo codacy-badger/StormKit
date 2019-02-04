@@ -5,7 +5,7 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include <set>
 
 #include <storm/core/NonCopyable.hpp>
 
@@ -28,8 +28,8 @@ namespace storm::engine {
 
 			RenderTaskBase *m_creator;
 
-			std::vector<const RenderTaskBase *> m_readers;
-			std::vector<const RenderTaskBase *> m_writers;
+			std::set<const RenderTaskBase *> m_readers;
+			std::set<const RenderTaskBase *> m_writers;
 
 			std::uint32_t m_ref_count;
 

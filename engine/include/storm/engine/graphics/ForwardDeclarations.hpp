@@ -10,6 +10,7 @@ namespace storm::engine {
 	class DrawableCache;
 	class Geometry;
 	class Material;
+	template <auto Method>
 	class Renderer;
 	class Transform;
 	

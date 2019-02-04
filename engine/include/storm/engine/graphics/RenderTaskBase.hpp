@@ -5,7 +5,7 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include <set>
 
 #include <storm/core/NonCopyable.hpp>
 
@@ -28,9 +28,9 @@ namespace storm::engine {
 
 			std::string m_name;
 
-			std::vector<const ResourceBase *> m_create_resources;
-			std::vector<const ResourceBase *> m_write_resources;
-			std::vector<const ResourceBase *> m_read_resources;
+			std::set<const ResourceBase *> m_create_resources;
+			std::set<const ResourceBase *> m_write_resources;
+			std::set<const ResourceBase *> m_read_resources;
 
 			std::uint32_t m_ref_count;
 

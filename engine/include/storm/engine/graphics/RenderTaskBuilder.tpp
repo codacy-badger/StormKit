@@ -24,28 +24,28 @@ namespace storm::engine {
 		resources.emplace_back(std::move(resource_ptr));
 		auto *resource = resources.back().get();
 
-		create_resources.emplace_back(resource);
+		create_resources.emplace(resource);
 
 		return static_cast<Resource*>(resource);
 	}
 
 	template <typename Resource>
-	Resource *RenderTaskBuilder::write(Resource &resource) {
+	Resource *RenderTaskBuilder::write(Resource *resource) {
 		auto &write_resources = m_task.m_write_resources;
 
-		resource.m_writers.emplace_back(&(m_task));
-		write_resources.emplace_back(&resource);
+		resource->m_writers.emplace(&(m_task));
+		write_resources.emplace(resource);
 
-		return &resource;
+		return resource;
 	}
 
 	template <typename Resource>
-	Resource *RenderTaskBuilder::read(Resource &resource) {
+	Resource *RenderTaskBuilder::read(Resource *resource) {
 		auto &read_resources = m_task.m_read_resources;
 
-		resource.m_readers.emplace_back(&(m_task));
-		read_resources.emplace_back(&resource);
+		resource->m_readers.emplace(&(m_task));
+		read_resources.emplace(resource);
 
-		return &resource;
+		return resource;
 	}
 }

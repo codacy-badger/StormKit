@@ -24,15 +24,15 @@ namespace storm::engine {
 	}
 
 	template <typename ResourceDescription, typename ResourceType>
-	Resource<std::remove_reference_t<ResourceDescription>, std::remove_reference_t<ResourceType>> &
+	Resource<std::remove_reference_t<ResourceDescription>, std::remove_reference_t<ResourceType>> *
 		RenderGraph::addRetainedResource(std::string name,
 										ResourceDescription &&description,
-										ResourceType &resource) {
+										ResourceType *resource) {
 		auto resource_ptr = std::make_unique<Resource<ResourceDescription, ResourceType>>(
 					std::move(name), std::forward<ResourceDescription>(description), resource);
 
 		m_resources.emplace_back(std::move(resource_ptr));
 
-		return static_cast<Resource<std::remove_reference_t<ResourceDescription>, std::remove_reference_t<ResourceType>>&>(*m_resources.back());
+		return static_cast<Resource<std::remove_reference_t<ResourceDescription>, std::remove_reference_t<ResourceType>>*>(m_resources.back().get());
 	}
 }

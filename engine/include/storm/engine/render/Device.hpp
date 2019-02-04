@@ -68,6 +68,8 @@ namespace storm::engine {
 
 			void waitIdle() const;
 
+			uvec2 maxImage2DSize() const;
+
 			IMPLEMENTATION(DeviceImpl)
 		private:
 			core::Pimpl<DeviceImpl> m_impl;

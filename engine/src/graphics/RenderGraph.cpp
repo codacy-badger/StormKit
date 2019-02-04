@@ -30,6 +30,54 @@ RenderGraph &RenderGraph::operator=(RenderGraph &&) = default;
 
 /////////////////////////////////////
 /////////////////////////////////////
+void RenderGraph::removeRenderPass(const std::string name) {
+	auto it = std::find_if(std::begin(m_render_tasks), std::end(m_render_tasks),
+		[&name](const auto &task) -> bool {
+			return task->name() == name;
+		}
+	);
+
+	if(it == std::end(m_render_tasks))
+		return;
+
+	for(auto &resource : m_resources) {
+		if(resource == nullptr) {
+			auto it = std::find(std::begin(m_resources), std::end(m_resources), resource);
+			m_resources.erase(it);
+
+			continue;
+		}
+
+		if(resource->m_creator == it->get()) {
+			auto it = std::find(std::begin(m_resources), std::end(m_resources), resource);
+
+			for(auto &task : m_render_tasks) {
+				auto reader = std::find(std::begin(task->m_read_resources), std::end(task->m_read_resources), resource.get());
+				if(reader != std::end(task->m_read_resources))
+					task->m_read_resources.erase(reader);
+
+				auto writer = std::find(std::begin(task->m_write_resources), std::end(task->m_write_resources), resource.get());
+				if(writer != std::end(task->m_write_resources))
+					task->m_write_resources.erase(writer);
+
+				m_resources.erase(it);
+			}
+		}
+
+		auto reader = std::find(std::begin(resource->m_readers), std::end(resource->m_readers), it->get());
+		if(reader != std::end(resource->m_readers))
+			resource->m_readers.erase(reader);
+
+		auto writer = std::find(std::begin(resource->m_writers), std::end(resource->m_writers), it->get());
+		if(writer != std::end(resource->m_writers))
+			resource->m_writers.erase(writer);
+	}
+
+	m_render_tasks.erase(it);
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
 void RenderGraph::compile() {
 	/*
 	 * Compute initial resource and pass reference counts
@@ -97,6 +145,13 @@ void RenderGraph::compile() {
 /////////////////////////////////////
 void RenderGraph::execute() {
 
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+void RenderGraph::clear() {
+	m_render_tasks.clear();
+	m_resources.clear();
 }
 
 

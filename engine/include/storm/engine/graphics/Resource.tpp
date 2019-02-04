@@ -17,9 +17,9 @@ namespace storm::engine {
 	}
 
 	template <typename ResourceDescription_, typename ResourceType_>
-	Resource<ResourceDescription_, ResourceType_>::Resource(std::string name, ResourceDescription &&description, ResourceType &resource)
+	Resource<ResourceDescription_, ResourceType_>::Resource(std::string name, ResourceDescription &&description, ResourceType *resource)
 		: ResourceBase{std::move(name), nullptr}, m_description{std::forward<ResourceDescription>(description)} {
-		m_resource = &resource;
+		m_resource = resource;
 	}
 
 	template <typename ResourceDescription_, typename ResourceType_>

@@ -20,6 +20,7 @@ namespace storm::engine {
 			
 			TextureImpl(TextureImpl &&);
 			
+			inline const image::Image &image() const noexcept;
 			inline const BackedVkTexture &backedVkTexture() const noexcept;
 		private:
 			void initialise();
