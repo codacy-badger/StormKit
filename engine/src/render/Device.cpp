@@ -211,3 +211,9 @@ Texture::Ptr Device::createTexturePtr(const storm::image::Image &image) const {
 void Device::waitIdle() const {
 	m_impl->waitIdle();
 }
+
+/////////////////////////////////////
+/////////////////////////////////////
+uvec2 Device::maxImage2DSize() const {
+	return m_impl->maxImage2DSize();
+}

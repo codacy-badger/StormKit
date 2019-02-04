@@ -20,6 +20,8 @@ TextureImpl::TextureImpl(const Device &device, const image::Image &image)
 	initialise();
 }
 
+/////////////////////////////////////
+/////////////////////////////////////
 TextureImpl::TextureImpl(const Device &device, TextureDescription description)
 	: m_image{}, m_device{device} {
 	m_image.create(description.size.x, description.size.y, 4);
@@ -27,6 +29,8 @@ TextureImpl::TextureImpl(const Device &device, TextureDescription description)
 	initialise();
 }
 
+/////////////////////////////////////
+/////////////////////////////////////
 void TextureImpl::initialise() {
 	auto image_create_info = vk::ImageCreateInfo{}
 							 .setImageType(vk::ImageType::e2D)

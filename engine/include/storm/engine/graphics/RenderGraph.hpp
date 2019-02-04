@@ -28,19 +28,23 @@ namespace storm::engine {
 				RenderGraph    &graph;
 				RenderTaskBase &render_task;
 			};
+
 			template <typename RenderTaskData>
 			RenderTask<RenderTaskData> &addRenderPass(const std::string name,
 													  typename RenderTask<RenderTaskData>::SetupFunction setup_func,
 													  typename RenderTask<RenderTaskData>::ExecuteFunction execute_func);
+			void removeRenderPass(const std::string name);
 
 			template <typename ResourceDescription, typename ResourceType>
 			Resource<std::remove_reference_t<ResourceDescription>, std::remove_reference_t<ResourceType>>
-				&addRetainedResource(std::string name,
-									ResourceDescription &&description,
-									ResourceType &resource);
+				*addRetainedResource(std::string name,
+									 ResourceDescription &&description,
+									 ResourceType *resource);
 
 			void compile();
 			void execute();
+
+			void clear();
 
 			void exportGraphviz(const _std::filesystem::path &filepath) const;
 		private:
