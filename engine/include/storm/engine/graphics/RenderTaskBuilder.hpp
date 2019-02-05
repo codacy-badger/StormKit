@@ -9,28 +9,31 @@
 
 #include <storm/core/NonCopyable.hpp>
 
+#include <storm/engine/render/ForwardDeclarations.hpp>
+
+#include <storm/engine/graphics/ForwardDeclarations.hpp>
+#include <storm/engine/graphics/RenderTaskBase.hpp>
+#include <storm/engine/graphics/ResourceBase.hpp>
+
 namespace storm::engine {
-	class Device;
-	class RenderTaskBase;
-	class RenderGraph;
 	class RenderTaskBuilder : public core::NonCopyable {
 		public:
-			explicit RenderTaskBuilder(const Device &device, RenderTaskBase &task, RenderGraph &graph);
+			explicit RenderTaskBuilder(const Device &device, RenderTaskBase &task, ResourcePool &pool);
 			~RenderTaskBuilder();
 
 			RenderTaskBuilder(RenderTaskBuilder &&);
 
 			template <typename Resource, typename ResourceDescription>
-			Resource *create(std::string name, ResourceDescription &&description);
+			ResourceBase::ID create(std::string name, ResourceDescription &&description);
 
 			template <typename Resource>
-			Resource *write(Resource *resource);
+			ResourceBase::ID write(ResourceBase::ID resource);
 
 			template <typename Resource>
-			Resource *read(Resource *resource);
+			ResourceBase::ID read(ResourceBase::ID resource);
 		private:
 			const Device   &m_device;
 			RenderTaskBase &m_task;
-			RenderGraph    &m_graph;
+			ResourcePool   &m_pool;
 	};
 }

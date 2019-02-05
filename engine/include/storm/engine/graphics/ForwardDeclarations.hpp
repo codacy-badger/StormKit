@@ -13,6 +13,15 @@ namespace storm::engine {
 	template <auto Method>
 	class Renderer;
 	class Transform;
+	class RenderTaskBase;
+	class RenderGraph;
+	class ResourcePool;
+	class ResourceBase;
+	class RenderTaskBuilder;
+	template <typename ResourceDescription_, typename ResourceType_>
+	class Resource;
+	template <typename RenderTaskData>
+	class RenderTask;
 	
 	struct Vertex_P;
 	struct Vertex_P_C;

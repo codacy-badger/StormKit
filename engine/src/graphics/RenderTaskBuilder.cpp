@@ -8,8 +8,8 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-RenderTaskBuilder::RenderTaskBuilder(const Device &device, RenderTaskBase &task, RenderGraph &graph)
-	: m_device{device}, m_task{task}, m_graph{graph} {
+RenderTaskBuilder::RenderTaskBuilder(const Device &device, RenderTaskBase &task, ResourcePool &pool)
+	: m_device{device}, m_task{task}, m_pool{pool} {
 
 }
 

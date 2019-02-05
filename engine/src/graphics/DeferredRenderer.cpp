@@ -10,21 +10,21 @@
 using namespace storm::engine;
 
 struct GBufferPassData {
-	std::vector<TextureResource *>diffuse_textures;
+	std::vector<ResourceBase::ID>diffuse_textures;
 
-	TextureResource *position;
-	TextureResource *albedo;
-	TextureResource *normal;
-	TextureResource *specular;
+	ResourceBase::ID position;
+	ResourceBase::ID albedo;
+	ResourceBase::ID normal;
+	ResourceBase::ID specular;
 };
 
 struct LightningPassData {
-	TextureResource *position;
-	TextureResource *albedo;
-	TextureResource *normal;
-	TextureResource *specular;
+	ResourceBase::ID position;
+	ResourceBase::ID albedo;
+	ResourceBase::ID normal;
+	ResourceBase::ID specular;
 
-	TextureResource *backbuffer;
+	ResourceBase::ID backbuffer;
 };
 
 /////////////////////////////////////
@@ -64,8 +64,8 @@ void Renderer<RenderMethod::DEFERRED_RENDERING>::addMesh(Mesh mesh) {
 
 	auto &mesh_ref = m_mesh.back();
 
-	if(mesh_ref.diffuse)
-		appendTexture(mesh_ref.diffuse);
+	//if(mesh_ref.diffuse)
+//		appendTexture(mesh_ref.diffuse);
 }
 
 /////////////////////////////////////
@@ -83,22 +83,19 @@ void Renderer<RenderMethod::DEFERRED_RENDERING>::appendTexture(Texture *src) {
 	texture_description.mip_level = 1;
 
 	auto size = std::size(m_texture_resources);
-	m_texture_resources.emplace_back(m_graph->addRetainedResource(
+	/*m_texture_resources.emplace_back(m_graph->addRetainedResource(
 										 "texture_" + storm::core::toString(size),
 										 texture_description,
-										 src));
+										 src));*/
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-void Renderer<RenderMethod::DEFERRED_RENDERING>::updateRenderGraph() {
-	m_graph->removeRenderPass("deferred_lightning_pass");
-	m_graph->removeRenderPass("deferred_gbuffer_pass");
-
+void Renderer<RenderMethod::DEFERRED_RENDERING>::flush() {
 	m_gbuffer_pass = &m_graph->addRenderPass<GBufferPassData>("deferred_gbuffer_pass",
 		[&](GBufferPassData &data, engine::RenderTaskBuilder &builder) {
-			for(auto &texture_resource : m_texture_resources)
-				data.diffuse_textures.emplace_back(builder.read<TextureResource>(texture_resource));
+			//for(auto &texture_resource : m_texture_resources)
+/*				data.diffuse_textures.emplace_back(builder.read<TextureResource>(texture_resource));
 
 			auto texture_desc = TextureDescription {
 				1,
@@ -109,27 +106,20 @@ void Renderer<RenderMethod::DEFERRED_RENDERING>::updateRenderGraph() {
 			data.position  = builder.create<TextureResource>("position", texture_desc);
 			data.albedo    = builder.create<TextureResource>("albedo",   texture_desc);
 			data.normal    = builder.create<TextureResource>("normal",   texture_desc);
-			data.specular  = builder.create<TextureResource>("specular", texture_desc);
+			data.specular  = builder.create<TextureResource>("specular", texture_desc);*/
 		},
 		[](const GBufferPassData &data) {
 
 		}
 	);
-
-	auto &gbuffer_data = m_gbuffer_pass->data();
-	auto *backbuffer_resource = m_graph->addRetainedResource(
-										"backbuffer",
-										m_backbuffer_desc,
-										&m_backbuffer);
-
 	m_lightning_pass = &m_graph->addRenderPass<LightningPassData>("deferred_lightning_pass",
 		[&](LightningPassData &data, engine::RenderTaskBuilder &builder) {
-			data.position  = builder.read<TextureResource>(gbuffer_data.position);
+/*			data.position  = builder.read<TextureResource>(gbuffer_data.position);
 			data.albedo    = builder.read<TextureResource>(gbuffer_data.albedo);
 			data.normal    = builder.read<TextureResource>(gbuffer_data.normal);
 			data.specular  = builder.read<TextureResource>(gbuffer_data.specular);
 
-			data.backbuffer = builder.write(backbuffer_resource);
+			data.backbuffer = builder.write(backbuffer_resource);*/
 		},
 		[](const LightningPassData &data) {
 

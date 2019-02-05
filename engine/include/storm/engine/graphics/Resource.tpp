@@ -8,17 +8,23 @@
 
 namespace storm::engine {
 	template <typename ResourceDescription_, typename ResourceType_>
-	Resource<ResourceDescription_, ResourceType_>::Resource(const Device &device,
-		std::string name,
-		ResourceDescription &&description,
-		RenderTaskBase *creator)
-		: ResourceBase{std::move(name), creator}, m_description{std::forward<ResourceDescription>(description)} {
+	Resource<ResourceDescription_, ResourceType_>::Resource(
+			const Device &device, 
+			std::string name,
+			ResourceDescription_ &&description, 
+			ResourceBase::RenderTaskBaseOptionalRef creator
+	) : ResourceBase{std::move(name), std::move(creator)}, 
+		m_description{std::forward<ResourceDescription>(description)} {
 		m_resource = std::make_unique<ResourceType>(device, m_description);
 	}
 
 	template <typename ResourceDescription_, typename ResourceType_>
-	Resource<ResourceDescription_, ResourceType_>::Resource(std::string name, ResourceDescription &&description, ResourceType *resource)
-		: ResourceBase{std::move(name), nullptr}, m_description{std::forward<ResourceDescription>(description)} {
+	Resource<ResourceDescription_, ResourceType_>::Resource(
+			std::string name, 
+			ResourceDescription_ &&description, 
+			ResourceType_ &resource
+	) : ResourceBase{std::move(name), std::nullopt}, 
+		m_description{std::forward<ResourceDescription>(description)} {
 		m_resource = resource;
 	}
 
@@ -38,14 +44,6 @@ namespace storm::engine {
 		if(std::holds_alternative<ResourcePtr>(m_resource))
 			return *std::get<ResourcePtr>(m_resource);
 
-		return *std::get<ResourceType*>(m_resource);
-	}
-
-	template <typename ResourceDescription_, typename ResourceType_>
-	inline typename Resource<ResourceDescription_, ResourceType_>::ResourceType *Resource<ResourceDescription_, ResourceType_>::resourcePtr() const noexcept {
-		if(std::holds_alternative<ResourcePtr>(m_resource))
-			return std::get<ResourcePtr>(m_resource).get();
-
-		return std::get<ResourceType*>(m_resource);
+		return std::get<std::reference_wrapper<ResourceType>>(m_resource).get();
 	}
 }

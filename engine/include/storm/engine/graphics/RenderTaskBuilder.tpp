@@ -9,43 +9,43 @@
 
 namespace storm::engine {
 	template <typename Resource, typename ResourceDescription>
-	Resource *RenderTaskBuilder::create(std::string name, ResourceDescription &&description) {
-		static_assert(std::is_same_v<typename Resource::ResourceDescription, std::remove_reference_t<ResourceDescription>>,
-					  "Description does not match the resource.");
-		auto &resources = m_graph.m_resources;
+	ResourceBase::ID RenderTaskBuilder::create(std::string name, ResourceDescription &&description) {
+		static_assert(std::is_same_v<typename Resource::ResourceDescription, 
+						std::remove_reference_t<ResourceDescription>>,
+					  "Description does not match the resource.");;
 		auto &create_resources = m_task.m_create_resources;
 
-		auto resource_ptr = std::make_unique<Resource>(
-					m_device,
-					std::move(name),
-					std::forward<typename Resource::ResourceDescription>(description),
-					&(m_task));
+		auto id = m_pool.addTransientResource(m_device,
+											  std::move(name),
+											  std::forward<typename Resource::ResourceDescription>(description),
+											  m_task);
 
-		resources.emplace_back(std::move(resource_ptr));
-		auto *resource = resources.back().get();
+		create_resources.emplace(id);
 
-		create_resources.emplace(resource);
-
-		return static_cast<Resource*>(resource);
+		return id;
 	}
 
 	template <typename Resource>
-	Resource *RenderTaskBuilder::write(Resource *resource) {
+	ResourceBase::ID RenderTaskBuilder::write(ResourceBase::ID resourceID) {
 		auto &write_resources = m_task.m_write_resources;
 
-		resource->m_writers.emplace(&(m_task));
-		write_resources.emplace(resource);
+		auto &resource = m_pool.acquireResource(resourceID);
+		resource.m_writers.emplace(m_task.id());
+		
+		write_resources.emplace(resourceID);
 
-		return resource;
+		return resource.id();
 	}
 
 	template <typename Resource>
-	Resource *RenderTaskBuilder::read(Resource *resource) {
+	ResourceBase::ID RenderTaskBuilder::read(ResourceBase::ID resourceID) {
 		auto &read_resources = m_task.m_read_resources;
 
-		resource->m_readers.emplace(&(m_task));
-		read_resources.emplace(resource);
+		auto &resource = m_pool.acquireResource(resourceID);
+		resource.m_readers.emplace(m_task.id());
+		
+		read_resources.emplace(resourceID);
 
-		return resource;
+		return resource.id();
 	}
 }

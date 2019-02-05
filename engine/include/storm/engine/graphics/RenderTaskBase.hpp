@@ -9,17 +9,20 @@
 
 #include <storm/core/NonCopyable.hpp>
 
+#include <storm/engine/graphics/ForwardDeclarations.hpp>
+
 namespace storm::engine {
-	class ResourceBase;
-	class RenderTaskBuilder;
 	class RenderTaskBase : core::NonCopyable {
 		public:
+			using ID = std::uint32_t;
+			
 			explicit RenderTaskBase(std::string name);
 			virtual ~RenderTaskBase();
 
 			RenderTaskBase(RenderTaskBase &&);
 			RenderTaskBase &operator=(RenderTaskBase &&);
 
+			inline ID id() const noexcept;
 			inline void setName(std::string name);
 			inline const std::string &name() const noexcept;
 		private:
@@ -28,10 +31,11 @@ namespace storm::engine {
 
 			std::string m_name;
 
-			std::set<const ResourceBase *> m_create_resources;
-			std::set<const ResourceBase *> m_write_resources;
-			std::set<const ResourceBase *> m_read_resources;
+			std::set<std::uint32_t> m_create_resources;
+			std::set<std::uint32_t> m_write_resources;
+			std::set<std::uint32_t> m_read_resources;
 
+			ID m_id;
 			std::uint32_t m_ref_count;
 
 			friend class RenderTaskBuilder;

@@ -8,6 +8,8 @@
 #include <storm/engine/graphics/RenderGraph.hpp>
 #include <storm/engine/graphics/Mesh.hpp>
 
+#include <unordered_map>
+
 struct GBufferPassData;
 struct LightningPassData;
 namespace storm::engine {
@@ -25,7 +27,7 @@ namespace storm::engine {
 
 			void addMesh(Mesh mesh);
 
-			void updateRenderGraph();
+			void flush();
 			void renderFrame();
 		private:
 			void appendTexture(Texture *src);

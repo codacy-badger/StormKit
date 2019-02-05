@@ -6,13 +6,15 @@
 
 #include <storm/engine/graphics/Vertex.hpp>
 
-#include <storm/engine/render/Texture.hpp>
+#include <storm/image/Image.hpp>
+
+#include <optional>
 
 namespace storm::engine {
 	struct Mesh {
 		VertexArrayProxy vertices;
 		IndexArrayProxy  indices;
 
-		Texture *diffuse;
+		std::optional<std::reference_wrapper<image::Image>> diffuse = std::nullopt;
 	};
 }

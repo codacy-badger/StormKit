@@ -16,25 +16,29 @@
 namespace storm::engine {
 	template <typename ResourceDescription_, typename ResourceType_>
 	class Resource : public ResourceBase {
+			using MyType = Resource<ResourceDescription_, ResourceType_>;
 		public:
-			using ResourceDescription = ResourceDescription_;
-			using ResourceType        = ResourceType_;
+			using ResourceDescription = std::decay_t<ResourceDescription_>;
+			using ResourceType        = std::decay_t<ResourceType_>;
+			
+			SUR_Object(MyType)
 
-			Resource(const Device &device, std::string name,
-					 ResourceDescription &&description, RenderTaskBase *creator);
-			Resource(std::string name, ResourceDescription &&description, ResourceType *resource);
+			Resource(const Device &device, 
+					 std::string name,
+					 ResourceDescription_ &&description, 
+					 ResourceBase::RenderTaskBaseOptionalRef creator);
+			Resource(std::string name, 
+					 ResourceDescription_ &&description, 
+					 ResourceType_ &resource);
 
 			Resource(Resource &&);
 			Resource &operator=(Resource &&);
 
 			inline const ResourceDescription &description() const noexcept;
 			inline const ResourceType &resource() const noexcept;
-			inline ResourceType *resourcePtr() const noexcept;
 		private:
-			Resource(std::string &&name, ResourceDescription &&description);
-
 			using ResourcePtr = std::unique_ptr<ResourceType>;
-			using ResourceVariant = std::variant<ResourceType*, ResourcePtr>;
+			using ResourceVariant = std::variant<std::reference_wrapper<ResourceType>, ResourcePtr>;
 
 			ResourceDescription m_description;
 			ResourceVariant     m_resource;

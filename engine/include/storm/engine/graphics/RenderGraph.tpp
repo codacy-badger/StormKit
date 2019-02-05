@@ -17,22 +17,33 @@ namespace storm::engine {
 
 		auto &task_ref = *m_render_tasks.back();
 
-		auto builder = RenderTaskBuilder{m_device, task_ref, *this};
+		auto builder = RenderTaskBuilder{m_device, task_ref, m_resources};
 		task_ref.setup(builder);
+		task_ref.m_id = m_next_task_id++;
 
 		return static_cast<RenderTask<RenderTaskData>&>(task_ref);
 	}
 
 	template <typename ResourceDescription, typename ResourceType>
-	Resource<std::remove_reference_t<ResourceDescription>, std::remove_reference_t<ResourceType>> *
-		RenderGraph::addRetainedResource(std::string name,
+	std::uint32_t RenderGraph::addRetainedResource(std::string name,
 										ResourceDescription &&description,
-										ResourceType *resource) {
-		auto resource_ptr = std::make_unique<Resource<ResourceDescription, ResourceType>>(
-					std::move(name), std::forward<ResourceDescription>(description), resource);
-
-		m_resources.emplace_back(std::move(resource_ptr));
-
-		return static_cast<Resource<std::remove_reference_t<ResourceDescription>, std::remove_reference_t<ResourceType>>*>(m_resources.back().get());
+										ResourceType &resource) {
+		return m_resources.addRetainedResource<ResourceDescription, ResourceType>(
+					std::move(name), 
+					std::forward<ResourceDescription>(description), 
+					resource
+				);
+	}
+	
+	template <typename T>
+	const T &RenderGraph::getRenderTaskAs(RenderTaskBase::ID render_task_id) const noexcept {
+		//static_assert (std::is_, )
+		
+		return static_cast<T&>(getRenderTask(render_task_id));
+	}
+	
+	template <typename T>
+	T &RenderGraph::getRenderTaskAs(RenderTaskBase::ID render_task_id) noexcept {
+		return static_cast<T&>(getRenderTask(render_task_id));
 	}
 }

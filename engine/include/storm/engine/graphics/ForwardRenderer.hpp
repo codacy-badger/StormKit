@@ -8,6 +8,11 @@
 #include <storm/engine/graphics/RenderGraph.hpp>
 #include <storm/engine/graphics/Mesh.hpp>
 
+#include <storm/image/Image.hpp>
+
+#include <list>
+#include <unordered_map>
+
 struct PassData;
 namespace storm::engine {
 	template <>
@@ -23,12 +28,14 @@ namespace storm::engine {
 			inline const RenderGraph &renderGraph() const noexcept;
 
 			void addMesh(Mesh mesh);
-			void updateRenderGraph();
-
+			void buildGraph();
+			
 			void renderFrame();
 		private:
-			void appendTexture(Texture *src);
+			void appendTexture(image::Image &src);
 			void updateUVs(Mesh &mesh);
+			
+			void traverseGraph();
 
 			void preRender();
 			void render();
@@ -39,14 +46,12 @@ namespace storm::engine {
 
 			TextureDescription m_backbuffer_desc;
 			Texture            m_backbuffer;
-			TextureResource   *m_backbuffer_resource;
 
-			RenderTask<PassData> *m_forward_color_pass;
-
-			std::vector<Mesh>            m_mesh;
-			std::vector<TextureResource*> m_texture_resources;
-
-			std::unordered_map<Mesh*, uvec2> m_texture_position_map;
+			std::vector<Mesh>         m_meshs;
+			std::vector<Texture::Ptr> m_textures;
+			std::unordered_map<std::uint32_t, std::vector<std::uint32_t>> m_mesh_texture_map;
+			
+			std::vector<RenderPass> m_render_passes;
 	};
 
 	using ForwardRenderer = Renderer<RenderMethod::FORWARD_RENDERING>;

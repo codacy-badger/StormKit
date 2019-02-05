@@ -5,20 +5,30 @@
 #pragma once
 
 #include <string>
-#include <set>
+#include <unordered_set>
+#include <optional>
 
 #include <storm/core/NonCopyable.hpp>
+#include <storm/core/Memory.hpp>
+
+#include <storm/engine/graphics/RenderTaskBase.hpp>
 
 namespace storm::engine {
-	class RenderTaskBase;
 	class ResourceBase : public core::NonCopyable {
 		public:
-			explicit ResourceBase(std::string name, RenderTaskBase *creator);
+			SUR_Object(ResourceBase)
+			
+			using ID = std::uint32_t;
+			
+			using RenderTaskBaseOptionalRef = std::optional<std::reference_wrapper<RenderTaskBase>>;
+			
+			explicit ResourceBase(std::string name, RenderTaskBaseOptionalRef &&creator);
 			virtual ~ResourceBase();
 
 			ResourceBase(ResourceBase &&);
 			ResourceBase &operator=(ResourceBase &&);
 
+			inline ID id() const noexcept;
 			inline bool transient() const noexcept;
 
 			inline void setName(std::string name);
@@ -26,15 +36,17 @@ namespace storm::engine {
 		protected:
 			std::string     m_name;
 
-			RenderTaskBase *m_creator;
+			RenderTaskBaseOptionalRef m_creator;
 
-			std::set<const RenderTaskBase *> m_readers;
-			std::set<const RenderTaskBase *> m_writers;
+			std::unordered_set<RenderTaskBase::ID> m_readers;
+			std::unordered_set<RenderTaskBase::ID> m_writers;
 
+			ID m_id;
 			std::uint32_t m_ref_count;
 
 			friend class RenderTaskBuilder;
 			friend class RenderGraph;
+			friend class ResourcePool;
 	};
 }
 

@@ -10,9 +10,9 @@
 using namespace storm::engine;
 
 struct PassData {
-	std::vector<TextureResource *>diffuse_textures;
+	std::vector<ResourceBase::ID> diffuse_textures;
 
-	TextureResource *backbuffer;
+	ResourceBase::ID backbuffer;
 };
 
 /////////////////////////////////////
@@ -26,10 +26,6 @@ Renderer<RenderMethod::FORWARD_RENDERING>::Renderer(const Device &device, uvec2 
 						},
 	  m_backbuffer{m_device, m_backbuffer_desc} {
 
-	m_backbuffer_resource = m_graph.get().addRetainedResource(
-										"backbuffer",
-										m_backbuffer_desc,
-										&m_backbuffer);
 };
 
 /////////////////////////////////////
@@ -47,12 +43,12 @@ Renderer<RenderMethod::FORWARD_RENDERING> &Renderer<RenderMethod::FORWARD_RENDER
 /////////////////////////////////////
 /////////////////////////////////////
 void Renderer<RenderMethod::FORWARD_RENDERING>::addMesh(Mesh mesh) {
-	m_mesh.emplace_back(mesh);
-
-	auto &mesh_ref = m_mesh.back();
-
-	if(mesh_ref.diffuse)
-		appendTexture(mesh_ref.diffuse);
+	if(mesh.diffuse)
+		m_textures.emplace_back(m_device.get().createTexturePtr(mesh.diffuse.value().get()));
+	
+	m_meshs.emplace_back(std::move(mesh));
+	
+	m_mesh_texture_map[std::size(m_meshs) - 1].emplace_back(std::size(m_textures) - 1);
 }
 
 /////////////////////////////////////
@@ -63,17 +59,7 @@ void Renderer<RenderMethod::FORWARD_RENDERING>::renderFrame() {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void Renderer<RenderMethod::FORWARD_RENDERING>::appendTexture(Texture *src) {
-	auto texture_description = TextureDescription{};
-	texture_description.size = {src->image().size().width, src->image().size().height, 1u};
-	texture_description.format = engine::Format::RGBA8888UNORM;
-	texture_description.mip_level = 1;
-
-	auto size = std::size(m_texture_resources);
-	m_texture_resources.emplace_back(m_graph.get().addRetainedResource(
-									 "texture_" + storm::core::toString(size),
-									 texture_description,
-									 src));
+void Renderer<RenderMethod::FORWARD_RENDERING>::appendTexture(image::Image &src) {
 }
 
 /////////////////////////////////////
@@ -82,18 +68,44 @@ void Renderer<RenderMethod::FORWARD_RENDERING>::updateUVs(Mesh &mesh) {
 
 }
 
-void Renderer<RenderMethod::FORWARD_RENDERING>::updateRenderGraph() {
-	m_graph.get().removeRenderPass("forward_color_pass");
+/////////////////////////////////////
+/////////////////////////////////////
+void storm::engine::Renderer<RenderMethod::FORWARD_RENDERING>::traverseGraph() {
+	
+	
+}
 
-	m_forward_color_pass = &m_graph.get().addRenderPass<PassData>("forward_color_pass",
+/////////////////////////////////////
+/////////////////////////////////////
+void storm::engine::Renderer<RenderMethod::FORWARD_RENDERING>::buildGraph() {
+	auto backbuffer_resource = m_graph.get().addRetainedResource(
+										"backbuffer",
+										m_backbuffer_desc,
+										m_backbuffer);
+	
+	auto texture_resources = std::vector<ResourceBase::ID>{};
+	for(auto &texture : m_textures) {
+		auto texture_description = TextureDescription{};
+		texture_description.size = {texture->image().size().width, texture->image().size().height, 1u};
+		texture_description.format = engine::Format::RGBA8888UNORM;
+		texture_description.mip_level = 1;
+		
+		const auto size = std::size(texture_resources);
+		texture_resources.emplace_back(m_graph.get().addRetainedResource(
+										 "texture_" + storm::core::toString(size),
+										 texture_description,
+										 *texture));
+	}
+	
+	m_graph.get().addRenderPass<PassData>("forward_color_pass",
 		[&](PassData &data, engine::RenderTaskBuilder &builder) {
-			for(auto &texture_resource : m_texture_resources)
+			for(auto &texture_resource : texture_resources)
 				data.diffuse_textures.emplace_back(builder.read<TextureResource>(texture_resource));
 
-			data.backbuffer  = builder.write<TextureResource>(m_backbuffer_resource);
+			data.backbuffer  = builder.write<TextureResource>(backbuffer_resource);
 		},
 		[=](const PassData &data) {
-
+			
 		}
 	);
 }

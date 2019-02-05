@@ -9,7 +9,7 @@ using namespace storm::engine;
 /////////////////////////////////////
 /////////////////////////////////////
 RenderTaskBase::RenderTaskBase(std::string name)
-	: m_name{std::move(name)}, m_ref_count{0u} {}
+	: m_name{std::move(name)}, m_id{0u}, m_ref_count{0u} {}
 
 /////////////////////////////////////
 /////////////////////////////////////
