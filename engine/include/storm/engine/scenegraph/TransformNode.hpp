@@ -1,28 +1,32 @@
 #pragma once
 
-#include <storm/engine/scenegraph/Node.hpp>
 #include <storm/engine/graphics/Transform.hpp>
 
+#include <storm/engine/scenegraph/SceneNode.hpp>
+
 namespace storm::engine {
-	class STORM_PUBLIC TransformNode : public Node {
+	class STORM_PUBLIC TransformNode : public SceneNode {
 		public:
 			SUR_Object(TransformNode)
-			using HoldedType = Transform;
 
-			~TransformNode() override = default;
+			using DataType = Transform;
 
-			inline const HoldedType &data()      const noexcept { return transform(); }
-			inline const HoldedType &transform() const noexcept { return m_transform; }
+			~TransformNode() override;
 
-			template <typename T = HoldedType, typename = std::enable_if_t<std::is_same_v<std::decay_t<std::remove_cv_t<T>>, HoldedType>>>
-			inline void setTransform(T&& transform) noexcept { m_transform = std::forward<T>(transform); notify(NodeEvent::UPDATED); }
+			TransformNode(TransformNode &&);
+			TransformNode &operator=(TransformNode &&);
 
+			inline const DataType &data()      const noexcept;
+			inline void setTransform(Transform transform) noexcept;
 		protected:
-			explicit TransformNode() = default;
+			explicit TransformNode(Scene &graph);
 
-			std::uint32_t dirtyValue() const noexcept override;
+			DirtyType dirtyValue() const noexcept override;
 
+			friend class Scene;
 		private:
-			HoldedType m_transform;
+			DataType m_transform;
 	};
 }
+
+#include "TransformNode.inl"

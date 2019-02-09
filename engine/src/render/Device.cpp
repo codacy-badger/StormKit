@@ -148,14 +148,14 @@ IndexBuffer::Ptr Device::createIndexBufferPtr(std::size_t size, std::size_t alig
 
 /////////////////////////////////////
 /////////////////////////////////////
-UniformBuffer Device::createUniformBuffer(std::size_t size, std::size_t alignement) const {
-	return UniformBuffer{*this, size, alignement};
+UniformBuffer Device::createUniformBuffer(UniformBuffer::Description description) const {
+	return UniformBuffer{*this, std::move(description)};
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-UniformBuffer::Ptr Device::createUniformBufferPtr(std::size_t size, std::size_t alignement) const {
-	return UniformBuffer::makeUnique(*this, size, alignement);
+UniformBuffer::Ptr Device::createUniformBufferPtr(UniformBuffer::Description description) const {
+	return UniformBuffer::makeUnique(*this, std::move(description));
 }
 
 /////////////////////////////////////
@@ -202,8 +202,20 @@ Texture Device::createTexture(const storm::image::Image &image) const {
 
 /////////////////////////////////////
 /////////////////////////////////////
+Texture Device::createTexture(Texture::Description description) const {
+	return Texture{*this, std::move(description)};
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
 Texture::Ptr Device::createTexturePtr(const storm::image::Image &image) const {
 	return Texture::makeUnique(*this, image);
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+Texture::Ptr Device::createTexturePtr(Texture::Description description) const {
+	return Texture::makeUnique(*this, std::move(description));
 }
 
 /////////////////////////////////////

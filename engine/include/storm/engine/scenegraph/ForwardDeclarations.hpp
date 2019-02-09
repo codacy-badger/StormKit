@@ -4,15 +4,12 @@
 
 #pragma once
 
-#include <storm/core/NonCopyable.hpp>
-#include <storm/core/Memory.hpp>
-
 namespace storm::engine {
-	enum class RenderMethod {
-		FORWARD_RENDERING,
-		DEFERRED_RENDERING
-	};
+	class Scene;
 
-	template <auto Method>
-	class Renderer;
+	class SceneNode;
+	class GroupNode;
+	class CameraNode;
+	class GeometryNode;
+	class TransformNode;
 }

@@ -11,11 +11,14 @@ using namespace storm::engine;
 //todo implement stagging buffer
 /////////////////////////////////////
 /////////////////////////////////////
-UniformBufferImpl::UniformBufferImpl(const Device &device, std::size_t size, std::size_t alignement)
-	: m_size{size}, m_alignement{alignement}, m_current_offset{0}, m_mapped_data{nullptr}, m_device{device.implementation()} {
+UniformBufferImpl::UniformBufferImpl(const Device &device, UniformBuffer::Description description)
+	: m_description{std::move(description)},
+	  m_current_offset{0},
+	  m_mapped_data{nullptr},
+	  m_device{device.implementation()} {
 	m_buffer = m_device.createBackedVkBuffer(vk::BufferUsageFlagBits::eUniformBuffer,
 											 vk::MemoryPropertyFlagBits::eHostCoherent | vk::MemoryPropertyFlagBits::eHostVisible,
-											 size);
+											 m_description.size);
 
 }
 
@@ -42,8 +45,8 @@ std::size_t UniformBufferImpl::addData(const std::byte *data, std::size_t size) 
 
 	m_current_offset += size;
 
-	if(m_alignement > 0)
-		m_current_offset += m_alignement - m_current_offset % m_alignement;
+	if(m_description.alignement > 0)
+		m_current_offset += m_description.alignement - m_current_offset % m_description.alignement;
 
 	return offset;
 }
@@ -51,7 +54,7 @@ std::size_t UniformBufferImpl::addData(const std::byte *data, std::size_t size) 
 /////////////////////////////////////
 /////////////////////////////////////
 void UniformBufferImpl::updateData(const std::byte *data, std::size_t size, std::ptrdiff_t offset) {
-	ASSERT((offset + size) <= m_size, "Offset + size cannot be > to the buffer size");
+	ASSERT((offset + size) <= m_description.size, "Offset + size cannot be > to the buffer size");
 
 	auto mem = map(size, offset);
 
@@ -63,7 +66,7 @@ void UniformBufferImpl::updateData(const std::byte *data, std::size_t size, std:
 /////////////////////////////////////
 /////////////////////////////////////
 std::byte *UniformBufferImpl::map() {
-	return map(m_size, 0);
+	return map(m_description.size, 0);
 }
 
 

@@ -14,24 +14,25 @@
 #include <storm/core/Memory.hpp>
 
 namespace storm::engine {
-	struct TextureDescription {
-		std::size_t mip_level;
-		Format      format;
-		uvec3       size;
-	};
-
 	class TextureImpl;
 	class Texture {
 		public:
 			Unique_Object(Texture)
+
+			struct Description {
+				std::size_t mip_level;
+				Format      format;
+				uvec3       size;
+			};
 			
 			explicit Texture(const Device &device, const image::Image &image);
-			explicit Texture(const Device &device, TextureDescription description);
+			explicit Texture(const Device &device, Description description);
 			~Texture();
 			
 			Texture(Texture &&);
 			Texture &operator=(Texture &&);
 
+			const Texture::Description &description() const noexcept;
 			const image::Image &image() const noexcept;
 			
 			IMPLEMENTATION(TextureImpl)

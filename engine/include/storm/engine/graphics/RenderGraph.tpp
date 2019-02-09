@@ -18,17 +18,17 @@ namespace storm::engine {
 		auto &task_ref = *m_render_tasks.back();
 
 		auto builder = RenderTaskBuilder{m_device, task_ref, m_resources};
-		task_ref.setup(builder);
 		task_ref.m_id = m_next_task_id++;
+		task_ref.setup(builder);
 
 		return static_cast<RenderTask<RenderTaskData>&>(task_ref);
 	}
 
-	template <typename ResourceDescription, typename ResourceType>
+	template <typename ResourceType, typename ResourceDescription>
 	std::uint32_t RenderGraph::addRetainedResource(std::string name,
 										ResourceDescription &&description,
 										ResourceType &resource) {
-		return m_resources.addRetainedResource<ResourceDescription, ResourceType>(
+		return m_resources.addRetainedResource<ResourceType, ResourceDescription>(
 					std::move(name), 
 					std::forward<ResourceDescription>(description), 
 					resource

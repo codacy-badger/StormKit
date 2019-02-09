@@ -23,12 +23,15 @@ namespace storm::engine {
 			
 			SUR_Object(MyType)
 
+			template <typename ResourceDescription__>
 			Resource(const Device &device, 
 					 std::string name,
-					 ResourceDescription_ &&description, 
+					 ResourceDescription__ &&description,
 					 ResourceBase::RenderTaskBaseOptionalRef creator);
+
+			template <typename ResourceDescription__>
 			Resource(std::string name, 
-					 ResourceDescription_ &&description, 
+					 ResourceDescription__ &&description,
 					 ResourceType_ &resource);
 
 			Resource(Resource &&);
@@ -38,7 +41,7 @@ namespace storm::engine {
 			inline const ResourceType &resource() const noexcept;
 		private:
 			using ResourcePtr = std::unique_ptr<ResourceType>;
-			using ResourceVariant = std::variant<std::reference_wrapper<ResourceType>, ResourcePtr>;
+			using ResourceVariant = std::variant<ResourceType*, ResourcePtr>;
 
 			ResourceDescription m_description;
 			ResourceVariant     m_resource;

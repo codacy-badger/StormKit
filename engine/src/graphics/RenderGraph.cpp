@@ -71,7 +71,7 @@ void RenderGraph::compile() {
 					--(read_resource.m_ref_count);
 
 				if(read_resource.m_ref_count == 0u && read_resource.transient())
-					unreferenced_resources.emplace(read_resource);
+					unreferenced_resources.emplace(&read_resource);
 			}
 		}
 
@@ -89,7 +89,7 @@ void RenderGraph::compile() {
 						--(read_resource.m_ref_count);
 
 					if(read_resource.m_ref_count == 0u && read_resource.transient())
-						unreferenced_resources.emplace(read_resource);
+						unreferenced_resources.emplace(&read_resource);
 				}
 			}
 		}
@@ -160,13 +160,13 @@ void RenderGraph::exportGraphviz(const _std::filesystem::path &filepath) const {
 /////////////////////////////////////
 /////////////////////////////////////
 const RenderTaskBase &RenderGraph::getRenderTask(RenderTaskBase::ID render_task_id) const noexcept {
-	ASSERT(render_task_id > m_next_task_id, "Render task id out of bound");
+	ASSERT(render_task_id < m_next_task_id, "Render task id out of bound");
 	
 	auto it = std::find_if(std::begin(m_render_tasks), std::end(m_render_tasks), [render_task_id](const auto &task) {
-		return task.id() == render_task_id;
+		return task->id() == render_task_id;
 	});
 	
-	ASSERT(it == std::end(m_render_tasks), core::format("Failed to find render task, id %{1}", render_task_id));
+	ASSERT(it != std::end(m_render_tasks), core::format("Failed to find render task, id %{1}", render_task_id));
 	
 	return *it->get();
 }
@@ -174,13 +174,13 @@ const RenderTaskBase &RenderGraph::getRenderTask(RenderTaskBase::ID render_task_
 /////////////////////////////////////
 /////////////////////////////////////
 RenderTaskBase &RenderGraph::getRenderTask(RenderTaskBase::ID render_task_id) noexcept {
-	ASSERT(render_task_id > m_next_task_id, "Render task id out of bound");
+	ASSERT(render_task_id < m_next_task_id, "Render task id out of bound");
 	
 	auto it = std::find_if(std::begin(m_render_tasks), std::end(m_render_tasks), [render_task_id](const auto &task) {
-		return task.id() == render_task_id;
+		return task->id() != render_task_id;
 	});
 	
-	ASSERT(it == std::end(m_render_tasks), core::format("Failed to find render task, id %{1}", render_task_id));
+	ASSERT(it != std::end(m_render_tasks), core::format("Failed to find render task, id %{1}", render_task_id));
 	
 	return *it->get();
 }

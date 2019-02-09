@@ -78,7 +78,7 @@ void CommandBufferImpl::end() const {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void CommandBufferImpl::beginRenderPass(RenderPass &render_pass, core::RGBColorF clear_color) {
+void CommandBufferImpl::beginRenderPass(RenderPass &render_pass, Framebuffer &buffer, core::RGBColorF clear_color) {
 	m_current_render_pass = &render_pass;
 	
 	auto &render_pass_impl = render_pass.implementation();
@@ -87,7 +87,7 @@ void CommandBufferImpl::beginRenderPass(RenderPass &render_pass, core::RGBColorF
 		render_pass_impl.init();
 
 	const auto &vk_render_pass = render_pass_impl.vkRenderPass();
-	const auto &vk_framebuffer = render_pass_impl.framebuffer().implementation().vkFramebuffer();
+	const auto &vk_framebuffer = buffer.implementation().vkFramebuffer();
 
 	const auto clear_color_value = vk::ClearColorValue{}
 			.setFloat32({clear_color.r, clear_color.g, clear_color.b, clear_color.a});

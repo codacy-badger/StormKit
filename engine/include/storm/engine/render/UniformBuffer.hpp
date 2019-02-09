@@ -16,7 +16,12 @@ namespace storm::engine {
 		public:
 			Unique_Object(UniformBuffer)
 
-			explicit UniformBuffer(const Device &device, std::size_t size, std::size_t alignement);
+			struct Description {
+				std::size_t size;
+				std::size_t alignement;
+			};
+
+			explicit UniformBuffer(const Device &device, Description description);
 			~UniformBuffer();
 
 			UniformBuffer(UniformBuffer &&);
@@ -35,6 +40,8 @@ namespace storm::engine {
 			std::byte *map();
 			std::byte *map(std::size_t size, std::ptrdiff_t offset);
 			void       unmap();
+
+			const UniformBuffer::Description &description() const noexcept;
 
 			IMPLEMENTATION(UniformBufferImpl)
 		private:

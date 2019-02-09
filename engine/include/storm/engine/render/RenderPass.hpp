@@ -40,7 +40,7 @@ namespace storm::engine {
 
 			void setExtent(uvec2 extent);
 
-			const Framebuffer &framebuffer() const noexcept;
+			void build();
 
 			IMPLEMENTATION(RenderPassImpl)
 		private:

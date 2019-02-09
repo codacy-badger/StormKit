@@ -9,16 +9,20 @@
 #include <vector>
 #include <unordered_map>
 
+#include <storm/core/NonCopyable.hpp>
+
 #include <storm/engine/graphics/Resource.hpp>
 
 namespace storm::engine {
-	class ResourcePool {
+	class ResourcePool : public core::NonCopyable {
 		public:
-			
 			explicit ResourcePool();
 			~ResourcePool();
+
+			ResourcePool(ResourcePool &&);
+			ResourcePool &operator=(ResourcePool &&);
 			
-			template <typename ResourceDescription, typename ResourceType>
+			template <typename ResourceType, typename ResourceDescription>
 			ResourceBase::ID addRetainedResource(
 					std::string name,
 					ResourceDescription &&description,
@@ -31,6 +35,12 @@ namespace storm::engine {
 					ResourceDescription &&description,
 					std::optional<std::reference_wrapper<RenderTaskBase>> task);
 			
+			template <typename T>
+			const T &acquireResourceAs(ResourceBase::ID resource_id) const noexcept;
+
+			template <typename T>
+			T &acquireResourceAs(ResourceBase::ID resource_id) noexcept;
+
 			const ResourceBase &acquireResource(ResourceBase::ID resource_id) const noexcept;
 			ResourceBase &acquireResource(ResourceBase::ID resource_id) noexcept;
 			

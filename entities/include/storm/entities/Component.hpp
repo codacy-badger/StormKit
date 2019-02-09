@@ -2,6 +2,7 @@
 
 #include <storm/core/NonInstanciable.hpp>
 #include <storm/core/Memory.hpp>
+#include <storm/core/Hash.hpp>
 
 #include <memory>
 #include <string>
@@ -27,15 +28,7 @@ namespace storm::entities {
 		static constexpr Type TYPE = INVALID_TYPE;
 	};
 
-	constexpr Component::Type ComponentHash(const char *str, std::size_t sz) {
-	  return sz == 0 ? 0xcbf29ce484222325UL : (std::size_t(str[0]) ^ ComponentHash(str + 1, sz - 1)) * 0x100000001b3UL;
+	constexpr Component::Type operator"" _type(const char *str, std::size_t size) {
+		return core::ComponentHash<Component::Type>(str, size);
 	}
-
-    inline Component::Type ComponentHash(const std::string& str) {
-	  return ComponentHash(str.c_str(), str.size());
-	}
-}
-
-constexpr storm::entities::Component::Type operator"" _type(const char *str, std::size_t sz) {
-  return storm::entities::ComponentHash(str, sz);
 }

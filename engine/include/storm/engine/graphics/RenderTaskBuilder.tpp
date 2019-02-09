@@ -15,9 +15,9 @@ namespace storm::engine {
 					  "Description does not match the resource.");;
 		auto &create_resources = m_task.m_create_resources;
 
-		auto id = m_pool.addTransientResource(m_device,
+		auto id = m_pool.addTransientResource<Resource, ResourceDescription>(m_device,
 											  std::move(name),
-											  std::forward<typename Resource::ResourceDescription>(description),
+											  std::forward<ResourceDescription>(description),
 											  m_task);
 
 		create_resources.emplace(id);

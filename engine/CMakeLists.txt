@@ -40,8 +40,8 @@ add_library(
 		${VULKAN_INCLUDES}
 		${GRAPHICS_SOURCES}
 		${GRAPHICS_INCLUDES}
-		#${SCENEGRAPH_SOURCES}
-		#${SCENEGRAPH_INCLUDES}
+		${SCENEGRAPH_SOURCES}
+		${SCENEGRAPH_INCLUDES}
 )
 
 add_library(StormKit::engine ALIAS stormkit-engine)

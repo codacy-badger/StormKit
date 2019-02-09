@@ -4,17 +4,30 @@
 
 #pragma once
 
-#include <storm/engine/graphics/Vertex.hpp>
+#include <storm/engine/render/VertexBuffer.hpp>
+#include <storm/engine/render/IndexBuffer.hpp>
+
+#include <storm/engine/graphics/Material.hpp>
 
 #include <storm/image/Image.hpp>
 
 #include <optional>
 
 namespace storm::engine {
-	struct Mesh {
-		VertexArrayProxy vertices;
-		IndexArrayProxy  indices;
+	struct MeshInstance {
+		VertexBuffer::Ptr vertex_buffer;
+		std::size_t vertex_count = 0u;
 
-		std::optional<std::reference_wrapper<image::Image>> diffuse = std::nullopt;
+		IndexBuffer::Ptr index_buffer;
+		std::size_t index_count = 0u;
+		bool large_indices = false;
+
+		Material  material;
+		//Transform transform;
+
+		mat4 transform;
+		mat4 inverted_transform;
+
+		std::uint32_t id;
 	};
 }

@@ -16,7 +16,7 @@ Texture::Texture(const Device &device, const image::Image &image)
 
 /////////////////////////////////////
 /////////////////////////////////////
-Texture::Texture(const Device &device, TextureDescription description)
+Texture::Texture(const Device &device, Description description)
 	: m_impl{device, std::move(description)} {
 
 }
@@ -32,6 +32,12 @@ Texture::Texture(Texture &&) = default;
 /////////////////////////////////////
 /////////////////////////////////////
 Texture &Texture::operator=(Texture &&) = default;
+
+/////////////////////////////////////
+/////////////////////////////////////
+const Texture::Description &Texture::description() const noexcept {
+	return m_impl->description();
+}
 
 /////////////////////////////////////
 /////////////////////////////////////

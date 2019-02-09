@@ -9,13 +9,18 @@
 #include <storm/tools/Subject.hpp>
 
 namespace storm::engine {
-	class Node;
-	using NodeArray = std::vector<std::shared_ptr<Node>>;
+	class SceneNode;
+	using SceneNodeArray = std::vector<std::reference_wrapper<SceneNode>>;
 
 	enum class NodeEvent {
 		ADDED = 1, REMOVED = 2, UPDATED = 3
 	};
-	using NodePayload  = std::pair<std::shared_ptr<Node>, std::uint32_t>;
+
+	struct NodePayload {
+		std::reference_wrapper<SceneNode> node;
+		std::uint32_t index;
+	};
+
 	using NodeObserver = tools::Observer<NodeEvent, NodePayload>;
 	using NodeSubject  = tools::Subject<NodeEvent, NodePayload>;
 }

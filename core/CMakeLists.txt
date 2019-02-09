@@ -10,6 +10,7 @@ add_custom_target(stormkit-core_parseproject
 	include/storm/core/CRTP.hpp
 	include/storm/core/Filesystem.hpp
 	include/storm/core/Flags.hpp
+	include/storm/core/Hash.hpp
 	include/storm/core/Iterator.hpp
 	include/storm/core/Memory.hpp
 	include/storm/core/NamedType.hpp

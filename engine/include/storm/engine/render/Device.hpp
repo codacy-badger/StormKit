@@ -47,12 +47,12 @@ namespace storm::engine {
 			RenderPass createRenderPass(bool default_subpass = false, bool enable_depth_attachment = false) const;
 			RenderPass::Ptr createRenderPassPtr(bool default_subpass = false, bool enable_depth_attachment = false) const;
 
-			VertexBuffer createVertexBuffer(std::size_t size, std::size_t alignement = 0u) const;
-			VertexBuffer::Ptr createVertexBufferPtr(std::size_t size, std::size_t alignement = 0u) const;
-			IndexBuffer createIndexBuffer(std::size_t size, std::size_t alignement = 0u) const;
-			IndexBuffer::Ptr createIndexBufferPtr(std::size_t size, std::size_t alignement = 0u) const;
-			UniformBuffer createUniformBuffer(std::size_t size, std::size_t alignement = 0u) const;
-			UniformBuffer::Ptr createUniformBufferPtr(std::size_t size, std::size_t alignement = 0u) const;
+			VertexBuffer createVertexBuffer(std::size_t size, std::size_t alignement) const;
+			VertexBuffer::Ptr createVertexBufferPtr(std::size_t size, std::size_t alignement) const;
+			IndexBuffer createIndexBuffer(std::size_t size, std::size_t alignement) const;
+			IndexBuffer::Ptr createIndexBufferPtr(std::size_t size, std::size_t alignement) const;
+			UniformBuffer createUniformBuffer(UniformBuffer::Description description) const;
+			UniformBuffer::Ptr createUniformBufferPtr(UniformBuffer::Description description) const;
 
 			Fence createFence() const;
 			Fence::Ptr createFencePtr() const;
@@ -64,7 +64,9 @@ namespace storm::engine {
 			CommandBuffer::Ptr createCommandBufferPtr() const;
 			
 			Texture createTexture(const storm::image::Image &image) const;
+			Texture createTexture(Texture::Description description) const;
 			Texture::Ptr createTexturePtr(const storm::image::Image &image) const;
+			Texture::Ptr createTexturePtr(Texture::Description description) const;
 
 			void waitIdle() const;
 

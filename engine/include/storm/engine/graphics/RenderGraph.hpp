@@ -17,7 +17,8 @@
 #include <storm/engine/graphics/RenderTask.hpp>
 
 namespace storm::engine {
-	using TextureResource = Resource<TextureDescription, Texture>;
+	using TextureResource = Resource<Texture::Description, Texture>;
+	using UniformBufferResource = Resource<UniformBuffer::Description, UniformBuffer>;
 	class RenderGraph : core::NonCopyable {
 		public:
 			explicit RenderGraph(const Device &device);
@@ -31,7 +32,7 @@ namespace storm::engine {
 													  typename RenderTask<RenderTaskData>::SetupFunction setup_func,
 													  typename RenderTask<RenderTaskData>::ExecuteFunction execute_func);
 
-			template <typename ResourceDescription, typename ResourceType>
+			template <typename ResourceType, typename ResourceDescription>
 			std::uint32_t addRetainedResource(std::string name,
 									 ResourceDescription &&description,
 									 ResourceType &resource);
@@ -51,13 +52,14 @@ namespace storm::engine {
 			
 			template <typename T>
 			T &getRenderTaskAs(RenderTaskBase::ID render_task_id) noexcept;
+
+			inline const ResourcePool &pool() const noexcept { return m_resources; }
 		private:
 			std::reference_wrapper<const Device> m_device;
 
 			std::vector<std::unique_ptr<RenderTaskBase>> m_render_tasks;
 			
 			ResourcePool m_resources;
-			//std::vector<std::unique_ptr<ResourceBase>> m_resources;
 
 			std::uint32_t m_next_task_id;
 			friend class RenderTaskBuilder;

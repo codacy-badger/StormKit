@@ -5,6 +5,7 @@
 #include <storm/engine/vulkan/TextureImpl.hpp>
 #include <storm/engine/vulkan/CommandBufferImpl.hpp>
 #include <storm/engine/vulkan/DeviceImpl.hpp>
+#include <storm/engine/vulkan/TypeConversions.hpp>
 
 using namespace storm::engine;
 
@@ -17,14 +18,20 @@ TextureImpl::TextureImpl(const Device &device, const image::Image &image)
 		m_image.addChannels(missing_channels);
 	}
 
+	m_description = Texture::Description{
+		1u,
+		Format::RGBA8888UNORM,
+		{m_image.size().width, m_image.size().height, 1u}
+	};
+
 	initialise();
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-TextureImpl::TextureImpl(const Device &device, TextureDescription description)
-	: m_image{}, m_device{device} {
-	m_image.create(description.size.x, description.size.y, 4);
+TextureImpl::TextureImpl(const Device &device, Texture::Description description)
+	: m_description{std::move(description)}, m_image{}, m_device{device} {
+	m_image.create(m_description.size.x, m_description.size.y, 4);
 
 	initialise();
 }
@@ -34,10 +41,10 @@ TextureImpl::TextureImpl(const Device &device, TextureDescription description)
 void TextureImpl::initialise() {
 	auto image_create_info = vk::ImageCreateInfo{}
 							 .setImageType(vk::ImageType::e2D)
-							 .setFormat(vk::Format::eR8G8B8A8Unorm)
-							 .setExtent(vk::Extent3D{static_cast<std::uint32_t>(m_image.size().width), static_cast<std::uint32_t>(m_image.size().height), 1u})
+							 .setFormat(asVK(m_description.format))
+							 .setExtent(vk::Extent3D{m_description.size.x, m_description.size.y, 1u})
 							 .setArrayLayers(1)
-							 .setMipLevels(1)
+							 .setMipLevels(m_description.mip_level)
 							 .setSamples(vk::SampleCountFlagBits::e1)
 							 .setTiling(vk::ImageTiling::eOptimal)
 							 .setUsage(vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled)

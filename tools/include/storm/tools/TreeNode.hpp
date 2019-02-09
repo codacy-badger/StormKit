@@ -21,21 +21,20 @@ namespace storm::tools {
 			TreeNode &operator=(const TreeNode &node) = default;
 			TreeNode &operator=(TreeNode &&node) = default;
 
-			inline const std::string &name() const noexcept { return m_name; }
-			template <typename T = std::string, typename = std::enable_if_t<std::is_same_v<std::decay_t<std::remove_cv_t<T>>, std::string>>>
-			inline void setName(T &&name) noexcept { m_name = std::forward<T>(name); }
+			inline const std::string &name() const noexcept;
+			inline void setName(std::string_view name) noexcept;
 
-			inline Index parent() const noexcept { return m_parent; }
-			inline void setParent(Index index) noexcept { m_parent = index; }
+			inline Index parent() const noexcept;
+			inline void setParent(Index index) noexcept;
 
-			inline Index nextSibling() const noexcept { return m_next_sibling; }
-			inline void setNextSibling(Index index) noexcept { m_next_sibling = index; }
+			inline Index nextSibling() const noexcept;
+			inline void setNextSibling(Index index) noexcept;
 
-			inline Index firstChild() const noexcept { return m_first_child; }
-			inline void setFirstChild(Index index) noexcept { m_first_child = index; }
+			inline Index firstChild() const noexcept;
+			inline void setFirstChild(Index index) noexcept;
 
-			inline const DirtyBits &dirtyBits() const noexcept { return m_dirty_bits; }
-			inline void setDirtyBits(DirtyBits bits) noexcept  { m_dirty_bits = bits; }
+			inline const DirtyBits &dirtyBits() const noexcept;
+			inline void setDirtyBits(DirtyBits bits) noexcept;
 
 			void invalidate();
 		private:
@@ -47,3 +46,5 @@ namespace storm::tools {
 			std::string m_name;
 	};
 }
+
+#include "TreeNode.inl"

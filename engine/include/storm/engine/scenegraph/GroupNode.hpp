@@ -1,17 +1,22 @@
 #pragma once
 
-#include <storm/engine/scenegraph/Node.hpp>
+#include <storm/engine/scenegraph/SceneNode.hpp>
 
 namespace storm::engine {
-	class STORM_PUBLIC GroupNode : public Node {
+	class STORM_PUBLIC GroupNode : public SceneNode {
 		public:
 			SUR_Object(GroupNode)
 
-			~GroupNode() override = default;
+			~GroupNode() override;
+
+			GroupNode(GroupNode &&);
+			GroupNode &operator=(GroupNode &&);
 
 		protected:
-			explicit GroupNode();
+			explicit GroupNode(Scene &graph);
 
-			std::uint32_t dirtyValue() const noexcept override;
+			DirtyType dirtyValue() const noexcept override;
+
+			friend class Scene;
 	};
 }

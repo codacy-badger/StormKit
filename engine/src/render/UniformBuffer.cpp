@@ -9,8 +9,8 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-UniformBuffer::UniformBuffer(const Device &device, std::size_t size, std::size_t alignement)
-	: m_impl{device, size, alignement} {
+UniformBuffer::UniformBuffer(const Device &device, Description description)
+	: m_impl{device, std::move(description)} {
 
 }
 
@@ -60,4 +60,10 @@ std::byte *UniformBuffer::map(std::size_t size, std::ptrdiff_t offset) {
 /////////////////////////////////////
 void UniformBuffer::unmap() {
 	m_impl->unmap();
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+const UniformBuffer::Description &UniformBuffer::description() const noexcept {
+	return m_impl->description();
 }

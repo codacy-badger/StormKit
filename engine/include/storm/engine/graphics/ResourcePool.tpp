@@ -7,10 +7,13 @@
 #include <storm/engine/graphics/ResourcePool.hpp>
 
 namespace storm::engine {
-	template <typename ResourceDescription, typename ResourceType>
+	template <typename ResourceType, typename ResourceDescription>
 	ResourceBase::ID ResourcePool::addRetainedResource(std::string name,
 							 ResourceDescription &&description,
 							 ResourceType &resource) {
+		using RawResourceDescription = std::decay_t<ResourceDescription>;
+		using RawResourceType = std::decay_t<ResourceType>;
+
 		m_resources.emplace_back(
 					std::make_unique<Resource<ResourceDescription, ResourceType>>(
 							std::move(name),
@@ -35,7 +38,7 @@ namespace storm::engine {
 					std::make_unique<Resource>(
 						device, 
 						std::move(name), 
-						std::forward(description), 
+						std::forward<ResourceDescription>(description),
 						std::move(task)
 					)
 				);
@@ -44,5 +47,15 @@ namespace storm::engine {
 		resource_.m_id = m_next_id++;
 		
 		return resource_.id();
+	}
+
+	template <typename T>
+	const T &ResourcePool::acquireResourceAs(ResourceBase::ID resource_id) const noexcept {
+		return static_cast<const T &>(acquireResource(resource_id));
+	}
+
+	template <typename T>
+	T &ResourcePool::acquireResourceAs(ResourceBase::ID resource_id) noexcept {
+		return static_cast<T &>(acquireResource(resource_id));
 	}
 }

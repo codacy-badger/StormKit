@@ -23,10 +23,6 @@ namespace storm::engine {
 		return m_has_depth_attachment;
 	}
 
-	inline const Framebuffer &RenderPassImpl::framebuffer() const noexcept {
-		return *m_framebuffer;
-	}
-
 	inline const vk::RenderPass &RenderPassImpl::vkRenderPass() const noexcept {
 		return m_render_pass.get();
 	}

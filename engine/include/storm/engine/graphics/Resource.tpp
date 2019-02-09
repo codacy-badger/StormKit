@@ -8,24 +8,26 @@
 
 namespace storm::engine {
 	template <typename ResourceDescription_, typename ResourceType_>
+	template <typename ResourceDescription__>
 	Resource<ResourceDescription_, ResourceType_>::Resource(
 			const Device &device, 
 			std::string name,
-			ResourceDescription_ &&description, 
+			ResourceDescription__ &&description,
 			ResourceBase::RenderTaskBaseOptionalRef creator
 	) : ResourceBase{std::move(name), std::move(creator)}, 
-		m_description{std::forward<ResourceDescription>(description)} {
+		m_description{std::forward<ResourceDescription__>(description)} {
 		m_resource = std::make_unique<ResourceType>(device, m_description);
 	}
 
 	template <typename ResourceDescription_, typename ResourceType_>
+	template <typename ResourceDescription__>
 	Resource<ResourceDescription_, ResourceType_>::Resource(
 			std::string name, 
-			ResourceDescription_ &&description, 
+			ResourceDescription__ &&description,
 			ResourceType_ &resource
 	) : ResourceBase{std::move(name), std::nullopt}, 
-		m_description{std::forward<ResourceDescription>(description)} {
-		m_resource = resource;
+		m_description{std::forward<ResourceDescription__>(description)} {
+		m_resource = &resource;
 	}
 
 	template <typename ResourceDescription_, typename ResourceType_>
@@ -44,6 +46,6 @@ namespace storm::engine {
 		if(std::holds_alternative<ResourcePtr>(m_resource))
 			return *std::get<ResourcePtr>(m_resource);
 
-		return std::get<std::reference_wrapper<ResourceType>>(m_resource).get();
+		return *std::get<ResourceType*>(m_resource);
 	}
 }

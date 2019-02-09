@@ -70,12 +70,27 @@ namespace storm::engine {
 	
 	template <typename T = Vertex_P_UV_N>
 	using VertexArray = std::vector<T>;
-	
-	using IndexArrayProxy = std::variant<IndexArray, LargeIndexArray>;
-	using VertexArrayProxy = std::variant<
-		VertexArray<Vertex_P>,
-		VertexArray<Vertex_P_C>,
-		VertexArray<Vertex_P_C_N>,
-		VertexArray<Vertex_P_C_UV>
-	>;
+
+	struct IndexArrayProxy {
+		using Variant = std::variant<IndexArray, LargeIndexArray>;
+
+		Variant array;
+
+		std::size_t size;
+		std::size_t alignement;
+	};
+
+	struct VertexArrayProxy {
+		using Variant = std::variant<
+			VertexArray<Vertex_P>,
+			VertexArray<Vertex_P_C>,
+			VertexArray<Vertex_P_C_N>,
+			VertexArray<Vertex_P_C_UV>
+		>;
+
+		Variant array;
+
+		std::size_t size;
+		std::size_t alignement;
+	};
 }

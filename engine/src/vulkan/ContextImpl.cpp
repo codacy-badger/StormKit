@@ -13,6 +13,12 @@
 
 using namespace storm::engine;
 
+#if defined(STORM_OS_LINUX)
+#define VULKAN_SHARED_LIBRARY_FILENAME "libvulkan.so"
+#elif defined(STORM_OS_WINDOWS)
+#define VULKAN_SHARED_LIBRARY_FILENAME "vulkan-1.dll"
+#endif
+
 /////////////////////////////////////
 /////////////////////////////////////
 VKAPI_ATTR VkBool32 debugCallback(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objType, uint64_t obj, size_t location, int32_t code, const char *layerPrefix, const char *msg, [[maybe_unused]] void *userData) {
@@ -38,7 +44,7 @@ VKAPI_ATTR VkBool32 debugCallback(VkDebugReportFlagsEXT flags, VkDebugReportObje
 /////////////////////////////////////
 /////////////////////////////////////
 ContextImpl::ContextImpl(ContextSettings settings)
-	: m_context_settings{std::move(settings)} {
+	: m_context_settings{std::move(settings)}, m_vulkan_shared_library{VULKAN_SHARED_LIBRARY_FILENAME} {
 	createInstance();
 }
 
@@ -102,7 +108,8 @@ void ContextImpl::createInstance() {
 	if(!m_instance)
 		throw std::runtime_error("Failed to create Vulkan instance!");
 
-	m_dispatcher = vk::DispatchLoaderDynamic{*m_instance};
+	auto vk_get_instance_proc_addr_func = m_vulkan_shared_library.getCFunc<PFN_vkGetInstanceProcAddr>("vkGetInstanceProcAddr");
+	m_dispatcher.init(*m_instance, *vk_get_instance_proc_addr_func);
 
 	if(enable_validation) {
 		auto debug_create_info = vk::DebugReportCallbackCreateInfoEXT{}

@@ -115,51 +115,10 @@ namespace storm::core {
 	}
 
 	template <class T>
-	constexpr inline void hash_combine(std::size_t& seed, const T& v) {
-		std::hash<T> hasher;
-		seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
-	}
-	
-	template <class T>
 	inline std::intptr_t extractPtr(T *ptr) {
 		return reinterpret_cast<std::intptr_t>(ptr);
 	}
-	
-	template <typename T>
-	struct enum_hash {
-		constexpr std::size_t operator()(T val) const noexcept {
-			using underlying_type = std::underlying_type_t<T>;
-			
-			auto val_c = static_cast<underlying_type>(val);
-			
-			return std::hash<underlying_type>{}(val_c);
-		}
-		
-		private:
-			using sfinae = std::enable_if_t<std::is_enum_v<T>>;
-	};
 }
 
-namespace std {
-	template<typename T>
-	struct hash<std::vector<T>> {
-		std::size_t operator()(const std::vector<T> &in) const {
-			auto size = std::size(in);
-			std::size_t seed = 0;
-			for (size_t i = 0; i < size; i++)
-				storm::core::hash_combine(seed, in[i]);
-								   
-			return seed;
-		}
-	};
-}
 
-#define HASH_FUNC(x) \
-	template <> \
-	struct hash<x> { \
-		std::size_t operator()(const x&) const; \
-	}; \
-	template <> \
-	struct equal_to<x> { \
-		bool operator()(const x &, const x &second) const noexcept; \
-	};
+
