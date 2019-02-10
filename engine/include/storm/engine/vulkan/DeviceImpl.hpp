@@ -72,6 +72,8 @@ namespace storm::engine {
 									vk::ImageTiling tiling,
 									vk::FormatFeatureFlags features) const noexcept;
 
+			uvec2 maxImage2DSize() const noexcept;
+
 			inline const Context &context() const noexcept;
 			inline const PhysicalDevice &physicalDevice() const noexcept;
 			inline FamilyQueueIndices familyQueuesIndices() const noexcept;

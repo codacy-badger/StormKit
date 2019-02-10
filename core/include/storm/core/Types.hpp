@@ -6,6 +6,7 @@
 #include <memory>
 
 #include <storm/core/Numerics.hpp>
+#include <storm/core/Hash.hpp>
 
 #ifdef STORM_GLM_CONVERSION
 #include <glm/vec3.hpp>

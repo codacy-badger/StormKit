@@ -112,6 +112,8 @@ namespace storm::engine {
 		BGRA8888UNORM,
 		BGRA8888SNORM,
 		BGRA8888SRGB,
+		D16,
+		D16S8,
 		D32,
 		D32S8,
 		D24S8UNORM,
@@ -142,6 +144,23 @@ namespace storm::engine {
 	};
 	
 	using ColorFormat = Format;
+
+	inline constexpr bool isDepthOnlyFormat(Format format) {
+		return format == Format::D16 || format == Format::D32;
+	}
+
+	inline constexpr bool isDepthStencilFormat(Format format) {
+		return format == Format::D16 || format == Format::D24S8UNORM ||
+			 format == Format::D32S8;
+	}
+
+	inline constexpr bool isColorFormat(Format format) {
+		return !isDepthStencilFormat(format) && !isDepthOnlyFormat(format);
+	}
+
+	inline constexpr bool isDepthFormat(Format format) {
+		return isDepthStencilFormat(format) || isDepthOnlyFormat(format);
+	}
 }
 
 FLAG_ENUM(storm::engine::ColorComponent)

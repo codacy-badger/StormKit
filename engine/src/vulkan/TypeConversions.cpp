@@ -173,6 +173,8 @@ static inline constexpr const auto FORMAT_MAP = MappingArray<vk::Format, storm::
 	{vk::Format::eR8G8B8A8Unorm,  storm::engine::ColorFormat::RGBA8888UNORM},
 	{vk::Format::eR8G8B8A8Snorm,  storm::engine::ColorFormat::RGBA8888SNORM},
 	{vk::Format::eR8G8B8A8Srgb,   storm::engine::ColorFormat::RGBA8888SRGB},
+	{vk::Format::eD16Unorm,       storm::engine::ColorFormat::D16},
+	{vk::Format::eD16UnormS8Uint,       storm::engine::ColorFormat::D16S8},
 	{vk::Format::eD32Sfloat,       storm::engine::ColorFormat::D32},
 	{vk::Format::eD32SfloatS8Uint, storm::engine::ColorFormat::D32S8},
 	{vk::Format::eD24UnormS8Uint, storm::engine::ColorFormat::D24S8UNORM},

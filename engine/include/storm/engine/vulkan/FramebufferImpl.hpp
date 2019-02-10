@@ -21,7 +21,6 @@ namespace storm::engine {
 			inline const std::vector<BackedVkImage> &backedVkImages() const noexcept;
 		private:
 			void createFramebuffer();
-
 			
 			UniqueHandle<vk::Framebuffer> m_framebuffer;
 			std::vector<BackedVkImage>    m_images;

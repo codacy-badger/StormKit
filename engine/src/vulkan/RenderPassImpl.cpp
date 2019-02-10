@@ -31,8 +31,6 @@ RenderPassImpl::RenderPassImpl(RenderPassImpl &&) = default;
 void RenderPassImpl::init() {
 	createRenderPass();
 
-	m_framebuffer = Framebuffer::makeUnique(m_device, *this);
-
 	m_is_built = true;
 }
 

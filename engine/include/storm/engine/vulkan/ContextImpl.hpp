@@ -4,12 +4,14 @@
 
 #pragma once
 
-#include <storm/engine/render/Context.hpp>
+#include <storm/core/NonCopyable.hpp>
+
+#include <storm/sharedobject/SharedLibrary.hpp>
 
 #include <storm/engine/vulkan/ContextImpl.hpp>
 #include <storm/engine/vulkan/UniqueHandle.hpp>
 
-#include <storm/core/NonCopyable.hpp>
+#include <storm/engine/render/Context.hpp>
 
 #if defined(VK_USE_PLATFORM_XCB_KHR)
 	static constexpr const auto SURFACE_EXTENSION_NAME = VK_KHR_XCB_SURFACE_EXTENSION_NAME;
@@ -50,6 +52,8 @@ namespace storm::engine {
 			UniqueHandle<vk::Instance> m_instance;
 			vk::DebugReportCallbackEXT m_callback;
 			vk::DispatchLoaderDynamic  m_dispatcher;
+
+			storm::sharedlibrary::SharedLibrary m_vulkan_shared_library;
 			
 	};
 }

@@ -11,7 +11,7 @@
 namespace storm::engine {
 	class UniformBufferImpl {
 		public:
-			explicit UniformBufferImpl(const Device &device, std::size_t size, std::size_t alignement);
+			explicit UniformBufferImpl(const Device &device, UniformBuffer::Description description);
 			~UniformBufferImpl();
 
 			UniformBufferImpl(UniformBufferImpl &&);
@@ -25,12 +25,12 @@ namespace storm::engine {
 			std::byte *map(std::size_t size, std::ptrdiff_t offset);
 			void       unmap();
 
+			inline const UniformBuffer::Description &description() const noexcept;
 			inline const BackedVkBuffer &backedVkBuffer() const noexcept;
 		private:
 			BackedVkBuffer m_buffer;
 
-			std::size_t m_size;
-			std::size_t m_alignement;
+			UniformBuffer::Description m_description;
 			std::ptrdiff_t m_current_offset;
 
 			std::byte *m_mapped_data;

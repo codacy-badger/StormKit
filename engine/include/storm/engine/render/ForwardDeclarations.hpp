@@ -18,7 +18,9 @@ namespace storm::engine {
 	class IndexBuffer;
 	class Shader;
 	class CommandBuffer;
-	
+	class UniformBuffer;
+	class Texture;
+
 	struct ContextSettings;
 	struct UniformBufferBinding;
 	struct TextureBinding;
@@ -28,4 +30,5 @@ namespace storm::engine {
 	struct VertexInputAttribute;
 	struct VertexInputBinding;
 	struct BindingState;
+
 }

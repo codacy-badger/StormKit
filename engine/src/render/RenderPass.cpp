@@ -46,6 +46,6 @@ void RenderPass::setExtent(uvec2 extent) {
 
 /////////////////////////////////////
 /////////////////////////////////////
-const Framebuffer &RenderPass::framebuffer() const noexcept {
-	return m_impl->framebuffer();
+void RenderPass::build() {
+	m_impl->init();
 }

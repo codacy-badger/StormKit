@@ -30,7 +30,6 @@ namespace storm::engine {
 			inline bool isBuilt() const noexcept;
 			inline bool hasDepthAttachment() const noexcept;
 
-			inline const Framebuffer &framebuffer() const noexcept;
 			inline const vk::RenderPass &vkRenderPass() const noexcept;
 		private:
 			void createRenderPass();
@@ -43,8 +42,6 @@ namespace storm::engine {
 			std::vector<RenderPass::SubPass> m_subpasses;
 			std::vector<ColorFormat> m_attachments;
 			uvec2 m_extent;
-
-			Framebuffer::Ptr m_framebuffer;
 			
 			bool m_has_depth_attachment;
 

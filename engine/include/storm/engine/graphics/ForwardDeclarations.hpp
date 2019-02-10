@@ -5,13 +5,14 @@
 #pragma once
 
 namespace storm::engine {
-	class DirectionalLight;
-	class Drawable;
-	class DrawableCache;
-	class Geometry;
-	class Material;
-	class Renderer;
 	class Transform;
+	class RenderGraph;
+	class RenderTaskBase;
+	class RenderTaskBuilder;
+	class ResourceBase;
+	class ResourcePool;
+
+	struct MeshInstance;
 	
 	struct Vertex_P;
 	struct Vertex_P_C;
@@ -20,5 +21,4 @@ namespace storm::engine {
 	struct Vertex_P_UV;
 	struct Vertex_P_UV_N;
 	struct Vertex_P_UV_N_T_BT;
-	struct RendererCommandBufferCacheKey;
 }

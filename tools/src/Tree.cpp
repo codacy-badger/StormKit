@@ -163,35 +163,21 @@ void Tree::markDirty(TreeNode::Index index, TreeNode::DirtyBits bits) {
 	node.setDirtyBits(node.dirtyBits() | bits);
 }
 
-std::string colorFromNode(const std::string &name) {
-	if(name == "SceneNode")
-		return ".7 .3 1.0";
-	else if(name =="ProgramNode")
-		return "0.3 0.2 0.5";
-	else if(name =="GroupNode")
-		return "0.9 0.1 0.3";
-	else if(name =="MaterialNode")
-		return "0.4 0.1 0.4";
-	else if(name =="GeoNode")
-		return "0.1 0.2 0.3";
-	else if(name =="TransformNode")
-		return "0.1 0.2 0.7";
-	else if(name =="GeoInstancedNode")
-		return "0.5 0.1 0.4";
-
-	return "1.0 1.0 1.0";
-}
-
-void Tree::genDotFile(const std::string &filename) {
+void Tree::genDotFile(const std::string &filename, std::function<std::string_view(std::string_view)> colorize_node) const {
 	std::fstream stream(filename, std::ios::out);
 
 	stream << "digraph G { \n"
-			  "node [shape=box];\n";
+		   << "    rankdir = LR\n"
+		   << "    bgcolor = black\n\n"
+		   << "    node [shape=box, fontname=\"helvetica\", fontsize=12];\n\n";
 
 	for(auto i = 0;i < m_first_free_index; ++i) {
 		const auto name = operator[](i).name();
 		const auto dirty = bool(operator[](i).dirtyBits());
-		stream << "    Node" << i << "[label=\"id: " << i << " type: " << name << " dirty: " << std::boolalpha << dirty << "\", style=filled,color=\"" << colorFromNode(name) << "\"];\n";
+
+		stream << "    \"node" << i << "\" [label=\"id: " << i << " type: " << name
+			   << " dirty: " << std::boolalpha << dirty << "\", style=filled,color=\""
+			   << colorize_node(name) << "\"];\n";
 	}
 
 	for(auto i = 0;i < m_first_free_index; ++i) {
@@ -199,7 +185,7 @@ void Tree::genDotFile(const std::string &filename) {
 			continue;
 
 		for(auto current = operator[](i).firstChild(); current != TreeNode::INVALID_INDEX; current =  operator[](current).nextSibling()) {
-			stream << "    Node" << i << " -> Node" << current  << ";\n";
+			stream << "    \"node" << i << "\" -> \"node" << current  << "\" [color=seagreen] ;\n";
 		}
 	}
 
@@ -208,19 +194,22 @@ void Tree::genDotFile(const std::string &filename) {
 	stream.close();
 }
 
-void Tree::genDotFile(const std::string &filename, int highlight) {
+void Tree::genDotFile(const std::string &filename, int highlight, std::function<std::string_view(std::string_view)> colorize_node) const {
 	std::fstream stream(filename, std::ios::out);
 
 	stream << "digraph G { \n"
-			  "node [shape=box];\n";
+		   << "    rankdir = LR\n"
+		   << "    bgcolor = black\n\n"
+		   << "    node [shape=box, fontname=\"helvetica\", fontsize=12];\n\n";
+
 
 	for(auto i = 0;i < m_first_free_index; ++i) {
 		const auto name = operator[](i).name();
 		const auto dirty = bool(operator[](i).dirtyBits());
 		if(i != highlight)
-			stream << "    Node" << i << "[label=\"id: " << i << " type: " << name << " dirty: " << std::boolalpha << dirty << "\", style=filled,color=\"" << colorFromNode(name) << "\"];\n";
+			stream << "    \"node" << i << "\" [label=\"id: " << i << " type: " << name << " dirty: " << std::boolalpha << dirty << "\", style=filled,color=\"" << colorize_node(name) << "\"];\n";
 		else
-			stream << "    Node" << i << "[shape=polygon,sides=5,peripheries=3, label=\"id: " << i << " type: " << name << " dirty: " << std::boolalpha << dirty << "\", style=filled,color=\"" << colorFromNode(name) << "\"];\n";
+			stream << "    \"node" << i << "\" [shape=polygon,sides=5,peripheries=3, label=\"id: " << i << " type: " << name << " dirty: " << std::boolalpha << dirty << "\", style=filled,color=\"" << colorize_node(name) << "\"];\n";
 	}
 
 	for(auto i = 0;i < m_first_free_index; ++i) {
@@ -228,7 +217,7 @@ void Tree::genDotFile(const std::string &filename, int highlight) {
 			continue;
 
 		for(auto current = operator[](i).firstChild(); current != TreeNode::INVALID_INDEX; current =  operator[](current).nextSibling()) {
-			stream << "    Node" << i << " -> Node" << current  << ";\n";
+			stream << "    \"node" << i << "\" -> \"nodeNode" << current  << "\" [color=seagreen] ;\n";
 		}
 	}
 

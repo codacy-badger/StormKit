@@ -7,6 +7,7 @@ file(GLOB VULKAN_SHADER_SOURCES  src/vulkan/shaders/*.glsl)
 file(GLOB VULKAN_INCLUDES include/storm/engine/vulkan/*.hpp include/storm/engine/vulkan/*.tpp include/storm/engine/vulkan/*.inl)
 
 file(GLOB GRAPHICS_SOURCES  src/graphics/*.cpp src/graphics/*.hpp)
+file(GLOB GRAPHICS_SHADERS  src/graphics/shaders/*.vert src/graphics/shaders/*.frag)
 file(GLOB GRAPHICS_INCLUDES include/storm/engine/graphics/*.hpp include/storm/engine/graphics/*.tpp include/storm/engine/graphics/*.inl)
 
 file(GLOB SCENEGRAPH_SOURCES  src/scenegraph/*.cpp src/scenegraph/private/*.cpp src/scenegraph/private/*.hpp)
@@ -40,8 +41,9 @@ add_library(
 		${VULKAN_INCLUDES}
 		${GRAPHICS_SOURCES}
 		${GRAPHICS_INCLUDES}
-		#${SCENEGRAPH_SOURCES}
-		#${SCENEGRAPH_INCLUDES}
+		${SCENEGRAPH_SOURCES}
+		${SCENEGRAPH_INCLUDES}
+		${GRAPHICS_SHADERS}
 )
 
 add_library(StormKit::engine ALIAS stormkit-engine)

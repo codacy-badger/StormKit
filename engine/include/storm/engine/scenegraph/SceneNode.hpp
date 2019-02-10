@@ -1,27 +1,66 @@
+// Copyright (C) 2019 Arthur LAURENT <arthur.laurent4@gmail.com>
+// This file is subject to the license terms in the LICENSE file
+// found in the top-level of this distribution
+
 #pragma once
 
-#include <storm/engine/scenegraph/Node.hpp>
-#include <storm/engine/render/Types.hpp>
+#include <storm/core/NonCopyable.hpp>
+#include <storm/core/Memory.hpp>
+
+#include <storm/engine/scenegraph/ForwardDeclarations.hpp>
+
+#include <storm/tools/Subject.hpp>
+
+#include <storm/engine/scenegraph/NodeData.hpp>
 
 namespace storm::engine {
-	class STORM_PUBLIC SceneNode : public Node {
+	class SceneNode : public core::NonCopyable, public NodeSubject {
 		public:
 			SUR_Object(SceneNode)
 
-			using HoldedType = mat4;
+			using Array = std::vector<std::reference_wrapper<SceneNode>>;
+			using ID = std::uint64_t;
 
-			~SceneNode() override = default;
+			virtual ~SceneNode();
 
-			inline const mat4 &data() const noexcept { return projection(); }
-			inline const mat4 &projection() const noexcept { return m_projection; }
-			template <typename T = HoldedType, typename = std::enable_if_t<std::is_same_v<std::decay_t<std::remove_cv_t<T>>, mat4>>>
-			inline void setProjection(T&& projection) noexcept { m_projection = std::forward<T>(projection); notify(NodeEvent::UPDATED); }
+			void addChild(SceneNode &node);
+			void removeChild(SceneNode &node);
+
+			SceneNode(SceneNode &&);
+			SceneNode &operator=(SceneNode &&);
+
+			template <typename T>
+			T &childAs(ID id);
+
+			inline std::string_view name() const noexcept;
+			inline const SceneNode::Array &parents() const noexcept;
+			inline const SceneNode::Array &children() const noexcept;
+			inline ID id() const noexcept;
+
+			void setObserver(NodeObserver::RawPtr observer);
 		protected:
-			explicit SceneNode();
+			using DirtyType = std::uint32_t;
 
-			std::uint32_t dirtyValue() const noexcept override;
+			explicit SceneNode(Scene &graph, std::string_view name);
+
+			void notify(NodeEvent event) noexcept;
+
+			virtual DirtyType dirtyValue() const noexcept = 0;
+
+			friend class Scene;
+			friend class SceneTree;
 
 		private:
-			mat4 m_projection;
+			ID m_id;
+			std::string_view m_name;
+			std::reference_wrapper<Scene> m_graph;
+
+			SceneNode::Array m_parents;
+			SceneNode::Array m_children;
+
+			static inline auto next_id = 0u;
 	};
 }
+
+#include "SceneNode.tpp"
+#include "SceneNode.inl"

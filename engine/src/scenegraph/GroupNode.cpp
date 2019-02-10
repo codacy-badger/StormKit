@@ -1,14 +1,35 @@
+// Copyright (C) 2019 Arthur LAURENT <arthur.laurent4@gmail.com>
+// This file is subject to the license terms in the LICENSE file
+// found in the top-level of this distribution
+
 #include <storm/engine/scenegraph/GroupNode.hpp>
-#include "private/DirtyDefs.hpp"
+#include <storm/engine/scenegraph/DirtyDefs.hpp>
 
 using namespace storm::engine;
 
-////////////////////////////////////////
-////////////////////////////////////////
-GroupNode::GroupNode() : Node() {
+/////////////////////////////////////
+/////////////////////////////////////
+GroupNode::GroupNode(Scene &graph)
+	: SceneNode{graph, "GroupNode"}
+	{
 
 }
 
-uint32_t GroupNode::dirtyValue() const noexcept {
+/////////////////////////////////////
+/////////////////////////////////////
+GroupNode::~GroupNode() = default;
+
+/////////////////////////////////////
+/////////////////////////////////////
+GroupNode::GroupNode(GroupNode &&) = default;
+
+/////////////////////////////////////
+/////////////////////////////////////
+GroupNode &GroupNode::operator=(GroupNode &&) = default;
+
+/////////////////////////////////////
+/////////////////////////////////////
+SceneNode::DirtyType GroupNode::dirtyValue() const noexcept {
 	return GROUP_BITS;
 }
+

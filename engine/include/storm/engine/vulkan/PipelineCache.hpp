@@ -5,6 +5,7 @@
 #pragma once
 
 #include <storm/core/Numerics.hpp>
+#include <storm/core/Hash.hpp>
 
 #include <storm/engine/render/RenderPass.hpp>
 

@@ -40,8 +40,8 @@ namespace storm::tools {
 			inline void clearDirties() { for(auto i : m_dirties) { m_tree[i].setDirtyBits(0); } m_dirties.clear(); }
 			inline const std::vector<TreeNode::Index> &dirties() const noexcept { return m_dirties; }
 
-			void genDotFile(const std::string &filename);
-			void genDotFile(const std::string &filename, int highlight);
+			void genDotFile(const std::string &filename, std::function<std::string_view(std::string_view)> colorize_node) const;
+			void genDotFile(const std::string &filename, int highlight, std::function<std::string_view(std::string_view)> colorize_node) const;
 		private:
 			TreeNode::Index              m_first_free_index;
 			std::vector<TreeNode>        m_tree;

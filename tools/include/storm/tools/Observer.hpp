@@ -22,6 +22,10 @@ namespace storm::tools {
 			Shared_Object_Wm(SharedObjectObserverHelper)
 			Unique_Object_Wm(SharedObjectObserverHelper)
 
+			using RawPtr = Observer*;
+			using Ref = Observer&;
+			using CRef = Observer&;
+
 			virtual ~Observer() = default;
 
 			virtual void onNotified(Event, CustomData &&) = 0;

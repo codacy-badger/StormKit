@@ -312,5 +312,12 @@ vk::Format DeviceImpl::findSupportedFormat(const std::vector<vk::Format> &candid
 			return format;
     }
 
-    throw std::runtime_error("failed to find supported format!");
+	throw std::runtime_error("failed to find supported format!");
+}
+
+uvec2 DeviceImpl::maxImage2DSize() const noexcept {
+	const auto &max_image_dimensions =
+		m_physical_device.implementation().vkPhysicalDeviceProperties().limits.maxImageDimension2D;
+
+	return {max_image_dimensions, max_image_dimensions};
 }

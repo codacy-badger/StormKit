@@ -72,8 +72,8 @@ namespace storm::core {
 	#define Private_Unique_Object_With_Maker(x, y) Private_Unique_Object(x, y) \
 								template <typename ...ARGS> \
                                 static inline Ptr makeUnique(ARGS&&... args) { \
-									struct EnableMaker : public x { EnableMaker(ARGS&&... args) : x(std::forward<ARGS>(args)...) {} }; \
-									return std::make_unique<EnableMaker>(std::forward<ARGS>(args)...); \
+									/*struct EnableMaker : public x { EnableMaker(ARGS&&... args) : x(std::forward<ARGS>(args)...) {} };*/ \
+									return std::make_unique<x>(std::forward<ARGS>(args)...); \
 								}
 
 

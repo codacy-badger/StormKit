@@ -36,6 +36,12 @@ namespace storm::sharedlibrary {
 					return std::function<Signature>(reinterpret_cast<STDCALL Signature*>(_getFunc(name)));
 				}
 
+
+				template <class Signature>
+				STDCALL Signature getCFunc(const std::string &name) {
+					return reinterpret_cast<Signature>(_getFunc(name));
+				}
+
 				const std::string &getFilename() const {
 					return m_filename;
 				}
@@ -86,6 +92,13 @@ namespace storm::sharedlibrary {
 				assert(!name.empty());
 
 				return m_impl->getFunc<Signature>(name);
+			}
+
+			template <class Signature>
+			Signature getCFunc(const std::string &name) const {
+				assert(!name.empty());
+
+				return m_impl->getCFunc<Signature>(name);
 			}
 
 		private:
