@@ -11,7 +11,11 @@ layout(binding = 0) uniform Matrices {
 	mat4 view;
 } matrices;
 
+layout(binding = 1) uniform MeshData {
+	mat4 model;
+} mesh_data;
+
 void main() {
-	gl_Position = matrices.view * matrices.projection * vec4(position, 1.0);
+	gl_Position = matrices.projection * matrices.view * mesh_data.model * vec4(position, 1.0);
 	frag_color = color;
 }

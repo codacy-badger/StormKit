@@ -30,10 +30,10 @@ namespace storm::engine {
 			void traverse(MeshList &mesh_list);
 		private:
 			struct State {
-				mat4 projection;
-				mat4 view;
+				mat4 projection = mat4{1.f};
+				mat4 view = mat4{1.f};
 
-				mat4 model;
+				mat4 model = mat4{1.f};
 				mat4 inverted_model;
 
 				std::int64_t mesh_id = -1;

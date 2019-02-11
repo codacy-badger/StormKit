@@ -10,6 +10,7 @@
 #include <storm/core/NonCopyable.hpp>
 
 #include <storm/engine/render/Device.hpp>
+#include <storm/engine/render/Framebuffer.hpp>
 
 #include <storm/engine/graphics/ResourceBase.hpp>
 
@@ -23,6 +24,9 @@ namespace storm::engine {
 	template <>
 	UniformBuffer::Ptr realize(const Device &device, UniformBuffer::Description description);
 
+	template <>
+	Framebuffer::Ptr realize(const Device &device, Framebuffer::Description description);
+	
 	template <typename ResourceDescription_, typename ResourceType_>
 	class Resource : public ResourceBase {
 			using MyType = Resource<ResourceDescription_, ResourceType_>;
@@ -48,6 +52,7 @@ namespace storm::engine {
 
 			inline const ResourceDescription &description() const noexcept;
 			inline const ResourceType &resource() const noexcept;
+			inline ResourceType &resource() noexcept;
 		private:
 			using ResourcePtr = std::unique_ptr<ResourceType>;
 			using ResourceVariant = std::variant<ResourceType*, ResourcePtr>;
@@ -61,7 +66,8 @@ namespace storm::engine {
 			}
 
 			void derealize() override {
-				if(transient()) std::get<ResourcePtr>(m_resource).reset(nullptr);
+				if(transient()) 
+					std::get<ResourcePtr>(m_resource).reset(nullptr);
 			}
 
 			ResourceDescription m_description;

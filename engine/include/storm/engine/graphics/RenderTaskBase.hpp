@@ -30,7 +30,7 @@ namespace storm::engine {
 			inline const std::string &name() const noexcept;
 		private:
 			virtual void setup(RenderTaskBuilder &builder) = 0;
-			virtual void execute() const = 0;
+			virtual void execute(ResourcePool &pool) const = 0;
 
 			std::string m_name;
 			bool m_cull_imune;

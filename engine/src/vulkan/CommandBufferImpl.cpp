@@ -59,7 +59,10 @@ CommandBufferImpl::CommandBufferImpl(CommandBufferImpl &&) = default;
 void CommandBufferImpl::reset() {
 	m_current_render_pass = nullptr;
 	m_current_program = nullptr;
+	m_pipeline_state = PipelineState{};
+	m_binding_state = BindingState{};
 
+	m_descriptor_sets.clear();
 	m_command_buffer->reset({});
 }
 
@@ -78,7 +81,7 @@ void CommandBufferImpl::end() const {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void CommandBufferImpl::beginRenderPass(RenderPass &render_pass, Framebuffer &buffer, core::RGBColorF clear_color) {
+void CommandBufferImpl::beginRenderPass(RenderPass &render_pass, const Framebuffer &buffer, core::RGBColorF clear_color) {
 	m_current_render_pass = &render_pass;
 	
 	auto &render_pass_impl = render_pass.implementation();
@@ -318,7 +321,8 @@ void CommandBufferImpl::createDescriptorPool() {
 	const auto create_info = vk::DescriptorPoolCreateInfo{}
 			.setPoolSizeCount(std::size(pool_sizes))
 			.setPPoolSizes(std::data(pool_sizes))
-			.setMaxSets(64);
+			.setMaxSets(64)
+			.setFlags(vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet);
 
 	m_descriptor_pool = device.vkDevice().createDescriptorPoolUnique(create_info);
 }
@@ -326,86 +330,19 @@ void CommandBufferImpl::createDescriptorPool() {
 /////////////////////////////////////
 /////////////////////////////////////
 void CommandBufferImpl::bindDescriptors() {
-	const auto &device = m_device.implementation();
-
 	auto pipeline = getOrCreatePipeline();
 
 	auto bind_point = vk::PipelineBindPoint::eGraphics;
 
 	m_command_buffer->bindPipeline(bind_point, pipeline);
 	
-	if(m_is_binding_state_dirty) {
-		const auto &descriptor_set_layouts = m_current_program->implementation().vkDescriptorSetLayouts();
-		auto descriptor_set_alloc_info = vk::DescriptorSetAllocateInfo{}
-				.setDescriptorPool(m_descriptor_pool.get())
-				.setDescriptorSetCount(std::size(descriptor_set_layouts))
-				.setPSetLayouts(std::data(descriptor_set_layouts));
-
-		m_descriptor_sets = device.vkDevice().allocateDescriptorSetsUnique(descriptor_set_alloc_info);
-
-		for(const auto &set : m_descriptor_sets) {
-			auto buffer_infos = std::vector<vk::DescriptorBufferInfo>{};
-			auto image_infos = std::vector<vk::DescriptorImageInfo>{};
-			auto write_infos = std::vector<vk::WriteDescriptorSet>{};
-			
-			for(const auto &binding : m_binding_state.bindings) {
-				std::visit(core::overload {
-					[&](const UniformBufferBinding &buffer_binding) {
-						const auto &backed_buffer = buffer_binding.buffer->implementation().backedVkBuffer();
-						const auto buffer_info_ = vk::DescriptorBufferInfo{}
-								.setBuffer(backed_buffer.buffer.get())
-								.setOffset(0)
-								.setRange(buffer_binding.size);
-
-						buffer_infos.emplace_back(std::move(buffer_info_));
-			
-						const auto descriptor_write = vk::WriteDescriptorSet{}
-								.setDstSet(set.get())
-								.setDstBinding(buffer_binding.binding)
-								.setDstArrayElement(0)
-								.setDescriptorType(vk::DescriptorType::eUniformBuffer)
-								.setDescriptorCount(1)
-								.setPBufferInfo(std::addressof(buffer_infos.back()));
-			
-						write_infos.emplace_back(descriptor_write);
-					},
-					[&](const TextureBinding &image_binding) {
-						const auto &backed_texture = image_binding.texture->implementation().backedVkTexture();
-						const auto image_info_ = vk::DescriptorImageInfo{}
-								.setImageLayout(backed_texture.image.layout)
-								.setImageView(backed_texture.image.view.get())
-								.setSampler(backed_texture.sampler.get());
-
-						image_infos.emplace_back(std::move(image_info_));
-						const auto *image_info_ptr = std::addressof(image_infos.back());
-			
-						const auto descriptor_write = vk::WriteDescriptorSet{}
-								.setDstSet(set.get())
-								.setDstBinding(image_binding.binding)
-								.setDstArrayElement(0)
-								.setDescriptorType(vk::DescriptorType::eCombinedImageSampler)
-								.setDescriptorCount(1)
-								.setPImageInfo(image_info_ptr);
-			
-						write_infos.emplace_back(std::move(descriptor_write));
-					}
-				}, binding);
-			}
-
-			
-			device.vkDevice().updateDescriptorSets(write_infos, {});
-		}
-		
-		auto descriptor_sets = std::vector<vk::DescriptorSet>{};
-		descriptor_sets.reserve(std::size(m_descriptor_sets));
-
-		for(const auto &descriptor_set : m_descriptor_sets)
-			descriptor_sets.emplace_back(descriptor_set.get());
-
-		m_command_buffer->bindDescriptorSets(vk::PipelineBindPoint::eGraphics, *m_current_pipeline_layout, 0, descriptor_sets, {});
-
-		m_is_binding_state_dirty = false;
-	}
+	auto descriptor_sets = getOrCreateDescriptorSets();
+	
+	m_command_buffer->bindDescriptorSets(
+		vk::PipelineBindPoint::eGraphics, 
+		*m_current_pipeline_layout, 
+		0, descriptor_sets, 
+	{});
 }
 
 /////////////////////////////////////
@@ -530,6 +467,85 @@ const vk::Pipeline &CommandBufferImpl::getOrCreatePipeline() {
 	const auto &pipeline_ = pipeline_cache.acquire(key);
 
 	return pipeline_;
+}
+
+std::vector<vk::DescriptorSet> CommandBufferImpl::getOrCreateDescriptorSets() {
+	const auto &device = m_device.implementation();
+	
+	if(m_is_binding_state_dirty) {
+		const auto &descriptor_set_layouts = m_current_program->implementation().vkDescriptorSetLayouts();
+		auto descriptor_set_alloc_info = vk::DescriptorSetAllocateInfo{}
+				.setDescriptorPool(m_descriptor_pool.get())
+				.setDescriptorSetCount(std::size(descriptor_set_layouts))
+				.setPSetLayouts(std::data(descriptor_set_layouts));
+
+		m_descriptor_sets = device.vkDevice().allocateDescriptorSetsUnique(descriptor_set_alloc_info);
+
+		for(const auto &set : m_descriptor_sets) {
+			auto buffer_infos = std::vector<std::pair<std::uint32_t, vk::DescriptorBufferInfo>>{};
+			auto image_infos = std::vector<std::pair<std::uint32_t, vk::DescriptorImageInfo>>{};
+			auto write_infos = std::vector<vk::WriteDescriptorSet>{};
+			
+			for(const auto &binding : m_binding_state.bindings) {
+				std::visit(core::overload {
+					[&](const UniformBufferBinding &buffer_binding) {
+						const auto &backed_buffer = buffer_binding.buffer->implementation().backedVkBuffer();
+						const auto buffer_info_ = vk::DescriptorBufferInfo{}
+								.setBuffer(backed_buffer.buffer.get())
+								.setOffset(0)
+								.setRange(buffer_binding.size);
+
+						buffer_infos.emplace_back(buffer_binding.binding, std::move(buffer_info_));
+					},
+					[&](const TextureBinding &image_binding) {
+						const auto &backed_texture = image_binding.texture->implementation().backedVkTexture();
+						const auto image_info_ = vk::DescriptorImageInfo{}
+								.setImageLayout(backed_texture.image.layout)
+								.setImageView(backed_texture.image.view.get())
+								.setSampler(backed_texture.sampler.get());
+
+						image_infos.emplace_back(image_binding.binding, std::move(image_info_));
+					}
+				}, binding);
+			}
+			
+			for(const auto &[binding, buffer_info] : buffer_infos) {
+				const auto descriptor_write = vk::WriteDescriptorSet{}
+						.setDstSet(set.get())
+						.setDstBinding(binding)
+						.setDstArrayElement(0)
+						.setDescriptorType(vk::DescriptorType::eUniformBuffer)
+						.setDescriptorCount(1)
+						.setPBufferInfo(&buffer_info);
+	
+				write_infos.emplace_back(descriptor_write);
+			}
+
+			for(const auto &[binding, image_info] : image_infos) {
+				const auto descriptor_write = vk::WriteDescriptorSet{}
+						.setDstSet(set.get())
+						.setDstBinding(binding)
+						.setDstArrayElement(0)
+						.setDescriptorType(vk::DescriptorType::eCombinedImageSampler)
+						.setDescriptorCount(1)
+						.setPImageInfo(&image_info);
+	
+				write_infos.emplace_back(std::move(descriptor_write));
+			}
+			
+			device.vkDevice().updateDescriptorSets(write_infos, {});
+		}
+
+		m_is_binding_state_dirty = false;
+	}
+	
+	auto descriptor_sets = std::vector<vk::DescriptorSet>{};
+	descriptor_sets.reserve(m_descriptor_sets.size());
+
+	for(const auto &descriptor_set : m_descriptor_sets)
+		descriptor_sets.emplace_back(descriptor_set.get());
+	
+	return descriptor_sets;
 }
 
 /////////////////////////////////////

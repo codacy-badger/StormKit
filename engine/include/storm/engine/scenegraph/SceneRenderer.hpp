@@ -11,6 +11,7 @@
 
 #include <storm/engine/render/ForwardDeclarations.hpp>
 #include <storm/engine/render/Types.hpp>
+#include <storm/engine/render/Framebuffer.hpp>
 
 #include <storm/engine/graphics/RenderGraph.hpp>
 #include <storm/engine/graphics/ShaderLibrary.hpp>
@@ -35,10 +36,14 @@ namespace storm::engine {
 			void updateRenderGraph(Scene &scene);
 			void addDefaultForwardRenderTask(Scene &scene, const BeginTaskData &begin_task_data);
 
+			struct MeshData {
+				mat4 transform;
+			};
+
 			struct CameraData {
 				mat4 projection = mat4{1.f};
 				mat4 view = mat4{1.f};
-			};
+			} m_camera;
 
 			std::reference_wrapper<const Device>  m_device;
 			std::reference_wrapper<const Surface> m_surface;
@@ -53,12 +58,19 @@ namespace storm::engine {
 
 			Fence         m_fence;
 			Semaphore     m_semaphore;
-			CommandBuffer m_command_buffer;
+			std::vector<CommandBuffer> m_command_buffers;
+			std::uint32_t m_current_command_buffer;
 
 			Texture::Description m_backbuffer_desc;
 			Texture::Description m_depthbuffer_desc;
 
 			UniformBuffer::Description m_camera_buffer_desc;
-			UniformBuffer::Ptr         m_camera_buffer;
+			UniformBuffer         m_camera_buffer;
+			
+			UniformBuffer::Description m_meshdata_buffer_desc;
+			UniformBuffer         m_meshdata_buffer;
+
+			std::unordered_map<std::string, RenderPass::Ptr> m_render_passes;
+			Framebuffer::Ptr m_backbuffer;
 	};
 }

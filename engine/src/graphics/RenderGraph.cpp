@@ -180,7 +180,7 @@ void RenderGraph::execute() {
 
 		auto &task = getRenderTask(step.task);
 
-		task.execute();
+		task.execute(m_resources);
 
 		for(auto resource_id : step.derealized_resources) {
 			auto &resource = m_resources.acquireResource(resource_id);

@@ -10,11 +10,11 @@
 #include <cstdint>
 
 namespace storm::engine {
-	static constexpr const auto FORWARD_RENDER_VERT_SRC = std::array{
+	static constexpr const auto FORWARD_RENDER_VERT_SRC = {
 		#include "shaders/forward_render.vert"
 	};
 
-	static constexpr const auto FORWARD_RENDER_FRAG_SRC = std::array{
+	static constexpr const auto FORWARD_RENDER_FRAG_SRC = {
 		#include "shaders/forward_render.frag"
 	};
 }

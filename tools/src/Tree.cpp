@@ -160,7 +160,8 @@ void Tree::markDirty(TreeNode::Index index, TreeNode::DirtyBits bits) {
 		node.setDirtyBits(bits);
 		return;
 	}
-	node.setDirtyBits(node.dirtyBits() | bits);
+	
+	node.setDirtyBits(bits);
 }
 
 void Tree::genDotFile(const std::string &filename, std::function<std::string_view(std::string_view)> colorize_node) const {

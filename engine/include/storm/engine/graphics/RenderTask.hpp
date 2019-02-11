@@ -13,7 +13,7 @@ namespace storm::engine {
 	class RenderTask : public RenderTaskBase {
 		public:
 			using SetupFunction = std::function<void(RenderTaskData &, RenderTaskBuilder &)>;
-			using ExecuteFunction = std::function<void(const RenderTaskData &)>;
+			using ExecuteFunction = std::function<void(const RenderTaskData &, ResourcePool &resources)>;
 
 			explicit RenderTask(std::string name, SetupFunction setup_func, ExecuteFunction execute_func);
 			virtual ~RenderTask();
@@ -24,7 +24,7 @@ namespace storm::engine {
 			inline const RenderTaskData &data() const noexcept;
 		private:
 			void setup(RenderTaskBuilder &builder) override;
-			void execute() const override;
+			void execute(ResourcePool &pool) const override;
 
 			SetupFunction m_setup_func;
 			ExecuteFunction m_execute_func;

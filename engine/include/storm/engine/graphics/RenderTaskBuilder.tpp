@@ -11,7 +11,7 @@ namespace storm::engine {
 	template <typename Resource, typename ResourceDescription>
 	ResourceBase::ID RenderTaskBuilder::create(std::string name, ResourceDescription &&description) {
 		static_assert(std::is_same_v<typename Resource::ResourceDescription, 
-						std::remove_reference_t<ResourceDescription>>,
+						std::decay_t<ResourceDescription>>,
 					  "Description does not match the resource.");;
 		auto &create_resources = m_task.m_create_resources;
 

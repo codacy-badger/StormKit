@@ -31,7 +31,7 @@ namespace storm::engine {
 			void begin(bool one_time_submit) const;
 			void end() const;
 
-			void beginRenderPass(RenderPass &render_pass, Framebuffer &buffer, core::RGBColorF clear_color);
+			void beginRenderPass(RenderPass &render_pass, const Framebuffer &buffer, core::RGBColorF clear_color);
 			void endRenderPass();
 
 			void draw(std::size_t vertex_count, std::size_t instance_count, 
@@ -72,6 +72,7 @@ namespace storm::engine {
 			void createDescriptorPool();
 			void bindDescriptors();
 			const vk::Pipeline &getOrCreatePipeline();
+			std::vector<vk::DescriptorSet> getOrCreateDescriptorSets();
 
 			UniqueHandle<vk::CommandBuffer> m_command_buffer;
 

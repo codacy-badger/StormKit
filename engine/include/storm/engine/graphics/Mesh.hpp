@@ -27,7 +27,9 @@ namespace storm::engine {
 		Material  material;
 		//Transform transform;
 
-		mat4 transform;
+		mat4 projection;
+		mat4 view;
+		mat4 model;
 		mat4 inverted_transform;
 
 		std::uint32_t id;

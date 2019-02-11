@@ -47,7 +47,7 @@ void CommandBuffer::end() {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void CommandBuffer::beginRenderPass(RenderPass &render_pass, Framebuffer &buffer, core::RGBColorF clear_color) {
+void CommandBuffer::beginRenderPass(RenderPass &render_pass, const Framebuffer &buffer, core::RGBColorF clear_color) {
 	m_impl->beginRenderPass(render_pass, buffer,  clear_color);
 }
 

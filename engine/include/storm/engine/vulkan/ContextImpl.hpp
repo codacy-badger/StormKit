@@ -53,7 +53,9 @@ namespace storm::engine {
 			vk::DebugReportCallbackEXT m_callback;
 			vk::DispatchLoaderDynamic  m_dispatcher;
 
+#ifndef STORM_OS_MACOS
 			storm::sharedlibrary::SharedLibrary m_vulkan_shared_library;
+#endif
 			
 	};
 }

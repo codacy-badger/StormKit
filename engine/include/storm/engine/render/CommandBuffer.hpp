@@ -30,7 +30,7 @@ namespace storm::engine {
 			void begin(bool one_time_submit = false);
 			void end();
 
-			void beginRenderPass(RenderPass &render_pass, Framebuffer &buffer, core::RGBColorF clear_color = core::RGBColorDef::Black);
+			void beginRenderPass(RenderPass &render_pass, const Framebuffer &buffer, core::RGBColorF clear_color = core::RGBColorDef::Black);
 			void endRenderPass();
 
 			void draw(std::size_t vertex_count, std::size_t instance_count = 1, 

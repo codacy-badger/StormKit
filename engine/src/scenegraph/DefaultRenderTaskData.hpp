@@ -12,25 +12,19 @@
 
 namespace storm::engine {
 	struct BeginTaskData {
-		RenderPass::Ptr    render_pass;
-		Framebuffer::Ptr   framebuffer;
-
+		ResourceBase::ID meshdata_buffer;
 		ResourceBase::ID camera_buffer;
 		ResourceBase::ID backbuffer;
 	};
 
 	struct ForwardRenderTaskData {
-		Framebuffer   *framebuffer;
-
-		RenderPass::Ptr render_pass;
-
+		ResourceBase::ID meshdata_buffer;
 		ResourceBase::ID camera_buffer;
 		ResourceBase::ID backbuffer;
 	};
 
 	struct SubmitTaskData {
-		Framebuffer   *framebuffer;
-
+		ResourceBase::ID meshdata_buffer;
 		ResourceBase::ID backbuffer;
 	};
 }

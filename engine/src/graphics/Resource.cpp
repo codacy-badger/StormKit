@@ -14,4 +14,9 @@ namespace storm::engine {
 	UniformBuffer::Ptr realize(const Device &device, UniformBuffer::Description description) {
 		return UniformBuffer::makeUnique(device, std::move(description));
 	}
+	
+	template <>
+	Framebuffer::Ptr realize(const Device &device, Framebuffer::Description description) {
+		return nullptr;
+	}	
 }

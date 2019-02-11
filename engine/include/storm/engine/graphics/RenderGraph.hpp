@@ -9,6 +9,7 @@
 #include <storm/engine/render/ForwardDeclarations.hpp>
 #include <storm/engine/render/RenderPass.hpp>
 #include <storm/engine/render/Texture.hpp>
+#include <storm/engine/render/Framebuffer.hpp>
 
 #include <storm/engine/graphics/ForwardDeclarations.hpp>
 #include <storm/engine/graphics/Resource.hpp>
@@ -18,6 +19,7 @@
 
 namespace storm::engine {
 	using TextureResource = Resource<Texture::Description, Texture>;
+	using FramebufferResource = Resource<Framebuffer::Description, Framebuffer>;
 	using UniformBufferResource = Resource<UniformBuffer::Description, UniformBuffer>;
 	class RenderGraph : core::NonCopyable {
 		public:

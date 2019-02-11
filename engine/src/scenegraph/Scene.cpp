@@ -50,8 +50,6 @@ Scene::Scene(const Device &device)
 	{
 	m_root.notify(NodeEvent::ADDED);
 	m_root.setObserver(&m_tree);
-
-
 }
 
 /////////////////////////////////////
@@ -80,7 +78,7 @@ void Scene::update() {
 void Scene::exportSceneGraph(const _std::filesystem::path &filepath) const {
 	using namespace std::literals;
 
-	auto stream = std::ofstream{filepath, std::ios::out};
+	auto stream = std::ofstream{filepath.string(), std::ios::out};
 
 	stream << "digraph G { \n"
 		   << "    rankdir = LR\n"

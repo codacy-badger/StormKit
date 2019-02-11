@@ -6,6 +6,7 @@
 
 #include <functional>
 #include <type_traits>
+#include <string>
 
 namespace storm::core {
 	template <typename T>

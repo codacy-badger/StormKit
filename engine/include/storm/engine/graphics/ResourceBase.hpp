@@ -5,7 +5,7 @@
 #pragma once
 
 #include <string>
-#include <unordered_set>
+#include <vector>
 #include <optional>
 
 #include <storm/core/NonCopyable.hpp>

@@ -115,78 +115,90 @@ void SceneTree::traverseSubTree(tools::TreeNode::Index index, MeshList &mesh_lis
 		const auto &current_graph_node   = m_graph_tree_link.at(current_tree_node_index).get();
 
 		const auto parent_index = m_tree[current_tree_node_index].parent();
-		const auto &parent_state = m_states[index];
-
-		current_state = parent_state;
+		const auto &parent_state = m_states[parent_index];
 
 		auto dirty_bits = current_tree_node.dirtyBits();
 		switch(dirty_bits) {
+			case CAMERA_BITS | CREATE_NODE_STATE:
 			case CAMERA_BITS | UPDATE_NODE_STATE: {
+				current_state = parent_state;
+				
 				const auto &data_node = static_cast<const CameraNode&>(current_graph_node);
 				const auto &data = data_node.data();
 
 				current_state.projection = data.projection;
 				current_state.view       = data.view;
 				break;
-			} case TRANSFORM_BITS | UPDATE_NODE_STATE:
-			case TRANSFORM_BITS | AGGREGATE_NODE_STATE: {
+			} case TRANSFORM_BITS | CREATE_NODE_STATE:
+			  case TRANSFORM_BITS | UPDATE_NODE_STATE: {
+				current_state = parent_state;
+				
 				const auto &data_node = static_cast<const TransformNode&>(current_graph_node);
 				const auto &data = data_node.data();
 
 				current_state.model *= data.matrix(); // always recompute transform matrix
 				current_state.inverted_model = glm::inverse(current_state.model);
-
-				dirty_bits = TRANSFORM_BITS;
 				break;
-			} case GEOMETRY_BITS | UPDATE_NODE_STATE: {
+			} case GEOMETRY_BITS | CREATE_NODE_STATE: {
+				current_state = parent_state;
+				
 				const auto &data_node = static_cast<const GeometryNode&>(current_graph_node);
 				const auto &data = data_node.data();
 
-				if(current_state.mesh_id == -1) {
-					auto pair = mesh_list.addMesh();
-					auto id = pair.first;
-					auto &mesh = pair.second;
+				auto pair = mesh_list.addMesh();
+				auto id = pair.first;
+				auto &mesh = pair.second;
 
-					mesh.get().vertex_buffer = m_device.get().createVertexBufferPtr(data.vertices.size, data.vertices.alignement);
-					mesh.get().vertex_state = data.vertex_state;
+				mesh.get().vertex_buffer = m_device.get().createVertexBufferPtr(data.vertices.size, data.vertices.alignement);
+				mesh.get().vertex_state = data.vertex_state;
+
+				std::visit(
+					[&](const auto &vertices) {
+						mesh.get().vertex_buffer->addData(vertices);
+						mesh.get().vertex_count = std::size(vertices);
+					},
+					data.vertices.array
+				);
+
+				if(data.indices.size) {
+					mesh.get().index_buffer = m_device.get().createIndexBufferPtr(data.indices.size, data.indices.alignement);
 
 					std::visit(
-						[&](const auto &vertices) {
-							mesh.get().vertex_buffer->addData(vertices);
-							mesh.get().vertex_count = std::size(vertices);
-						},
-						data.vertices.array
-					);
-
-					if(data.indices.size) {
-						mesh.get().index_buffer = m_device.get().createIndexBufferPtr(data.indices.size, data.indices.alignement);
-
-						std::visit(
-							core::overload{
-								[&](const IndexArray &indices) {
-									mesh.get().index_buffer->addData(indices);
-									mesh.get().index_count = std::size(indices);
-								},
-								[&](const LargeIndexArray &indices) {
-									mesh.get().index_buffer->addData(indices);
-									mesh.get().large_indices = true;
-									mesh.get().index_count = std::size(indices);
-								}
+						core::overload{
+							[&](const IndexArray &indices) {
+								mesh.get().index_buffer->addData(indices);
+								mesh.get().index_count = std::size(indices);
 							},
-							data.indices.array
-						);
-					}
-
-					current_state.mesh_id = id;
-				} else {
-
+							[&](const LargeIndexArray &indices) {
+								mesh.get().index_buffer->addData(indices);
+								mesh.get().large_indices = true;
+								mesh.get().index_count = std::size(indices);
+							}
+						},
+						data.indices.array
+					);
 				}
+				mesh.get().projection = current_state.projection;
+				mesh.get().view = current_state.view;
+				mesh.get().model = current_state.model;
+				current_state.mesh_id = id;
+				break;
+			} case GEOMETRY_BITS | UPDATE_NODE_STATE: {
+				auto mesh_id = current_state.mesh_id;
+				
+				current_state = parent_state;
+				current_state.mesh_id = mesh_id;
+				
+				auto &mesh = mesh_list.mesh(current_state.mesh_id);
+				mesh.projection = current_state.projection;
+				mesh.view = current_state.view;
+				mesh.model = current_state.model;
 			}
 		}
 
 		for(auto child = current_tree_node.firstChild(); child != tools::TreeNode::INVALID_INDEX; child = m_tree[child].nextSibling()) {
 			if(m_tree[child].dirtyBits() == 0)
-				m_tree.markDirty(child,  m_graph_tree_link.at(child).get().dirtyValue() | AGGREGATE_NODE_STATE);
+				m_tree.markDirty(child,  m_graph_tree_link.at(child).get().dirtyValue() | UPDATE_NODE_STATE);
 
 			stack.emplace(child);
 		}
@@ -212,7 +224,7 @@ void SceneTree::addNode(NodePayload &&payload) {
 		node.setName(payload.node.get().name());
 		auto node_index = m_tree.insert(node, tools::TreeNode::INVALID_INDEX, tools::TreeNode::INVALID_INDEX);
 
-		m_tree.markDirty(node_index, payload.index);
+		m_tree.markDirty(node_index, payload.node.get().dirtyValue() | CREATE_NODE_STATE);
 
 		m_graph_tree_link.emplace(node_index, std::move(payload.node));
 	} else {
@@ -231,7 +243,7 @@ void SceneTree::addNode(NodePayload &&payload) {
 				auto node = tools::TreeNode{};
 				node.setName(payload.node.get().name());
 				auto node_index = m_tree.insert(node, parent_tree_index, tools::TreeNode::INVALID_INDEX);
-				m_tree.markDirty(node_index, payload.index);
+				m_tree.markDirty(node_index, payload.node.get().dirtyValue() | CREATE_NODE_STATE);
 				m_graph_tree_link.emplace(node_index, std::move(payload.node));
 			}
 		}
@@ -254,5 +266,6 @@ void SceneTree::updateNode(NodePayload &&payload) {
 	});
 
 	for(auto &node_index : tree_nodes)
-		m_tree.markDirty(node_index, payload.index);
+		if(!m_tree[node_index].dirtyBits())
+			m_tree.markDirty(node_index, payload.node.get().dirtyValue() | UPDATE_NODE_STATE);
 }

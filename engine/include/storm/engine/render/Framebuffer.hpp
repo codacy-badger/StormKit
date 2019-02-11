@@ -18,6 +18,9 @@ namespace storm::engine {
 	class Framebuffer {
 		public:
 			Unique_Object(Framebuffer)
+			
+			struct Description {};
+			
 			explicit Framebuffer(const Device &device, const RenderPassImpl &render_pass);
 			~Framebuffer();
 

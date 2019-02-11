@@ -48,4 +48,12 @@ namespace storm::engine {
 
 		return *std::get<ResourceType*>(m_resource);
 	}
+	
+	template <typename ResourceDescription_, typename ResourceType_>
+	inline typename Resource<ResourceDescription_, ResourceType_>::ResourceType &Resource<ResourceDescription_, ResourceType_>::resource() noexcept {
+		if(std::holds_alternative<ResourcePtr>(m_resource))
+			return *std::get<ResourcePtr>(m_resource);
+
+		return *std::get<ResourceType*>(m_resource);
+	}
 }

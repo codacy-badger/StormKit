@@ -44,7 +44,12 @@ VKAPI_ATTR VkBool32 debugCallback(VkDebugReportFlagsEXT flags, VkDebugReportObje
 /////////////////////////////////////
 /////////////////////////////////////
 ContextImpl::ContextImpl(ContextSettings settings)
-	: m_context_settings{std::move(settings)}, m_vulkan_shared_library{VULKAN_SHARED_LIBRARY_FILENAME} {
+	: m_context_settings{std::move(settings)}
+	#ifndef STORM_OS_MACOS
+	  , 
+	  m_vulkan_shared_library{VULKAN_SHARED_LIBRARY_FILENAME} 
+	#endif
+	{
 	createInstance();
 }
 
@@ -108,9 +113,12 @@ void ContextImpl::createInstance() {
 	if(!m_instance)
 		throw std::runtime_error("Failed to create Vulkan instance!");
 
+#ifndef STORM_OS_MACOS
 	auto vk_get_instance_proc_addr_func = m_vulkan_shared_library.getCFunc<PFN_vkGetInstanceProcAddr>("vkGetInstanceProcAddr");
 	m_dispatcher.init(*m_instance, *vk_get_instance_proc_addr_func);
-
+#else
+	m_dispatcher.init(*m_instance);
+#endif
 	if(enable_validation) {
 		auto debug_create_info = vk::DebugReportCallbackCreateInfoEXT{}
 				.setFlags(vk::DebugReportFlagBitsEXT::eError | vk::DebugReportFlagBitsEXT::eWarning | vk::DebugReportFlagBitsEXT::eDebug | vk::DebugReportFlagBitsEXT::eInformation)
