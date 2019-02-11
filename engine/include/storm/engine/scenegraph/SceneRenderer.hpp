@@ -68,7 +68,6 @@ namespace storm::engine {
 			UniformBuffer         m_camera_buffer;
 			
 			UniformBuffer::Description m_meshdata_buffer_desc;
-			UniformBuffer         m_meshdata_buffer;
 
 			std::unordered_map<std::string, RenderPass::Ptr> m_render_passes;
 			Framebuffer::Ptr m_backbuffer;

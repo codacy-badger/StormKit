@@ -37,23 +37,19 @@ SceneRenderer::SceneRenderer(const Device &device,
 		sizeof(CameraData),
 		alignof(CameraData)
 	  },
-	  m_camera_buffer{m_device, m_camera_buffer_desc},
-	  m_meshdata_buffer_desc {
-		sizeof(MeshData),
-		alignof(MeshData)
-	  }
+	  m_camera_buffer{m_device, m_camera_buffer_desc}
 	{
-	
+
 	m_command_buffers.reserve(4u);
-	
+
 	for(auto i = 0u; i < 4u; ++i) {
 		m_command_buffers.emplace_back(m_device);
 	}
-	
+
 	auto camera = CameraData{};
-	
+
 	m_camera_buffer.updateData(reinterpret_cast<const std::byte *>(&camera), sizeof(camera), 0);
-	
+
 	const auto &vert_data = m_shader_library.getSource(ShaderLibrary::FORWARD_RENDER_VERT);
 	const auto &frag_data = m_shader_library.getSource(ShaderLibrary::FORWARD_RENDER_FRAG);
 	m_forward_vert = m_device.get().createShaderPtr(engine::Shader::Stage::VERTEX, std::data(vert_data), std::size(vert_data));
@@ -64,7 +60,7 @@ SceneRenderer::SceneRenderer(const Device &device,
 	m_forward_program->addShaderModule(*m_forward_vert);
 	m_forward_program->addShaderModule(*m_forward_frag);
 	m_forward_program->link();
-	
+
 	auto &begin_pass = m_render_passes["begin_task"];
 	begin_pass = m_device.get().createRenderPassPtr();
 	begin_pass->setExtent(m_render_extent);
@@ -79,9 +75,9 @@ SceneRenderer::SceneRenderer(const Device &device,
 
 	begin_pass->addSubPass(subpass);
 	begin_pass->build();
-	
+
 	m_backbuffer = Framebuffer::makeUnique(m_device.get(), begin_pass->implementation());
-	
+
 	auto &forward_render_pass = m_render_passes["forward_render_task"];
 	forward_render_pass = m_device.get().createRenderPassPtr();
 	forward_render_pass->setExtent(m_render_extent);
@@ -107,12 +103,7 @@ SceneRenderer &SceneRenderer::operator=(SceneRenderer &&) = default;
 /////////////////////////////////////
 /////////////////////////////////////
 void SceneRenderer::render(Scene &scene) {
-	//m_device.get().waitIdle();
-
 	updateRenderGraph(scene);
-
-	m_fence.wait();
-	m_fence.reset();
 
 	auto &command_buffer = m_command_buffers[m_current_command_buffer];
 	command_buffer.reset();
@@ -135,7 +126,7 @@ void SceneRenderer::updateRenderGraph(Scene &scene) {
 			m_camera_buffer_desc,
 			m_camera_buffer
 	);
-	
+
 	auto backbuffer_desc = Framebuffer::Description{};
 	const auto backbuffer_resource = m_render_graph.addRetainedResource(
 			"backbuffer",
@@ -147,8 +138,13 @@ void SceneRenderer::updateRenderGraph(Scene &scene) {
 	auto &begin_task = m_render_graph.addRenderPass<BeginTaskData>(
 		"begin_task",
 		[&](BeginTaskData &data, RenderTaskBuilder &builder) {
-			data.meshdata_buffer = 
-				builder.create<UniformBufferResource>("meshdata_buffer", m_meshdata_buffer_desc);
+			const auto meshdata_buffer_desc = UniformBuffer::Description {
+				sizeof(MeshData) * std::size(scene.meshes().meshes()),
+				alignof(MeshData)
+			};
+
+			data.meshdata_buffer =
+				builder.create<UniformBufferResource>("meshdata_buffer", meshdata_buffer_desc);
 			data.camera_buffer =
 				builder.read<UniformBufferResource>(camera_buffer_resource);
 			data.backbuffer =
@@ -174,17 +170,20 @@ void SceneRenderer::updateRenderGraph(Scene &scene) {
 			command_buffer.end();
 
 			command_buffer.submit({}, { &m_semaphore });
-			
+
 			auto &backbuffer = resources.acquireResourceAs<FramebufferResource>(data.backbuffer).resource();
 
 			auto &surface = const_cast<Surface &>(m_surface.get());
 			surface.presentFrame(backbuffer, m_semaphore, m_fence);
+
+			m_fence.wait();
+			m_fence.reset();
 		}
 	);
 	submit_task.setCullImune(true);
 
 	m_render_graph.compile();
-	
+
 	m_current_command_buffer = (m_current_command_buffer + 1) % std::size(m_command_buffers);
 }
 
@@ -197,20 +196,20 @@ void SceneRenderer::addDefaultForwardRenderTask(Scene &scene, const BeginTaskDat
 	auto &forward_render_task = m_render_graph.addRenderPass<ForwardRenderTaskData>(
 		"forward_render_task",
 		[&](ForwardRenderTaskData &data, RenderTaskBuilder &builder) {
-			data.meshdata_buffer = 
+			data.meshdata_buffer =
 				builder.write<UniformBufferResource>(begin_task_data.meshdata_buffer);
-			data.camera_buffer = 
+			data.camera_buffer =
 				builder.write<UniformBufferResource>(begin_task_data.camera_buffer);
-			data.backbuffer = 
+			data.backbuffer =
 				builder.write<FramebufferResource>(begin_task_data.backbuffer);
 		},
 		[&](const ForwardRenderTaskData &data, ResourcePool &resources) {
 			auto &render_pass = m_render_passes["forward_render_task"];
-			
+
 			auto &camera_buffer = resources.acquireResourceAs<UniformBufferResource>(data.camera_buffer);
 			auto &meshdata_buffer = resources.acquireResourceAs<UniformBufferResource>(data.meshdata_buffer);
 			const auto &backbuffer = resources.acquireResourceAs<FramebufferResource>(data.backbuffer).resource();
-			
+
 			command_buffer.pipelineState().viewport =
 				Viewport { 0.f, 0.f, static_cast<float>(m_render_extent.x), static_cast<float>(m_render_extent.y) };
 			command_buffer.pipelineState().scissor =
@@ -227,18 +226,11 @@ void SceneRenderer::addDefaultForwardRenderTask(Scene &scene, const BeginTaskDat
 					Shader::Stage::VERTEX
 				}
 			);
-			command_buffer.bindingState().bindings.emplace_back(
-				UniformBufferBinding {
-					&meshdata_buffer.resource(),
-					1u,
-					meshdata_buffer.description().size,
-					0u,
-					Shader::Stage::VERTEX
-				}
-			);
 
 			command_buffer.setProgram(*m_forward_program);
 			command_buffer.beginRenderPass(*render_pass, backbuffer);
+
+			auto counter = 0;
 			for(const auto &mesh : meshes) {
 				if(m_camera.projection != mesh.projection) {
 					m_camera.projection = mesh.projection;
@@ -247,10 +239,22 @@ void SceneRenderer::addDefaultForwardRenderTask(Scene &scene, const BeginTaskDat
 					m_camera.view = mesh.view;
 					camera_buffer.resource().updateData(reinterpret_cast<const std::byte *>(&m_camera.view), sizeof(m_camera.view), offsetof(CameraData, view));
 				}
-				
+
+				const auto offset = counter * static_cast<std::int32_t>(sizeof(MeshData));
+
+				command_buffer.bindingState().bindings.emplace_back(
+					UniformBufferBinding {
+						&meshdata_buffer.resource(),
+						1u,
+						meshdata_buffer.description().size,
+						offset,
+						Shader::Stage::VERTEX
+					}
+				);
+
 				auto meshdata = MeshData { mesh.model };
-				meshdata_buffer.resource().updateData(reinterpret_cast<const std::byte *>(&meshdata), sizeof(meshdata), 0u);
-				
+				meshdata_buffer.resource().updateData(reinterpret_cast<const std::byte *>(&meshdata), sizeof(meshdata), offset);
+
 				command_buffer.pipelineState().vertex_input_state = mesh.vertex_state;
 				command_buffer.bindVertexBuffer(0, *mesh.vertex_buffer);
 
@@ -259,6 +263,8 @@ void SceneRenderer::addDefaultForwardRenderTask(Scene &scene, const BeginTaskDat
 					command_buffer.drawIndexed(mesh.index_count);
 				} else
 					command_buffer.draw(mesh.vertex_count);
+
+				++counter;
 			}
 
 			command_buffer.endRenderPass();
