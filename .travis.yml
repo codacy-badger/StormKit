@@ -1,6 +1,18 @@
 language: cpp
+sudo: false
+branches:
+  only:
+    - dev
 
-compiler:
-	- gcc
-	- clang
+env:
+  global:
+    - TRAVIS_BUILD_TYPE=Debug
+
+matrix:
+  include:
+    - os: linux
+      compiler: clang
+      sudo: required
+    - os: osx
+      compiler: clang
 
