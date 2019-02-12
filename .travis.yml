@@ -13,6 +13,15 @@ matrix:
     - os: linux
       compiler: clang
       sudo: required
+      addons:
+        apt:
+          package:
+            - libx11-xcb-dev
+            - lunarg-vulkan-sdk
+            - libjpeg-turbo-dev
+            - libpng-dev
+            - glm
+            - cmake
     - os: osx
       compiler: clang
       cache:
@@ -22,3 +31,8 @@ matrix:
       before_install:
         - "brew update && brew upgrade && brew install cmake ccache && brew cask install brew cask install apenngrace/vulkan/vulkan-sdk"
 
+before_script:
+  - ccache -s 
+  - cmake -G "Unix Makefiles"
+  - cmake --build . -- -j
+  - ccache -s
