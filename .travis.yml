@@ -15,4 +15,10 @@ matrix:
       sudo: required
     - os: osx
       compiler: clang
+      cache:
+        ccache: true
+        directories:
+          - ~/Library/Caches/Homebrew
+      before_install:
+        - "brew update && brew upgrade && brew install cmake ccache && brew cask install brew cask install apenngrace/vulkan/vulkan-sdk"
 
