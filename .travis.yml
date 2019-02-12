@@ -16,6 +16,7 @@ matrix:
       sudo: required
       addons:
         apt:
+          update: true
           package:
             - libx11-xcb-dev
             - lunarg-vulkan-sdk
@@ -29,8 +30,17 @@ matrix:
         ccache: true
         directories:
           - ~/Library/Caches/Homebrew
-      before_install:
-        - "brew update && brew upgrade && brew install cmake ccache && brew cask install brew cask install apenngrace/vulkan/vulkan-sdk"
+      addons:
+        homebrew:
+          update: true
+          taps: apenngrace/vulkan
+          package:
+            - cmake
+            - ccache
+            - libpng
+            - libjpeg-turbo
+            - boost
+            - vulkan-sdk
 
 before_script:
   - ccache -s 
