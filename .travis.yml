@@ -12,18 +12,21 @@ matrix:
   include:
     - os: linux
       dist: xenial
-      compiler: clang
+      compiler: 
+        - clang 
+        - gcc
       sudo: required
       addons:
         apt:
           update: true
           package:
             - libx11-xcb-dev
-            - lunarg-vulkan-sdk
             - libjpeg-turbo-dev
             - libpng-dev
             - glm
             - cmake
+      before_install:
+        - apt install lunarg-vulkan-sdk
     - os: osx
       compiler: clang
       cache:
