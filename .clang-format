@@ -1,0 +1,29 @@
+﻿---
+BasedOnStyle: WebKit
+AlignAfterOpenBracket: DontAlign
+AlignConsecutiveAssignments: 'true'
+AlignConsecutiveDeclarations: 'true'
+AlignOperands: 'true'
+AlwaysBreakBeforeMultilineStrings: 'true'
+AlwaysBreakTemplateDeclarations: 'true'
+BreakBeforeBraces: Attach
+BreakBeforeInheritanceComma: 'true'
+BreakBeforeTernaryOperators: 'true'
+BreakConstructorInitializers: BeforeColon
+ColumnLimit: '80'
+CompactNamespaces: 'false'
+Cpp11BracedListStyle: 'true'
+IncludeBlocks: Regroup
+Language: Cpp
+NamespaceIndentation: All
+PointerAlignment: Right
+SortIncludes: 'true'
+SortUsingDeclarations: 'true'
+SpaceAfterTemplateKeyword: 'true'
+SpaceBeforeAssignmentOperators: 'true'
+SpaceInEmptyParentheses: 'false'
+Standard: Cpp11
+TabWidth: '4'
+UseTab: ForIndentation
+
+...
