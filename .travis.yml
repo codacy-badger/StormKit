@@ -26,7 +26,7 @@ matrix:
             - glm
             - cmake
       before_install:
-        - apt install lunarg-vulkan-sdk
+        - sudo apt install lunarg-vulkan-sdk
     - os: osx
       compiler: clang
       cache:
