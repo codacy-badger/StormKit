@@ -12,9 +12,7 @@ matrix:
   include:
     - os: linux
       dist: xenial
-      compiler: 
-        - clang 
-        - gcc
+      compiler: clang
       sudo: required
       addons:
         apt:
@@ -34,7 +32,7 @@ matrix:
             - libx11-xcb-dev
             - libwayland-dev 
             - libxrandr-dev
-      before_install:
+      before_script:
         - wget -O vulkan.run https://vulkan.lunarg.com/sdk/home#sdk/downloadConfirm/1.1.97.0/linux/vulkansdk-linux-x86_64-1.1.97.0.tar.gz
         - chmod ugo+x vulkan.run
         - ./vulkan.run
