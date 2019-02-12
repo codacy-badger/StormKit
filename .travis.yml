@@ -19,14 +19,25 @@ matrix:
       addons:
         apt:
           update: true
+          sources:
+            - sourceline: ''
           package:
+            - libassimp-dev 
+            - libglm-dev 
+            - libxcb-dri3-0 
+            - libxcb-present0 
+            - libpciaccess0 
+            - cmake 
+            - libpng-dev 
+            - libxcb-dri3-dev 
+            - libx11-dev 
             - libx11-xcb-dev
-            - libjpeg-turbo-dev
-            - libpng-dev
-            - glm
-            - cmake
+            - libwayland-dev 
+            - libxrandr-dev
       before_install:
-        - sudo apt install lunarg-vulkan-sdk
+        - wget -O vulkan.run https://vulkan.lunarg.com/sdk/home#sdk/downloadConfirm/1.1.97.0/linux/vulkansdk-linux-x86_64-1.1.97.0.tar.gz
+        - chmod ugo+x vulkan.run
+        - ./vulkan.run
     - os: osx
       compiler: clang
       cache:
