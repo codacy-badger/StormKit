@@ -33,7 +33,7 @@ matrix:
             - libwayland-dev 
             - libxrandr-dev
       before_script:
-        - wget -O vulkan.run https://vulkan.lunarg.com/sdk/home#sdk/downloadConfirm/1.1.97.0/linux/vulkansdk-linux-x86_64-1.1.97.0.tar.gz
+        - wget -O vulkan.run https://sdk.lunarg.com/sdk/download/1.1.97.0/linux/vulkansdk-linux-x86_64-1.1.97.0.tar.gz?u=
         - chmod ugo+x vulkan.run
         - ./vulkan.run
     - os: osx
