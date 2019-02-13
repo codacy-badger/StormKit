@@ -2,18 +2,15 @@
 // This file is subject to the license terms in the LICENSE file
 // found in the top-level of this distribution
 
-#include <storm/engine/scenegraph/TransformNode.hpp>
 #include <storm/engine/scenegraph/DirtyDefs.hpp>
+#include <storm/engine/scenegraph/TransformNode.hpp>
 
 using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
 TransformNode::TransformNode(Scene &graph)
-	: SceneNode{graph, "TransformNode"}
-	{
-
-}
+    : SceneNode {graph, "TransformNode"} {}
 
 /////////////////////////////////////
 /////////////////////////////////////

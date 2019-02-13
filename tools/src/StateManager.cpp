@@ -1,65 +1,63 @@
-#include <storm/tools/StateManager.hpp>
-#include <storm/tools/State.hpp>
-
-#include <storm/core/Strings.hpp>
-
 #include <cassert>
-
+#include <storm/core/Strings.hpp>
+#include <storm/tools/State.hpp>
+#include <storm/tools/StateManager.hpp>
 
 using namespace storm::tools;
 
 ////////////////////////////////////////
 ////////////////////////////////////////
 void StateManager::requestPush(State::Ptr &&state) {
-	m_actionQueue.emplace(StateManagerAction{StateManagerAction::Type::push,
-											 std::move(state)});
+	m_actionQueue.emplace(
+	    StateManagerAction {StateManagerAction::Type::push, std::move(state)});
 }
 
 ////////////////////////////////////////
 ////////////////////////////////////////
 void StateManager::requestSet(State::Ptr &&state) {
-	m_actionQueue.emplace(StateManagerAction{StateManagerAction::Type::set,
-											 std::move(state)});
+	m_actionQueue.emplace(
+	    StateManagerAction {StateManagerAction::Type::set, std::move(state)});
 }
 
 ////////////////////////////////////////
 ////////////////////////////////////////
 void StateManager::requestPop() {
-	if(!m_stack.empty())
-		m_actionQueue.emplace(StateManagerAction{StateManagerAction::Type::pop, nullptr});
+	if (!m_stack.empty())
+		m_actionQueue.emplace(
+		    StateManagerAction {StateManagerAction::Type::pop, nullptr});
 }
 
 ////////////////////////////////////////
 ////////////////////////////////////////
 void StateManager::executeRequests() {
-	if(m_actionQueue.empty())
+	if (m_actionQueue.empty())
 		return;
 
-	while(!m_actionQueue.empty()) {
+	while (!m_actionQueue.empty()) {
 		auto &caction = m_actionQueue.front();
 
-		switch(caction.type) {
-			case StateManagerAction::Type::push:
-				if(!m_stack.empty())
-					m_stack.top()->pause();
-				m_stack.push(std::move(caction.state));
-				break;
-			case StateManagerAction::Type::pop:
+		switch (caction.type) {
+		case StateManagerAction::Type::push:
+			if (!m_stack.empty())
+				m_stack.top()->pause();
+			m_stack.push(std::move(caction.state));
+			break;
+		case StateManagerAction::Type::pop:
+			m_stack.pop();
+			if (!m_stack.empty())
+				m_stack.top()->resume();
+			break;
+		case StateManagerAction::Type::set:
+			if (!m_stack.empty())
 				m_stack.pop();
-				if(!m_stack.empty())
-					m_stack.top()->resume();
-				break;
-			case StateManagerAction::Type::set:
-				if(!m_stack.empty())
-					m_stack.pop();
-				m_stack.push(std::move(caction.state));
-				break;
-			case StateManagerAction::Type::clear:
-				if(!m_stack.empty()) {
-                    std::stack<std::unique_ptr<State>> q;
-					m_stack.swap(q);
-				}
-				break;
+			m_stack.push(std::move(caction.state));
+			break;
+		case StateManagerAction::Type::clear:
+			if (!m_stack.empty()) {
+				std::stack<std::unique_ptr<State>> q;
+				m_stack.swap(q);
+			}
+			break;
 		}
 
 		m_actionQueue.pop();
@@ -69,20 +67,21 @@ void StateManager::executeRequests() {
 ////////////////////////////////////////
 ////////////////////////////////////////
 void StateManager::update(std::uint64_t delta) {
-	if(!m_stack.empty())
+	if (!m_stack.empty())
 		m_stack.top()->update(delta);
 }
 
 ////////////////////////////////////////
 ////////////////////////////////////////
 void StateManager::render() {
-	if(!m_stack.empty())
+	if (!m_stack.empty())
 		m_stack.top()->render();
 }
 
 void StateManager::requestClear() {
-	if(!m_stack.empty())
-		m_actionQueue.emplace(StateManagerAction{StateManagerAction::Type::clear, nullptr});
+	if (!m_stack.empty())
+		m_actionQueue.emplace(
+		    StateManagerAction {StateManagerAction::Type::clear, nullptr});
 }
 
 ////////////////////////////////////////

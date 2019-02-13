@@ -15,10 +15,8 @@ namespace storm::engine {
 		return m_cull_imune;
 	}
 
-	inline std::uint32_t RenderTaskBase::id() const noexcept {
-		return m_id;
-	}
-	
+	inline std::uint32_t RenderTaskBase::id() const noexcept { return m_id; }
+
 	inline void RenderTaskBase::setName(std::string name) {
 		m_name = std::move(name);
 	}

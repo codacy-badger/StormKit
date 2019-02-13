@@ -18,22 +18,22 @@ namespace storm::log {
 	 * The class allow logging to the standart output
 	 */
 	class STORM_PUBLIC ConsoleOutput final : public LogOutput {
-		public:
-			/**
-			 * @brief Constructor
-			 *
-			 * Default Constructor of ConsoleOutput
-			 */
-			explicit ConsoleOutput() = default;
+	public:
+		/**
+		 * @brief Constructor
+		 *
+		 * Default Constructor of ConsoleOutput
+		 */
+		explicit ConsoleOutput() = default;
 
-			/**
-			 * @brief Destructor
-			 *
-			 * Destructor of ConsoleOutput
-			 */
-			~ConsoleOutput() override = default;
+		/**
+		 * @brief Destructor
+		 *
+		 * Destructor of ConsoleOutput
+		 */
+		~ConsoleOutput() override = default;
 
-		private:
-			void write(const char *string) override;
+	private:
+		void write(const char *string) override;
 	};
 }

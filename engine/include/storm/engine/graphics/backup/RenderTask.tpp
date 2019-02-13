@@ -9,14 +9,11 @@
 namespace storm::engine {
 	template <typename RenderTaskData>
 	RenderTask<RenderTaskData>::RenderTask(std::string name,
-										   RenderGraph &parent,
-										   SetupFunction setup_func,
-										   ExecuteFunction execute_func)
-		: RenderTaskBase{std::move(name), parent},
-		  m_setup_func{std::move(setup_func)},
-		  m_execute_func{std::move(execute_func)} {
-
-	}
+	    RenderGraph &parent, SetupFunction setup_func,
+	    ExecuteFunction execute_func)
+	    : RenderTaskBase {std::move(name), parent},
+	      m_setup_func {std::move(setup_func)}, m_execute_func {
+	                                                std::move(execute_func)} {}
 
 	template <typename RenderTaskData>
 	RenderTask<RenderTaskData>::~RenderTask() = default;
@@ -25,10 +22,13 @@ namespace storm::engine {
 	RenderTask<RenderTaskData>::RenderTask(RenderTask &&) = default;
 
 	template <typename RenderTaskData>
-	RenderTask<RenderTaskData> &RenderTask<RenderTaskData>::operator=(RenderTask &&) = default;
+	RenderTask<RenderTaskData> &RenderTask<RenderTaskData>::operator=(
+	    RenderTask &&)
+	    = default;
 
 	template <typename RenderTaskData>
-	inline const RenderTaskData &RenderTask<RenderTaskData>::data() const noexcept {
+	inline const RenderTaskData &RenderTask<RenderTaskData>::data() const
+	    noexcept {
 		return m_data;
 	}
 
@@ -38,7 +38,8 @@ namespace storm::engine {
 	}
 
 	template <typename RenderTaskData>
-	void RenderTask<RenderTaskData>::execute(CommandBuffer &command_buffer) const {
+	void RenderTask<RenderTaskData>::execute(
+	    CommandBuffer &command_buffer) const {
 		m_execute_func(command_buffer, m_data, *m_render_pass, *m_framebuffer);
 	}
 }

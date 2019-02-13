@@ -9,10 +9,9 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-IndexBuffer::IndexBuffer(const Device &device, std::size_t size, std::size_t alignement)
-	: m_impl{device, size, alignement} {
-
-}
+IndexBuffer::IndexBuffer(
+    const Device &device, std::size_t size, std::size_t alignement)
+    : m_impl {device, size, alignement} {}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -28,9 +27,7 @@ IndexBuffer &IndexBuffer::operator=(IndexBuffer &&) = default;
 
 /////////////////////////////////////
 /////////////////////////////////////
-void IndexBuffer::reset() {
-	m_impl->reset();
-}
+void IndexBuffer::reset() { m_impl->reset(); }
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -40,15 +37,14 @@ std::size_t IndexBuffer::addData(const std::byte *data, std::size_t size) {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void IndexBuffer::updateData(const std::byte *data, std::size_t size, std::ptrdiff_t offset) {
+void IndexBuffer::updateData(
+    const std::byte *data, std::size_t size, std::ptrdiff_t offset) {
 	m_impl->updateData(data, size, offset);
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-std::byte *IndexBuffer::map() {
-	return m_impl->map();
-}
+std::byte *IndexBuffer::map() { return m_impl->map(); }
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -58,6 +54,4 @@ std::byte *IndexBuffer::map(std::size_t size, std::ptrdiff_t offset) {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void IndexBuffer::unmap() {
-	m_impl->unmap();
-}
+void IndexBuffer::unmap() { m_impl->unmap(); }

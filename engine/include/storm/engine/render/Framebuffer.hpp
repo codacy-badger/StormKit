@@ -4,31 +4,33 @@
 
 #pragma once
 
-#include <storm/core/Pimpl.hpp>
-#include <storm/core/NonCopyable.hpp>
 #include <storm/core/Memory.hpp>
-
+#include <storm/core/NonCopyable.hpp>
+#include <storm/core/Pimpl.hpp>
 #include <storm/engine/render/ForwardDeclarations.hpp>
-#include <storm/engine/render/Utils.hpp>
 #include <storm/engine/render/Types.hpp>
+#include <storm/engine/render/Utils.hpp>
 
 namespace storm::engine {
 	class FramebufferImpl;
 	class RenderPassImpl;
 	class Framebuffer {
-		public:
-			Unique_Object(Framebuffer)
-			
-			struct Description {};
-			
-			explicit Framebuffer(const Device &device, const RenderPassImpl &render_pass);
-			~Framebuffer();
+	public:
+		Unique_Object(Framebuffer)
 
-			Framebuffer(Framebuffer &&);
-			Framebuffer &operator=(Framebuffer &&);
+		    struct Description {};
 
-			IMPLEMENTATION(FramebufferImpl)
-		private:
-			core::Pimpl<FramebufferImpl> m_impl;
+		explicit Framebuffer(
+		    const Device &device, const RenderPass &render_pass);
+		explicit Framebuffer(
+		    const Device &device, const RenderPassImpl &render_pass);
+		~Framebuffer();
+
+		Framebuffer(Framebuffer &&);
+		Framebuffer &operator=(Framebuffer &&);
+
+		IMPLEMENTATION(FramebufferImpl)
+	private:
+		core::Pimpl<FramebufferImpl> m_impl;
 	};
 }

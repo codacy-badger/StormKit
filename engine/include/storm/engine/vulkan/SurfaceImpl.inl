@@ -9,9 +9,7 @@
 namespace storm::engine {
 	/////////////////////////////////////
 	/////////////////////////////////////
-	inline vk::Extent2D SurfaceImpl::size() const noexcept {
-		return m_size;
-	}
+	inline vk::Extent2D SurfaceImpl::size() const noexcept { return m_size; }
 
 	/////////////////////////////////////
 	/////////////////////////////////////
@@ -21,19 +19,22 @@ namespace storm::engine {
 
 	/////////////////////////////////////
 	/////////////////////////////////////
-	inline const vk::SurfaceCapabilitiesKHR &SurfaceImpl::vkSurfaceCapabilities() const noexcept {
+	inline const vk::SurfaceCapabilitiesKHR &
+	SurfaceImpl::vkSurfaceCapabilities() const noexcept {
 		return m_surface_capabilities;
 	}
 
 	/////////////////////////////////////
 	/////////////////////////////////////
-	inline const std::vector<vk::PresentModeKHR> &SurfaceImpl::vkSurfacePresentMode() const noexcept {
+	inline const std::vector<vk::PresentModeKHR> &
+	SurfaceImpl::vkSurfacePresentMode() const noexcept {
 		return m_present_modes;
 	}
 
 	/////////////////////////////////////
 	/////////////////////////////////////
-	inline const std::vector<vk::SurfaceFormatKHR> &SurfaceImpl::vkSurfaceFormats() const noexcept {
+	inline const std::vector<vk::SurfaceFormatKHR> &
+	SurfaceImpl::vkSurfaceFormats() const noexcept {
 		return m_surface_formats;
 	}
 }

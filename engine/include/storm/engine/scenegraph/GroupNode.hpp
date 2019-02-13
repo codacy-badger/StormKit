@@ -4,19 +4,19 @@
 
 namespace storm::engine {
 	class STORM_PUBLIC GroupNode : public SceneNode {
-		public:
-			SUR_Object(GroupNode)
+	public:
+		SUR_Object(GroupNode)
 
-			~GroupNode() override;
+		    ~GroupNode() override;
 
-			GroupNode(GroupNode &&);
-			GroupNode &operator=(GroupNode &&);
+		GroupNode(GroupNode &&);
+		GroupNode &operator=(GroupNode &&);
 
-		protected:
-			explicit GroupNode(Scene &graph);
+	protected:
+		explicit GroupNode(Scene &graph);
 
-			DirtyType dirtyValue() const noexcept override;
+		DirtyType dirtyValue() const noexcept override;
 
-			friend class Scene;
+		friend class Scene;
 	};
 }

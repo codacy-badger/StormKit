@@ -13,7 +13,7 @@ namespace storm::engine {
 	class ResourcePool;
 
 	struct MeshInstance;
-	
+
 	struct Vertex_P;
 	struct Vertex_P_C;
 	struct Vertex_P_C_N;

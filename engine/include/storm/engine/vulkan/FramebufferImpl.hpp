@@ -5,28 +5,32 @@
 #pragma once
 
 #include <storm/engine/render/Framebuffer.hpp>
-
-#include <storm/engine/vulkan/UniqueHandle.hpp>
 #include <storm/engine/vulkan/DeviceImpl.hpp>
+#include <storm/engine/vulkan/UniqueHandle.hpp>
 
 namespace storm::engine {
 	class FramebufferImpl {
-		public:
-			explicit FramebufferImpl(const Device &device, const RenderPassImpl &render_pass);
-			~FramebufferImpl();
-
-			FramebufferImpl(FramebufferImpl &&);
-
-			inline const vk::Framebuffer &vkFramebuffer() const noexcept;
-			inline const std::vector<BackedVkImage> &backedVkImages() const noexcept;
-		private:
-			void createFramebuffer();
-			
-			UniqueHandle<vk::Framebuffer> m_framebuffer;
-			std::vector<BackedVkImage>    m_images;
-			
-			const DeviceImpl     &m_device;
-			const RenderPassImpl &m_render_pass;
+	public:
+		explicit FramebufferImpl(
+			const Device &device, const RenderPass &render_pass);
+		explicit FramebufferImpl(
+		const Device &device, const RenderPassImpl &render_pass);
+		~FramebufferImpl();
+	
+		FramebufferImpl(FramebufferImpl &&);
+	
+		inline const vk::Framebuffer &           vkFramebuffer() const noexcept;
+		inline const std::vector<BackedVkImage> &backedVkImages() const
+			noexcept;
+	
+	private:
+		void createFramebuffer(bool build_from_render_pass);
+	
+		UniqueHandle<vk::Framebuffer> m_framebuffer;
+		std::vector<BackedVkImage>    m_attachments;
+	
+		const DeviceImpl &    m_device;
+		const RenderPassImpl &m_render_pass;
 	};
 }
 

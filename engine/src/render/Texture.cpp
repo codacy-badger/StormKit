@@ -9,17 +9,13 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-Texture::Texture(const Device &device, const image::Image &image) 
-	: m_impl{device, image} {
-	
-}
+Texture::Texture(const Device &device, const image::Image &image)
+    : m_impl {device, image} {}
 
 /////////////////////////////////////
 /////////////////////////////////////
 Texture::Texture(const Device &device, Description description)
-	: m_impl{device, std::move(description)} {
-
-}
+    : m_impl {device, std::move(description)} {}
 
 /////////////////////////////////////
 /////////////////////////////////////

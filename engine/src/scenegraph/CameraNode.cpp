@@ -10,11 +10,8 @@ using namespace storm::engine;
 /////////////////////////////////////
 /////////////////////////////////////
 CameraNode::CameraNode(Scene &graph)
-	: SceneNode{graph, "CameraNode"},
-	  m_camera{mat4{1.f}, mat4{1.f}, true, true}
-	{
-
-}
+    : SceneNode {graph, "CameraNode"}, m_camera {mat4 {1.f}, mat4 {1.f}, true,
+                                           true} {}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -30,9 +27,7 @@ CameraNode &CameraNode::operator=(CameraNode &&) = default;
 
 /////////////////////////////////////
 /////////////////////////////////////
-void CameraNode::commit() noexcept {
-	notify(NodeEvent::UPDATED);
-}
+void CameraNode::commit() noexcept { notify(NodeEvent::UPDATED); }
 
 /////////////////////////////////////
 /////////////////////////////////////

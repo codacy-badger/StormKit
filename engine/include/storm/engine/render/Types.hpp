@@ -4,24 +4,23 @@
 
 #pragma once
 
-#include <storm/core/Flags.hpp>
-
+#include <glm/gtc/quaternion.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
-#include <glm/vec2.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/quaternion.hpp>
+#include <storm/core/Flags.hpp>
 
 namespace storm::engine {
 	using vec2  = glm::vec2;
 	using vec3  = glm::vec3;
 	using vec4  = glm::vec4;
-	using uvec2  = glm::uvec2;
-	using uvec3  = glm::uvec3;
-	using uvec4  = glm::uvec4;
-	using ivec2  = glm::ivec2;
-	using ivec3  = glm::ivec3;
-	using ivec4  = glm::ivec4;
+	using uvec2 = glm::uvec2;
+	using uvec3 = glm::uvec3;
+	using uvec4 = glm::uvec4;
+	using ivec2 = glm::ivec2;
+	using ivec3 = glm::ivec3;
+	using ivec4 = glm::ivec4;
 	using mat4  = glm::mat4;
 	using quat  = glm::quat;
 
@@ -35,40 +34,21 @@ namespace storm::engine {
 	};
 
 	enum class ColorComponent {
-		R = 1,
-		G = 2,
-		B = 4,
-		A = 8,
+		R    = 1,
+		G    = 2,
+		B    = 4,
+		A    = 8,
 		RGBA = R | G | B | A,
 		SIZE
 	};
 
-	enum class PrimitiveTopology {
-		TRIANGLES,
-		TRIANGLE_STRIP,
-		SIZE
-	};
+	enum class PrimitiveTopology { TRIANGLES, TRIANGLE_STRIP, SIZE };
 
-	enum class PolygonMode {
-		POINT,
-		LINE,
-		FILL,
-		SIZE
-	};
+	enum class PolygonMode { POINT, LINE, FILL, SIZE };
 
-	enum class CullMode {
-		FRONT,
-		BACK,
-		FRONT_AND_BACK,
-		NONE,
-		SIZE
-	};
+	enum class CullMode { FRONT, BACK, FRONT_AND_BACK, NONE, SIZE };
 
-	enum class FrontFace {
-		CLOCKWISE,
-		COUNTER_CLOCKWISE,
-		SIZE
-	};
+	enum class FrontFace { CLOCKWISE, COUNTER_CLOCKWISE, SIZE };
 
 	enum class Format {
 		BOOL,
@@ -120,17 +100,10 @@ namespace storm::engine {
 		SIZE
 	};
 
-	enum class VertexInputRate {
-		PER_VERTEX,
-		PER_INSTANCE,
-		SIZE
-	};
+	enum class VertexInputRate { PER_VERTEX, PER_INSTANCE, SIZE };
 
-	enum class PipelineStage {
-		COLOR_ATTACHMENT_OUTPUT,
-		SIZE
-	};
-	
+	enum class PipelineStage { COLOR_ATTACHMENT_OUTPUT, SIZE };
+
 	enum class CompareOperation {
 		NEVER,
 		LESS,
@@ -142,7 +115,7 @@ namespace storm::engine {
 		ALWAYS,
 		SIZE
 	};
-	
+
 	using ColorFormat = Format;
 
 	inline constexpr bool isDepthOnlyFormat(Format format) {
@@ -150,8 +123,8 @@ namespace storm::engine {
 	}
 
 	inline constexpr bool isDepthStencilFormat(Format format) {
-		return format == Format::D16 || format == Format::D24S8UNORM ||
-			 format == Format::D32S8;
+		return format == Format::D16 || format == Format::D24S8UNORM
+		       || format == Format::D32S8;
 	}
 
 	inline constexpr bool isColorFormat(Format format) {

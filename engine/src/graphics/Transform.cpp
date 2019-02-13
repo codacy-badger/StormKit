@@ -1,14 +1,14 @@
-#include <storm/engine/graphics/Transform.hpp>
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <storm/engine/graphics/Transform.hpp>
 
 using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
 Transform::Transform() noexcept
-	: m_recompute(true), m_position(0.f, 0.f, 0.f), m_scale(1.f, 1.f, 1.f), m_pitch(0.f), m_yaw(0.f), m_roll(0.f), m_transform(1.f) { }
+    : m_recompute(true), m_position(0.f, 0.f, 0.f), m_scale(1.f, 1.f, 1.f),
+      m_pitch(0.f), m_yaw(0.f), m_roll(0.f), m_transform(1.f) {}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -33,7 +33,7 @@ Transform &Transform::operator=(Transform &&) noexcept = default;
 /////////////////////////////////////
 /////////////////////////////////////
 void Transform::operator*=(const Transform &transform) noexcept {
-	if(m_recompute) {
+	if (m_recompute) {
 		recompute();
 		m_recompute = false;
 	}
@@ -44,7 +44,7 @@ void Transform::operator*=(const Transform &transform) noexcept {
 /////////////////////////////////////
 /////////////////////////////////////
 void Transform::operator+=(const Transform &transform) noexcept {
-	if(m_recompute) {
+	if (m_recompute) {
 		recompute();
 		m_recompute = false;
 	}
@@ -55,7 +55,7 @@ void Transform::operator+=(const Transform &transform) noexcept {
 /////////////////////////////////////
 /////////////////////////////////////
 void Transform::operator/=(const Transform &transform) noexcept {
-	if(m_recompute) {
+	if (m_recompute) {
 		recompute();
 		m_recompute = false;
 	}
@@ -66,7 +66,7 @@ void Transform::operator/=(const Transform &transform) noexcept {
 /////////////////////////////////////
 /////////////////////////////////////
 void Transform::operator-=(const Transform &transform) noexcept {
-	if(m_recompute) {
+	if (m_recompute) {
 		recompute();
 		m_recompute = false;
 	}
@@ -77,7 +77,8 @@ void Transform::operator-=(const Transform &transform) noexcept {
 /////////////////////////////////////
 /////////////////////////////////////
 void Transform::recompute() const noexcept {
-	m_quat = glm::quat(glm::vec3(glm::radians(m_pitch), glm::radians(m_yaw), glm::radians(m_roll)));
+	m_quat = glm::quat(glm::vec3(
+	    glm::radians(m_pitch), glm::radians(m_yaw), glm::radians(m_roll)));
 	m_quat = glm::normalize(m_quat);
 
 	auto scale       = glm::scale(glm::mat4(1.f), m_scale);
@@ -86,7 +87,7 @@ void Transform::recompute() const noexcept {
 	auto pivot       = glm::translate(glm::mat4(1.f), m_origin);
 	auto translation = glm::translate(glm::mat4(1.f), m_position);
 
-	m_transform =  translation * pivot * scale * rotation * inv_pivot;
+	m_transform = translation * pivot * scale * rotation * inv_pivot;
 }
 
 /////////////////////////////////////

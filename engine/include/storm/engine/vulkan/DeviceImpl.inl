@@ -17,14 +17,15 @@ namespace storm::engine {
 		return m_physical_device;
 	}
 
-	inline DeviceImpl::FamilyQueueIndices DeviceImpl::familyQueuesIndices() const noexcept {
+	inline DeviceImpl::FamilyQueueIndices
+	DeviceImpl::familyQueuesIndices() const noexcept {
 		return m_family_queue_indices;
 	}
-	
+
 	inline PipelineCache &DeviceImpl::pipelineCache() noexcept {
 		return m_pipeline_cache;
 	}
-	
+
 	inline const PipelineCache &DeviceImpl::pipelineCache() const noexcept {
 		return m_pipeline_cache;
 	}

@@ -3,7 +3,8 @@
 #include "Renderer.hpp"
 
 namespace storm::engine {
-	inline const window::VideoSettings &Renderer::videoSettings() const noexcept {
+	inline const window::VideoSettings &Renderer::videoSettings() const
+	    noexcept {
 		return m_video_settings;
 	}
 

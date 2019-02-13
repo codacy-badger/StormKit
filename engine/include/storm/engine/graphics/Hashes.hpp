@@ -4,11 +4,9 @@
 
 #pragma once
 
-#include <storm/core/Hash.hpp>
-
-#include <storm/engine/graphics/ForwardDeclarations.hpp>
-
 #include <functional>
+#include <storm/core/Hash.hpp>
+#include <storm/engine/graphics/ForwardDeclarations.hpp>
 
 namespace std {
 	/*HASH_FUNC(storm::engine::Material)
@@ -23,5 +21,5 @@ namespace std {
 	HASH_FUNC(storm::engine::Vertex_P_UV)
 	HASH_FUNC(storm::engine::Vertex_P_UV_N)
 	HASH_FUNC(storm::engine::Vertex_P_UV_N_T_BT)
-	//HASH_FUNC(storm::engine::RendererCommandBufferCacheKey)
+	// HASH_FUNC(storm::engine::RendererCommandBufferCacheKey)
 }

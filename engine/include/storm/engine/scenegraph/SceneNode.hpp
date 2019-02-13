@@ -4,63 +4,63 @@
 
 #pragma once
 
-#include <storm/core/NonCopyable.hpp>
 #include <storm/core/Memory.hpp>
-
+#include <storm/core/NonCopyable.hpp>
 #include <storm/engine/scenegraph/ForwardDeclarations.hpp>
-
+#include <storm/engine/scenegraph/NodeData.hpp>
 #include <storm/tools/Subject.hpp>
 
-#include <storm/engine/scenegraph/NodeData.hpp>
-
 namespace storm::engine {
-	class SceneNode : public core::NonCopyable, public NodeSubject {
-		public:
-			SUR_Object(SceneNode)
+	class SceneNode
+	    : public core::NonCopyable
+	    , public NodeSubject {
+	public:
+		SUR_Object(SceneNode)
 
-			using Array = std::vector<std::reference_wrapper<SceneNode>>;
-			using ID = std::uint64_t;
+		    using Array = std::vector<std::reference_wrapper<SceneNode>>;
+		using ID        = std::uint64_t;
 
-			virtual ~SceneNode();
+		virtual ~SceneNode();
 
-			void addChild(SceneNode &node);
-			void removeChild(SceneNode &node);
+		void addChild(SceneNode &node);
+		void removeChild(SceneNode &node);
 
-			SceneNode(SceneNode &&);
-			SceneNode &operator=(SceneNode &&);
+		SceneNode(SceneNode &&);
+		SceneNode &operator=(SceneNode &&);
 
-			template <typename T>
-			T &childAs(ID id);
+		template <typename T>
+		T &childAs(ID id);
 
-			inline std::string_view name() const noexcept;
-			inline const SceneNode::Array &parents() const noexcept;
-			inline const SceneNode::Array &children() const noexcept;
-			inline ID id() const noexcept;
+		inline std::string_view        name() const noexcept;
+		inline const SceneNode::Array &parents() const noexcept;
+		inline const SceneNode::Array &children() const noexcept;
+		inline ID                      id() const noexcept;
 
-			void setObserver(NodeObserver::RawPtr observer);
-		protected:
-			using DirtyType = std::uint32_t;
+		void setObserver(NodeObserver::RawPtr observer);
 
-			explicit SceneNode(Scene &graph, std::string_view name);
+	protected:
+		using DirtyType = std::uint32_t;
 
-			void notify(NodeEvent event) noexcept;
+		explicit SceneNode(Scene &graph, std::string_view name);
 
-			virtual DirtyType dirtyValue() const noexcept = 0;
+		void notify(NodeEvent event) noexcept;
 
-			friend class Scene;
-			friend class SceneTree;
+		virtual DirtyType dirtyValue() const noexcept = 0;
 
-		private:
-			ID m_id;
-			std::string_view m_name;
-			std::reference_wrapper<Scene> m_graph;
+		friend class Scene;
+		friend class SceneTree;
 
-			SceneNode::Array m_parents;
-			SceneNode::Array m_children;
+	private:
+		ID                            m_id;
+		std::string_view              m_name;
+		std::reference_wrapper<Scene> m_graph;
 
-			static inline auto next_id = 0u;
+		SceneNode::Array m_parents;
+		SceneNode::Array m_children;
+
+		static inline auto next_id = 0u;
 	};
 }
 
-#include "SceneNode.tpp"
 #include "SceneNode.inl"
+#include "SceneNode.tpp"

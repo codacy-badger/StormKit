@@ -4,39 +4,37 @@
 
 #pragma once
 
-#include <storm/engine/render/ForwardDeclarations.hpp>
-#include <storm/engine/render/Utils.hpp>
-#include <storm/engine/render/Types.hpp>
-
-#include <storm/image/Image.hpp>
-
-#include <storm/core/Pimpl.hpp>
 #include <storm/core/Memory.hpp>
+#include <storm/core/Pimpl.hpp>
+#include <storm/engine/render/ForwardDeclarations.hpp>
+#include <storm/engine/render/Types.hpp>
+#include <storm/engine/render/Utils.hpp>
+#include <storm/image/Image.hpp>
 
 namespace storm::engine {
 	class TextureImpl;
 	class Texture {
-		public:
-			Unique_Object(Texture)
+	public:
+		Unique_Object(Texture)
 
-			struct Description {
-				std::size_t mip_level;
-				Format      format;
-				uvec3       size;
-			};
-			
-			explicit Texture(const Device &device, const image::Image &image);
-			explicit Texture(const Device &device, Description description);
-			~Texture();
-			
-			Texture(Texture &&);
-			Texture &operator=(Texture &&);
+		    struct Description {
+			std::size_t mip_level;
+			Format      format;
+			uvec3       size;
+		};
 
-			const Texture::Description &description() const noexcept;
-			const image::Image &image() const noexcept;
-			
-			IMPLEMENTATION(TextureImpl)
-		private:
-			core::Pimpl<TextureImpl> m_impl;
+		explicit Texture(const Device &device, const image::Image &image);
+		explicit Texture(const Device &device, Description description);
+		~Texture();
+
+		Texture(Texture &&);
+		Texture &operator=(Texture &&);
+
+		const Texture::Description &description() const noexcept;
+		const image::Image &        image() const noexcept;
+
+		IMPLEMENTATION(TextureImpl)
+	private:
+		core::Pimpl<TextureImpl> m_impl;
 	};
 }

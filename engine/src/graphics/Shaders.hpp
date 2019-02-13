@@ -4,17 +4,16 @@
 
 #pragma once
 
-#include <initializer_list>
 #include <array>
-
 #include <cstdint>
+#include <initializer_list>
 
 namespace storm::engine {
 	static constexpr const auto FORWARD_RENDER_VERT_SRC = {
-		#include "shaders/forward_render.vert"
+#include "shaders/forward_render.vert"
 	};
 
 	static constexpr const auto FORWARD_RENDER_FRAG_SRC = {
-		#include "shaders/forward_render.frag"
+#include "shaders/forward_render.frag"
 	};
 }

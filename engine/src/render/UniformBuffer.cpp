@@ -10,9 +10,7 @@ using namespace storm::engine;
 /////////////////////////////////////
 /////////////////////////////////////
 UniformBuffer::UniformBuffer(const Device &device, Description description)
-	: m_impl{device, std::move(description)} {
-
-}
+    : m_impl {device, std::move(description)} {}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -28,9 +26,7 @@ UniformBuffer &UniformBuffer::operator=(UniformBuffer &&) = default;
 
 /////////////////////////////////////
 /////////////////////////////////////
-void UniformBuffer::reset() {
-	m_impl->reset();
-}
+void UniformBuffer::reset() { m_impl->reset(); }
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -40,15 +36,14 @@ std::size_t UniformBuffer::addData(const std::byte *data, std::size_t size) {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void UniformBuffer::updateData(const std::byte *data, std::size_t size, std::ptrdiff_t offset) {
+void UniformBuffer::updateData(
+    const std::byte *data, std::size_t size, std::ptrdiff_t offset) {
 	m_impl->updateData(data, size, offset);
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-std::byte *UniformBuffer::map() {
-	return m_impl->map();
-}
+std::byte *UniformBuffer::map() { return m_impl->map(); }
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -58,9 +53,7 @@ std::byte *UniformBuffer::map(std::size_t size, std::ptrdiff_t offset) {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void UniformBuffer::unmap() {
-	m_impl->unmap();
-}
+void UniformBuffer::unmap() { m_impl->unmap(); }
 
 /////////////////////////////////////
 /////////////////////////////////////

@@ -4,15 +4,12 @@
 
 #pragma once
 
-#include <storm/engine/render/VertexInputState.hpp>
-#include <storm/engine/render/VertexBuffer.hpp>
-#include <storm/engine/render/IndexBuffer.hpp>
-
-#include <storm/engine/graphics/Material.hpp>
-
-#include <storm/image/Image.hpp>
-
 #include <optional>
+#include <storm/engine/graphics/Material.hpp>
+#include <storm/engine/render/IndexBuffer.hpp>
+#include <storm/engine/render/VertexBuffer.hpp>
+#include <storm/engine/render/VertexInputState.hpp>
+#include <storm/image/Image.hpp>
 
 namespace storm::engine {
 	struct MeshInstance {
@@ -21,11 +18,11 @@ namespace storm::engine {
 		VertexInputState  vertex_state;
 
 		IndexBuffer::Ptr index_buffer;
-		std::size_t index_count = 0u;
-		bool large_indices = false;
+		std::size_t      index_count   = 0u;
+		bool             large_indices = false;
 
-		Material  material;
-		//Transform transform;
+		Material material;
+		// Transform transform;
 
 		mat4 projection;
 		mat4 view;

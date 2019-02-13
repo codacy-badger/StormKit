@@ -14,28 +14,29 @@ namespace storm::core {
 			m_stop = true;
 			m_wake_up.notify_all();
 		}
-		if(m_worker.joinable())
+		if (m_worker.joinable())
 			m_worker.join();
 	}
 
 	template <class Clock, class Duration>
-	typename Timer<Clock, Duration>::DeferredTaskId Timer<Clock, Duration>::makeTask(Duration when, Duration period, const Callback &callback) {
-		return makeTask({
-			0, Clock::now() + when, period, callback
-		});
+	typename Timer<Clock, Duration>::DeferredTaskId
+	Timer<Clock, Duration>::makeTask(
+	    Duration when, Duration period, const Callback &callback) {
+		return makeTask({0, Clock::now() + when, period, callback});
 	}
 
 	template <class Clock, class Duration>
-	typename Timer<Clock, Duration>::DeferredTaskId Timer<Clock, Duration>::makeTask(Duration when, Duration period, Callback &&callback) {
-		return makeTask(DeferredTask(
-			0, Clock::now() + when, period, std::move(callback)
-							));
+	typename Timer<Clock, Duration>::DeferredTaskId
+	Timer<Clock, Duration>::makeTask(
+	    Duration when, Duration period, Callback &&callback) {
+		return makeTask(
+		    DeferredTask(0, Clock::now() + when, period, std::move(callback)));
 	}
 
 	template <class Clock, class Duration>
 	void Timer<Clock, Duration>::deleteTask(Timer::DeferredTaskId id) {
 		ScopedLock lock;
-		auto it = m_tasks.find(id);
+		auto       it = m_tasks.find(id);
 		if (it == m_tasks.end())
 			return;
 		else if (it->second.running)
@@ -55,7 +56,8 @@ namespace storm::core {
 	}
 
 	template <class Clock, class Duration>
-	typename Timer<Clock, Duration>::DeferredTaskId Timer<Clock, Duration>::makeTask(DeferredTask &&task) {
+	typename Timer<Clock, Duration>::DeferredTaskId
+	Timer<Clock, Duration>::makeTask(DeferredTask &&task) {
 		DeferredTaskId id;
 		{
 			ScopedLock lock(m_lock);
@@ -72,15 +74,15 @@ namespace storm::core {
 	template <class Clock, class Duration>
 	void Timer<Clock, Duration>::workerTask() {
 		ScopedLock lock(m_lock);
-		while(!m_stop) {
-			if(m_task_queue.empty())
+		while (!m_stop) {
+			if (m_task_queue.empty())
 				m_wake_up.wait(lock);
 			else {
-				auto task_ref_w    = m_task_queue.begin();
-				DeferredTask &task = *task_ref_w;
-				auto  now          = Clock::now();
+				auto          task_ref_w = m_task_queue.begin();
+				DeferredTask &task       = *task_ref_w;
+				auto          now        = Clock::now();
 
-				if(now >= task.next) {
+				if (now >= task.next) {
 					m_task_queue.erase(task_ref_w);
 
 					task.running = true;
@@ -89,14 +91,14 @@ namespace storm::core {
 					task.callback();
 					lock.lock();
 
-					if(m_stop)
+					if (m_stop)
 						break;
-					else if(!task.running)
+					else if (!task.running)
 						m_tasks.erase(task.id);
 					else {
 						task.running = false;
 
-						if(task.duration.count() > 0) {
+						if (task.duration.count() > 0) {
 							task.next = task.next + task.duration;
 							m_task_queue.insert(task);
 						} else

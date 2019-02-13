@@ -5,26 +5,26 @@
 #pragma once
 
 #include <storm/engine/render/Fence.hpp>
-
 #include <storm/engine/vulkan/UniqueHandle.hpp>
 
 namespace storm::engine {
 	class Device;
 	class FenceImpl {
-		public:
-			explicit FenceImpl(const Device &device);
-			~FenceImpl();
+	public:
+		explicit FenceImpl(const Device &device);
+		~FenceImpl();
 
-			FenceImpl(FenceImpl &&);
+		FenceImpl(FenceImpl &&);
 
-			void wait(std::uint64_t timeout);
-			void reset();
+		void wait(std::uint64_t timeout);
+		void reset();
 
-			inline const vk::Fence &vkFence() const noexcept;
-		private:
-			UniqueHandle<vk::Fence> m_fence;
+		inline const vk::Fence &vkFence() const noexcept;
 
-			const Device &m_device;
+	private:
+		UniqueHandle<vk::Fence> m_fence;
+
+		const Device &m_device;
 	};
 }
 

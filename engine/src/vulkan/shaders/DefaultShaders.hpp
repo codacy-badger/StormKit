@@ -5,6 +5,6 @@
 #pragma once
 
 namespace storm::engine {
-    #include "DefaultVert2D.hpp"
-    #include "DefaultFrag2D.hpp"
+#include "DefaultFrag2D.hpp"
+#include "DefaultVert2D.hpp"
 }

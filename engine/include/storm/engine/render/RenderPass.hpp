@@ -4,46 +4,45 @@
 
 #pragma once
 
+#include <storm/core/Memory.hpp>
 #include <storm/core/NonCopyable.hpp>
 #include <storm/core/Pimpl.hpp>
-#include <storm/core/Memory.hpp>
-
 #include <storm/engine/render/ForwardDeclarations.hpp>
 #include <storm/engine/render/Types.hpp>
 #include <storm/engine/render/Utils.hpp>
-
 #include <vector>
 
 namespace storm::engine {
 	class RenderPassImpl;
 	class RenderPass : public core::NonCopyable {
-		public:
-			Unique_Object(RenderPass)
+	public:
+		Unique_Object(RenderPass)
 
-			struct SubPass {
-				static constexpr const auto EXTERNAL = std::numeric_limits<std::uint32_t>::max();
+		    struct SubPass {
+			static constexpr const auto EXTERNAL
+			    = std::numeric_limits<std::uint32_t>::max();
 
-				std::vector<std::uint32_t> previous_subpass;
-				std::vector<std::size_t> input_attachments;
-				std::vector<std::size_t> output_attachments;
-			};
+			std::vector<std::uint32_t> previous_subpass;
+			std::vector<std::size_t>   input_attachments;
+			std::vector<std::size_t>   output_attachments;
+		};
 
-			explicit RenderPass(const Device &device);
-			~RenderPass();
+		explicit RenderPass(const Device &device);
+		~RenderPass();
 
-			RenderPass(RenderPass &&);
+		RenderPass(RenderPass &&);
 
-			std::size_t addSubPass(SubPass subpass);
-			std::size_t addAttachment(ColorFormat format);
-			
-			bool hasDepthAttachment() const noexcept;
+		std::size_t addSubPass(SubPass subpass);
+		std::size_t addAttachment(ColorFormat format);
 
-			void setExtent(uvec2 extent);
+		bool hasDepthAttachment() const noexcept;
 
-			void build();
+		void setExtent(uvec2 extent);
 
-			IMPLEMENTATION(RenderPassImpl)
-		private:
-			core::Pimpl<RenderPassImpl> m_impl;
+		void build();
+
+		IMPLEMENTATION(RenderPassImpl)
+	private:
+		core::Pimpl<RenderPassImpl> m_impl;
 	};
 }

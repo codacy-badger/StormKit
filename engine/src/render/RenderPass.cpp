@@ -9,10 +9,7 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-RenderPass::RenderPass(const Device &device)
-	: m_impl{device} {
-
-}
+RenderPass::RenderPass(const Device &device) : m_impl {device} {}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -46,6 +43,4 @@ void RenderPass::setExtent(uvec2 extent) {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void RenderPass::build() {
-	m_impl->init();
-}
+void RenderPass::build() { m_impl->init(); }

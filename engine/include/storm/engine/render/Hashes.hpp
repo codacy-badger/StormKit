@@ -4,14 +4,11 @@
 
 #pragma once
 
+#include <functional>
+#include <glm/gtx/hash.hpp>
 #include <storm/core/Hash.hpp>
-
 #include <storm/engine/render/ForwardDeclarations.hpp>
 #include <storm/engine/render/Types.hpp>
-
-#include <functional>
-
-#include <glm/gtx/hash.hpp>
 
 namespace std {
 	HASH_FUNC(storm::engine::PipelineState)

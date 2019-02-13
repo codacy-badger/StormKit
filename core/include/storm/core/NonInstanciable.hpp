@@ -17,13 +17,15 @@ namespace storm::core {
 	 *
 	 * The class allow to a class to be non instanciable
 	 */
-	class NonInstanciable : public NonMovable, public NonCopyable {
-		public:
-			/**
-			 * @brief Constructor
-			 *
-			 * Default Constructor of NonInstanciable
-			 */
-			NonInstanciable() = delete;
+	class NonInstanciable
+	    : public NonMovable
+	    , public NonCopyable {
+	public:
+		/**
+		 * @brief Constructor
+		 *
+		 * Default Constructor of NonInstanciable
+		 */
+		NonInstanciable() = delete;
 	};
 }

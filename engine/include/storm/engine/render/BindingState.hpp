@@ -6,7 +6,6 @@
 
 #include <storm/core/Types.hpp>
 #include <storm/engine/render/Shader.hpp>
-
 #include <variant>
 
 namespace storm::engine {
@@ -14,17 +13,17 @@ namespace storm::engine {
 	class Texture;
 	struct UniformBufferBinding {
 		const UniformBuffer *buffer;
-		std::uint32_t  binding;
-		std::size_t    size;
-		std::ptrdiff_t offset;
-		Shader::Stage  stages;
+		std::uint32_t        binding;
+		std::size_t          size;
+		std::ptrdiff_t       offset;
+		Shader::Stage        stages;
 	};
-	
+
 	struct TextureBinding {
 		const Texture *texture;
 		std::uint32_t  binding;
 	};
-	
+
 	using Binding = std::variant<UniformBufferBinding, TextureBinding>;
 
 	struct BindingState {

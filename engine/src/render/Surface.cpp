@@ -10,13 +10,12 @@ using namespace storm::engine;
 /////////////////////////////////////
 /////////////////////////////////////
 Surface::Surface(const Device &device, const window::Window &window)
-	: m_impl{device, window} {
-	
-}
+    : m_impl {device, window} {}
 
 /////////////////////////////////////
 /////////////////////////////////////
-void Surface::presentFrame(const Framebuffer &framebuffer, const Semaphore &render_finished_semaphore, const Fence &signal_fence) {
+void Surface::presentFrame(const Framebuffer &framebuffer,
+    const Semaphore &render_finished_semaphore, const Fence &signal_fence) {
 	m_impl->presentFrame(framebuffer, render_finished_semaphore, signal_fence);
 }
 

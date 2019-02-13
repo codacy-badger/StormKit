@@ -3,17 +3,13 @@
 // found in the top-level of this distribution
 
 #include <storm/engine/render/Semaphore.hpp>
-
 #include <storm/engine/vulkan/SemaphoreImpl.hpp>
 
 using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-Semaphore::Semaphore(const Device &device)
-	: m_impl{device} {
-
-}
+Semaphore::Semaphore(const Device &device) : m_impl {device} {}
 
 /////////////////////////////////////
 /////////////////////////////////////

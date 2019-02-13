@@ -4,48 +4,48 @@
 
 #pragma once
 
-#include <storm/engine/vulkan/UniqueHandle.hpp>
-#include <storm/engine/vulkan/FramebufferImpl.hpp>
-
 #include <storm/engine/render/RenderPass.hpp>
+#include <storm/engine/vulkan/FramebufferImpl.hpp>
+#include <storm/engine/vulkan/UniqueHandle.hpp>
 
 namespace storm::engine {
 	class RenderPassImpl : public core::NonCopyable {
-		public:
-			explicit RenderPassImpl(const Device &device);
-			~RenderPassImpl();
+	public:
+		explicit RenderPassImpl(const Device &device);
+		~RenderPassImpl();
 
-			RenderPassImpl(RenderPassImpl &&);
+		RenderPassImpl(RenderPassImpl &&);
 
-			void init();
+		void init();
 
-			std::size_t addSubPass(RenderPass::SubPass &&subpass);
-			std::size_t addAttachment(ColorFormat format);
+		std::size_t addSubPass(RenderPass::SubPass &&subpass);
+		std::size_t addAttachment(ColorFormat format);
 
-			void setExtent(uvec2 &&extent) noexcept;
-			inline const uvec2 &extent() const noexcept;
+		void                setExtent(uvec2 &&extent) noexcept;
+		inline const uvec2 &extent() const noexcept;
 
-			inline const std::vector<ColorFormat> &attachments() const noexcept;
+		inline const std::vector<ColorFormat> &attachments() const noexcept;
 
-			inline bool isBuilt() const noexcept;
-			inline bool hasDepthAttachment() const noexcept;
+		inline bool isBuilt() const noexcept;
+		inline bool hasDepthAttachment() const noexcept;
 
-			inline const vk::RenderPass &vkRenderPass() const noexcept;
-		private:
-			void createRenderPass();
-			void createFramebuffer();
+		inline const vk::RenderPass &vkRenderPass() const noexcept;
 
-			bool m_is_built;
+	private:
+		void createRenderPass();
+		void createFramebuffer();
 
-			UniqueHandle<vk::RenderPass> m_render_pass;
+		bool m_is_built;
 
-			std::vector<RenderPass::SubPass> m_subpasses;
-			std::vector<ColorFormat> m_attachments;
-			uvec2 m_extent;
-			
-			bool m_has_depth_attachment;
+		UniqueHandle<vk::RenderPass> m_render_pass;
 
-			const Device &m_device;
+		std::vector<RenderPass::SubPass> m_subpasses;
+		std::vector<ColorFormat>         m_attachments;
+		uvec2                            m_extent;
+
+		bool m_has_depth_attachment;
+
+		const Device &m_device;
 	};
 }
 

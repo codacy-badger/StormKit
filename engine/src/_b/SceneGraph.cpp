@@ -1,6 +1,6 @@
-#include <storm/engine/scenegraph/SceneGraph.hpp>
-
 #include "private/SceneTree.hpp"
+
+#include <storm/engine/scenegraph/SceneGraph.hpp>
 
 using namespace storm::engine;
 
@@ -21,10 +21,7 @@ SceneGraph::~SceneGraph() = default;
 ////////////////////////////////////////
 ////////////////////////////////////////
 /*SceneTree &SceneGraph::updateCache(DrawableCache &cache) {
-	m_tree->traverse(cache);
+    m_tree->traverse(cache);
 
-	return *m_tree;
+    return *m_tree;
 }*/
-
-
-

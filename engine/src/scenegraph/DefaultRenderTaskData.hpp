@@ -4,11 +4,10 @@
 
 #pragma once
 
-#include <storm/engine/render/CommandBuffer.hpp>
-#include <storm/engine/render/RenderPass.hpp>
-#include <storm/engine/render/Framebuffer.hpp>
-
 #include <storm/engine/graphics/ResourceBase.hpp>
+#include <storm/engine/render/CommandBuffer.hpp>
+#include <storm/engine/render/Framebuffer.hpp>
+#include <storm/engine/render/RenderPass.hpp>
 
 namespace storm::engine {
 	struct BeginTaskData {

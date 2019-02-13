@@ -4,10 +4,9 @@
 
 #pragma once
 
-#include <vector>
 #include <cstdint>
-
 #include <storm/engine/render/Types.hpp>
+#include <vector>
 
 namespace storm::engine {
 	struct VertexInputAttribute {
@@ -24,7 +23,7 @@ namespace storm::engine {
 	};
 
 	using VertexInputAttributes = std::vector<VertexInputAttribute>;
-	using VertexInputBindings = std::vector<VertexInputBinding>;
+	using VertexInputBindings   = std::vector<VertexInputBinding>;
 
 	struct VertexInputState {
 		VertexInputAttributes attributes;

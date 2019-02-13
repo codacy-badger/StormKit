@@ -7,7 +7,8 @@
 #include "MeshList.hpp"
 
 namespace storm::engine {
-	inline std::pair<std::uint64_t, std::reference_wrapper<MeshInstance>> MeshList::addMesh() {
+	inline std::pair<std::uint64_t, std::reference_wrapper<MeshInstance>>
+	MeshList::addMesh() {
 		auto &mesh = m_meshes.emplace_back();
 
 		return std::make_pair(std::size(m_meshes) - 1, std::ref(mesh));
@@ -17,9 +18,7 @@ namespace storm::engine {
 		return m_meshes[id];
 	}
 
-	inline void MeshList::clear() {
-		m_meshes.clear();
-	}
+	inline void MeshList::clear() { m_meshes.clear(); }
 
 	inline const MeshList::MeshVec &MeshList::meshes() const noexcept {
 		return m_meshes;

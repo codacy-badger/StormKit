@@ -1,10 +1,11 @@
 #include "Wrapper.hpp"
-#include "WrapperTree.hpp"
-#include "WrapperState.hpp"
 
+#include "WrapperState.hpp"
+#include "WrapperTree.hpp"
+
+#include <storm/core/Configure.hpp>
 #include <storm/tools/Tree.hpp>
 #include <storm/tools/TreeNode.hpp>
-#include <storm/core/Configure.hpp>
 
 //#include <Python.h>
 #include <pybind11/pybind11.h>

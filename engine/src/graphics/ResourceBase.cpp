@@ -8,8 +8,10 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-ResourceBase::ResourceBase(std::string name, RenderTaskBaseOptionalRef &&creator)
-	: m_name{std::move(name)}, m_creator{std::move(creator)}, m_id{0u}, m_ref_count{0u} {}
+ResourceBase::ResourceBase(
+    std::string name, RenderTaskBaseOptionalRef &&creator)
+    : m_name {std::move(name)}, m_creator {std::move(creator)}, m_id {0u},
+      m_ref_count {0u} {}
 
 /////////////////////////////////////
 /////////////////////////////////////

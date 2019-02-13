@@ -11,14 +11,13 @@ namespace storm::engine {
 		return m_extent;
 	}
 
-	inline const std::vector<ColorFormat> &RenderPassImpl::attachments() const noexcept {
+	inline const std::vector<ColorFormat> &RenderPassImpl::attachments() const
+	    noexcept {
 		return m_attachments;
 	}
 
-	inline bool RenderPassImpl::isBuilt() const noexcept {
-		return m_is_built;
-	}
-	
+	inline bool RenderPassImpl::isBuilt() const noexcept { return m_is_built; }
+
 	inline bool RenderPassImpl::hasDepthAttachment() const noexcept {
 		return m_has_depth_attachment;
 	}

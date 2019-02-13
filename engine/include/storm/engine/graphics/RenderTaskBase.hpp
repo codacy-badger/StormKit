@@ -4,46 +4,45 @@
 
 #pragma once
 
-#include <string>
 #include <set>
-
 #include <storm/core/NonCopyable.hpp>
-
 #include <storm/engine/graphics/ForwardDeclarations.hpp>
+#include <string>
 
 namespace storm::engine {
 	class RenderTaskBase : core::NonCopyable {
-		public:
-			using ID = std::uint32_t;
-			
-			explicit RenderTaskBase(std::string name);
-			virtual ~RenderTaskBase();
+	public:
+		using ID = std::uint32_t;
 
-			RenderTaskBase(RenderTaskBase &&);
-			RenderTaskBase &operator=(RenderTaskBase &&);
+		explicit RenderTaskBase(std::string name);
+		virtual ~RenderTaskBase();
 
-			inline void setCullImune(bool imune);
-			inline bool cullImune() const noexcept;
+		RenderTaskBase(RenderTaskBase &&);
+		RenderTaskBase &operator=(RenderTaskBase &&);
 
-			inline ID id() const noexcept;
-			inline void setName(std::string name);
-			inline const std::string &name() const noexcept;
-		private:
-			virtual void setup(RenderTaskBuilder &builder) = 0;
-			virtual void execute(ResourcePool &pool) const = 0;
+		inline void setCullImune(bool imune);
+		inline bool cullImune() const noexcept;
 
-			std::string m_name;
-			bool m_cull_imune;
+		inline ID                 id() const noexcept;
+		inline void               setName(std::string name);
+		inline const std::string &name() const noexcept;
 
-			std::set<std::uint32_t> m_create_resources;
-			std::set<std::uint32_t> m_write_resources;
-			std::set<std::uint32_t> m_read_resources;
+	private:
+		virtual void setup(RenderTaskBuilder &builder) = 0;
+		virtual void execute(ResourcePool &pool) const = 0;
 
-			ID m_id;
-			std::uint32_t m_ref_count;
+		std::string m_name;
+		bool        m_cull_imune;
 
-			friend class RenderTaskBuilder;
-			friend class RenderGraph;
+		std::set<std::uint32_t> m_create_resources;
+		std::set<std::uint32_t> m_write_resources;
+		std::set<std::uint32_t> m_read_resources;
+
+		ID            m_id;
+		std::uint32_t m_ref_count;
+
+		friend class RenderTaskBuilder;
+		friend class RenderGraph;
 	};
 }
 

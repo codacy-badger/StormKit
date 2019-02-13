@@ -9,10 +9,7 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-Fence::Fence(const Device &device)
-	: m_impl{device} {
-
-}
+Fence::Fence(const Device &device) : m_impl {device} {}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -28,12 +25,8 @@ Fence &Fence::operator=(Fence &&) = default;
 
 /////////////////////////////////////
 /////////////////////////////////////
-void Fence::wait(std::uint64_t timeout) {
-	m_impl->wait(timeout);
-}
+void Fence::wait(std::uint64_t timeout) { m_impl->wait(timeout); }
 
 /////////////////////////////////////
 /////////////////////////////////////
-void Fence::reset() {
-	m_impl->reset();
-}
+void Fence::reset() { m_impl->reset(); }

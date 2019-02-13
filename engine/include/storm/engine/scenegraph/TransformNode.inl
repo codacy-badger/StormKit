@@ -7,7 +7,7 @@
 #include "TransformNode.hpp"
 
 namespace storm::engine {
-	inline const TransformNode::DataType &TransformNode::data()      const noexcept {
+	inline const TransformNode::DataType &TransformNode::data() const noexcept {
 		return m_transform;
 	}
 

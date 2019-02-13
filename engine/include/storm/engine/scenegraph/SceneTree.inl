@@ -4,5 +4,4 @@
 
 #include "SceneTree.hpp"
 
-namespace storm::engine {
-}
+namespace storm::engine {}

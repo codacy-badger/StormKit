@@ -10,7 +10,7 @@ namespace storm::engine {
 	}
 
 	inline void CameraNode::setView(mat4 view) noexcept {
-		m_camera.view = std::move(view);
+		m_camera.view          = std::move(view);
 		m_camera.is_view_dirty = true;
 	}
 
@@ -19,7 +19,7 @@ namespace storm::engine {
 	}
 
 	inline void CameraNode::setProjection(mat4 projection) noexcept {
-		m_camera.projection = std::move(projection);
+		m_camera.projection          = std::move(projection);
 		m_camera.is_projection_dirty = true;
 	}
 

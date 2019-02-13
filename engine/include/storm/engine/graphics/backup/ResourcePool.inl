@@ -7,11 +7,13 @@
 #include "ResourcePool.hpp"
 
 namespace storm::engine {
-	inline const std::vector<TextureResource::Ptr> &ResourcePool::textures() const noexcept {
+	inline const std::vector<TextureResource::Ptr> &
+	ResourcePool::textures() const noexcept {
 		return m_textures;
 	}
 
-	inline const std::vector<UniformBufferResource::Ptr> &ResourcePool::buffers() const noexcept {
+	inline const std::vector<UniformBufferResource::Ptr> &
+	ResourcePool::buffers() const noexcept {
 		return m_buffers;
 	}
 }

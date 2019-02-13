@@ -7,10 +7,8 @@
 #include "ResourceBase.hpp"
 
 namespace storm::engine {
-	inline std::uint32_t ResourceBase::id() const noexcept {
-		return m_id;
-	}
-	
+	inline std::uint32_t ResourceBase::id() const noexcept { return m_id; }
+
 	inline bool ResourceBase::transient() const noexcept {
 		return m_creator != std::nullopt;
 	}

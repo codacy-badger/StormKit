@@ -9,10 +9,15 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-Framebuffer::Framebuffer(const Device &device, const RenderPassImpl &render_pass)
-	: m_impl{device, render_pass} {
+Framebuffer::Framebuffer(
+    const Device &device, const RenderPassImpl &render_pass)
+    : m_impl {device, render_pass} {}
 
-}
+/////////////////////////////////////
+/////////////////////////////////////
+Framebuffer::Framebuffer(
+    const Device &device, const RenderPass &render_pass)
+    : m_impl {device, render_pass} {}
 
 /////////////////////////////////////
 /////////////////////////////////////

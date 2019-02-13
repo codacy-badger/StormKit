@@ -9,10 +9,7 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-Program::Program(const Device &device)
-	: m_impl{device} {
-
-}
+Program::Program(const Device &device) : m_impl {device} {}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -40,6 +37,4 @@ const std::vector<const Shader *> &Program::shaderModules() const noexcept {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void Program::link() {
-	m_impl->link();
-}
+void Program::link() { m_impl->link(); }

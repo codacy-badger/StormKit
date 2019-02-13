@@ -2,5 +2,4 @@
 
 using namespace storm::tools;
 
-
 UnhandledEventException::~UnhandledEventException() = default;

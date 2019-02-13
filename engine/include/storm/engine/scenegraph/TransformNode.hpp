@@ -1,31 +1,32 @@
 #pragma once
 
 #include <storm/engine/graphics/Transform.hpp>
-
 #include <storm/engine/scenegraph/SceneNode.hpp>
 
 namespace storm::engine {
 	class STORM_PUBLIC TransformNode : public SceneNode {
-		public:
-			SUR_Object(TransformNode)
+	public:
+		SUR_Object(TransformNode)
 
-			using DataType = Transform;
+		    using DataType = Transform;
 
-			~TransformNode() override;
+		~TransformNode() override;
 
-			TransformNode(TransformNode &&);
-			TransformNode &operator=(TransformNode &&);
+		TransformNode(TransformNode &&);
+		TransformNode &operator=(TransformNode &&);
 
-			inline const DataType &data()      const noexcept;
-			inline void setTransform(Transform transform) noexcept;
-		protected:
-			explicit TransformNode(Scene &graph);
+		inline const DataType &data() const noexcept;
+		inline void            setTransform(Transform transform) noexcept;
 
-			DirtyType dirtyValue() const noexcept override;
+	protected:
+		explicit TransformNode(Scene &graph);
 
-			friend class Scene;
-		private:
-			DataType m_transform;
+		DirtyType dirtyValue() const noexcept override;
+
+		friend class Scene;
+
+	private:
+		DataType m_transform;
 	};
 }
 

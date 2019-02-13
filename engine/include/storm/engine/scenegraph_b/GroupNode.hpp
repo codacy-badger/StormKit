@@ -4,14 +4,14 @@
 
 namespace storm::engine {
 	class STORM_PUBLIC GroupNode : public Node {
-		public:
-			SUR_Object(GroupNode)
+	public:
+		SUR_Object(GroupNode)
 
-			~GroupNode() override = default;
+		    ~GroupNode() override = default;
 
-		protected:
-			explicit GroupNode();
+	protected:
+		explicit GroupNode();
 
-			std::uint32_t dirtyValue() const noexcept override;
+		std::uint32_t dirtyValue() const noexcept override;
 	};
 }

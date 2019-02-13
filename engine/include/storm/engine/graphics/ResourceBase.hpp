@@ -4,54 +4,54 @@
 
 #pragma once
 
+#include <optional>
+#include <storm/core/Memory.hpp>
+#include <storm/core/NonCopyable.hpp>
+#include <storm/engine/graphics/RenderTaskBase.hpp>
+#include <storm/engine/render/ForwardDeclarations.hpp>
 #include <string>
 #include <vector>
-#include <optional>
-
-#include <storm/core/NonCopyable.hpp>
-#include <storm/core/Memory.hpp>
-
-#include <storm/engine/render/ForwardDeclarations.hpp>
-
-#include <storm/engine/graphics/RenderTaskBase.hpp>
 
 namespace storm::engine {
 	class ResourceBase : public core::NonCopyable {
-		public:
-			SUR_Object(ResourceBase)
-			
-			using ID = std::uint32_t;
-			
-			using RenderTaskBaseOptionalRef = std::optional<std::reference_wrapper<RenderTaskBase>>;
-			
-			explicit ResourceBase(std::string name, RenderTaskBaseOptionalRef &&creator);
-			virtual ~ResourceBase();
+	public:
+		SUR_Object(ResourceBase)
 
-			ResourceBase(ResourceBase &&);
-			ResourceBase &operator=(ResourceBase &&);
+		    using ID = std::uint32_t;
 
-			inline ID id() const noexcept;
-			inline bool transient() const noexcept;
+		using RenderTaskBaseOptionalRef
+		    = std::optional<std::reference_wrapper<RenderTaskBase>>;
 
-			inline void setName(std::string name);
-			inline const std::string &name() const noexcept;
-		protected:
-			virtual void realize(const Device &device) = 0;
-			virtual void derealize() = 0;
+		explicit ResourceBase(
+		    std::string name, RenderTaskBaseOptionalRef &&creator);
+		virtual ~ResourceBase();
 
-			std::string     m_name;
+		ResourceBase(ResourceBase &&);
+		ResourceBase &operator=(ResourceBase &&);
 
-			RenderTaskBaseOptionalRef m_creator;
+		inline ID   id() const noexcept;
+		inline bool transient() const noexcept;
 
-			std::vector<RenderTaskBase::ID> m_readers;
-			std::vector<RenderTaskBase::ID> m_writers;
+		inline void               setName(std::string name);
+		inline const std::string &name() const noexcept;
 
-			ID m_id;
-			std::uint32_t m_ref_count;
+	protected:
+		virtual void realize(const Device &device) = 0;
+		virtual void derealize()                   = 0;
 
-			friend class RenderTaskBuilder;
-			friend class RenderGraph;
-			friend class ResourcePool;
+		std::string m_name;
+
+		RenderTaskBaseOptionalRef m_creator;
+
+		std::vector<RenderTaskBase::ID> m_readers;
+		std::vector<RenderTaskBase::ID> m_writers;
+
+		ID            m_id;
+		std::uint32_t m_ref_count;
+
+		friend class RenderTaskBuilder;
+		friend class RenderGraph;
+		friend class ResourcePool;
 	};
 }
 

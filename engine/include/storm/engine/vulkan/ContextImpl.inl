@@ -10,8 +10,9 @@ namespace storm::engine {
 	inline const ContextSettings &ContextImpl::settings() const noexcept {
 		return m_context_settings;
 	}
-	
-	inline const vk::DispatchLoaderDynamic &ContextImpl::dispatcher() const noexcept {
+
+	inline const vk::DispatchLoaderDynamic &ContextImpl::dispatcher() const
+	    noexcept {
 		return m_dispatcher;
 	}
 

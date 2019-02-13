@@ -4,63 +4,63 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
 #include <memory>
-
 #include <storm/core/NonCopyable.hpp>
-
+#include <storm/engine/graphics/ForwardDeclarations.hpp>
 #include <storm/engine/render/ForwardDeclarations.hpp>
 #include <storm/engine/render/PipelineState.hpp>
-
-#include <storm/engine/graphics/ForwardDeclarations.hpp>
+#include <string>
+#include <vector>
 
 namespace storm::engine {
 	class RenderTaskBase : core::NonCopyable {
-		public:
-			using ID = std::uint32_t;
-			
-			explicit RenderTaskBase(std::string name, RenderGraph &parent);
-			virtual ~RenderTaskBase();
+	public:
+		using ID = std::uint32_t;
 
-			RenderTaskBase(RenderTaskBase &&);
-			RenderTaskBase &operator=(RenderTaskBase &&);
+		explicit RenderTaskBase(std::string name, RenderGraph &parent);
+		virtual ~RenderTaskBase();
 
-			inline ID id() const noexcept;
-			inline void setName(std::string name);
-			inline const std::string &name() const noexcept;
-			inline const Framebuffer &framebuffer() const noexcept;
-			inline PipelineState &pipelineState() noexcept;
+		RenderTaskBase(RenderTaskBase &&);
+		RenderTaskBase &operator=(RenderTaskBase &&);
 
-		protected:
-			std::unique_ptr<RenderPass>  m_render_pass;
-			std::unique_ptr<Framebuffer> m_framebuffer;
+		inline ID                 id() const noexcept;
+		inline void               setName(std::string name);
+		inline const std::string &name() const noexcept;
+		inline const Framebuffer &framebuffer() const noexcept;
+		inline PipelineState &    pipelineState() noexcept;
 
-		private:
-			void initRenderPass(ResourcePool &pool);
-			uvec2 computeSize(const std::optional<std::reference_wrapper<const ResourceBase> > &depth, const std::vector<std::reference_wrapper<const ResourceBase> > &colors);
+	protected:
+		Framebuffer m_framebuffer;
 
-			virtual void setup(RenderTaskBuilder &) = 0;
-			virtual void execute(CommandBuffer &) const = 0;
+	private:
+		void  initRenderPass(ResourcePool &pool);
+		uvec2 computeSize(
+		    const std::optional<std::reference_wrapper<const ResourceBase>>
+		        &depth,
+		    const std::vector<std::reference_wrapper<const ResourceBase>>
+		        &colors);
 
-			std::string m_name;
-			std::reference_wrapper<RenderGraph> m_parent;
+		virtual void setup(RenderTaskBuilder &)     = 0;
+		virtual void execute(CommandBuffer &) const = 0;
 
-			PipelineState m_pipeline_state;
+		std::string                         m_name;
+		std::reference_wrapper<RenderGraph> m_parent;
 
-			std::vector<std::uint32_t> m_create_attachments;
-			std::vector<std::uint32_t> m_write_attachments;
-			std::vector<std::uint32_t> m_read_attachments;
+		PipelineState m_pipeline_state;
 
-			std::vector<std::uint32_t> m_create_buffers;
-			std::vector<std::uint32_t> m_write_buffers;
-			std::vector<std::uint32_t> m_read_buffers;
+		std::vector<std::uint32_t> m_create_attachments;
+		std::vector<std::uint32_t> m_write_attachments;
+		std::vector<std::uint32_t> m_read_attachments;
 
-			ID m_id;
-			std::uint32_t m_ref_count;
+		std::vector<std::uint32_t> m_create_buffers;
+		std::vector<std::uint32_t> m_write_buffers;
+		std::vector<std::uint32_t> m_read_buffers;
 
-			friend class RenderTaskBuilder;
-			friend class RenderGraph;
+		ID            m_id;
+		std::uint32_t m_ref_count;
+
+		friend class RenderTaskBuilder;
+		friend class RenderGraph;
 	};
 }
 

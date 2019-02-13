@@ -3,7 +3,8 @@
 #include "ShaderStage.hpp"
 
 namespace storm::engine {
-	inline const _std::filesystem::path &ShaderStage::filepath() const noexcept {
+	inline const _std::filesystem::path &ShaderStage::filepath() const
+	    noexcept {
 		return m_filepath;
 	}
 

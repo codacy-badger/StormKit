@@ -5,23 +5,23 @@
 #pragma once
 
 #include <storm/engine/render/Semaphore.hpp>
-
 #include <storm/engine/vulkan/UniqueHandle.hpp>
 
 namespace storm::engine {
 	class Device;
 	class SemaphoreImpl : core::NonCopyable {
-		public:
-			explicit SemaphoreImpl(const Device &device);
-			~SemaphoreImpl();
+	public:
+		explicit SemaphoreImpl(const Device &device);
+		~SemaphoreImpl();
 
-			SemaphoreImpl(SemaphoreImpl &&);
+		SemaphoreImpl(SemaphoreImpl &&);
 
-			inline const vk::Semaphore &vkSemaphore() const noexcept;
-		private:
-			UniqueHandle<vk::Semaphore> m_semaphore;
+		inline const vk::Semaphore &vkSemaphore() const noexcept;
 
-			const Device &m_device;
+	private:
+		UniqueHandle<vk::Semaphore> m_semaphore;
+
+		const Device &m_device;
 	};
 }
 

@@ -1,7 +1,6 @@
-#include <storm/log/ConsoleOutput.hpp>
-#include <storm/core/Platform.hpp>
 #include <iostream>
-
+#include <storm/core/Platform.hpp>
+#include <storm/log/ConsoleOutput.hpp>
 
 using namespace storm::log;
 
@@ -21,72 +20,74 @@ static constexpr const std::uint8_t KGRS = 8;
 /////////////////////////////////////
 /////////////////////////////////////
 void colorify(std::string severity) {
-	HANDLE handle=GetStdHandle(STD_OUTPUT_HANDLE);
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	std::uint8_t background = KBLA;
-	std::uint8_t text = KWHT;
-	if(severity.at(1) == 'I') {
+	std::uint8_t text       = KWHT;
+	if (severity.at(1) == 'I') {
 		background = KGRN;
 		text       = KGRS;
-	} else if(severity.at(1) == 'W') {
+	} else if (severity.at(1) == 'W') {
 		background = KMAG;
 		text       = KGRS;
-	} if(severity.at(1) == 'E') {
+	}
+	if (severity.at(1) == 'E') {
 		background = KYEL;
 		text       = KGRS;
-	} if(severity.at(1) == 'F') {
+	}
+	if (severity.at(1) == 'F') {
 		background = KRED;
 		text       = KGRS;
-	} if(severity.at(1) == 'D') {
+	}
+	if (severity.at(1) == 'D') {
 		background = KCYN;
 		text       = KGRS;
 	}
 
-	SetConsoleTextAttribute(handle,(background << 4) + text);
+	SetConsoleTextAttribute(handle, (background << 4) + text);
 	std::cout << severity;
-	SetConsoleTextAttribute(handle,(KBLA << 4) + KWHT);
+	SetConsoleTextAttribute(handle, (KBLA << 4) + KWHT);
 }
 #elif defined(STORM_OS_IOS)
 /////////////////////////////////////
 /////////////////////////////////////
 void colorify(std::string severity) {
-    /*if(severity == "[Information] ")
-     
-     else if(severity == "[Warning] ")
-     
-     if(severity == "[Error] ")
-     
-     if(severity == "[FatalError] ")
-     
-     if(severity == "[Debug] ")*/
-    std::cout << severity;
-    
+	/*if(severity == "[Information] ")
+
+	 else if(severity == "[Warning] ")
+
+	 if(severity == "[Error] ")
+
+	 if(severity == "[FatalError] ")
+
+	 if(severity == "[Debug] ")*/
+	std::cout << severity;
 }
 #elif defined(STORM_POSIX)
 
-static constexpr const char * const KNRM = "\x1B[0m";
-static constexpr const char * const KRED = "\x1B[31m";
-static constexpr const char * const KGRN = "\x1B[32m";
-static constexpr const char * const KYEL = "\x1B[33m";
-static constexpr const char * const KBLU = "\x1B[34m";
-static constexpr const char * const KMAG = "\x1B[35m";
-static constexpr const char * const KCYN = "\x1B[36m";
-static constexpr const char * const KWHT = "\x1B[37m";
-static constexpr const char * const KGRS = "\033[1m";
-static constexpr const char * const KINV = "\e[7m";
+static constexpr const char *const KNRM = "\x1B[0m";
+static constexpr const char *const KRED = "\x1B[31m";
+static constexpr const char *const KGRN = "\x1B[32m";
+static constexpr const char *const KYEL = "\x1B[33m";
+static constexpr const char *const KBLU = "\x1B[34m";
+static constexpr const char *const KMAG = "\x1B[35m";
+static constexpr const char *const KCYN = "\x1B[36m";
+static constexpr const char *const KWHT = "\x1B[37m";
+static constexpr const char *const KGRS = "\033[1m";
+static constexpr const char *const KINV = "\e[7m";
 
 /////////////////////////////////////
 /////////////////////////////////////
 void colorify(std::string severity) {
-	if(severity.at(1) == 'I')
+	if (severity.at(1) == 'I')
 		std::cout << KGRS << KINV << KGRN << severity << KNRM << " ";
-	else if(severity.at(1) == 'W')
-		std::cout << KGRS << KINV << KMAG <<  severity << KNRM << " ";
-	else if(severity.at(1) == 'E')
+	else if (severity.at(1) == 'W')
+		std::cout << KGRS << KINV << KMAG << severity << KNRM << " ";
+	else if (severity.at(1) == 'E')
 		std::cout << KGRS << KINV << KYEL << severity << KNRM << " ";
-	else if(severity.at(1) == 'F')
+	else if (severity.at(1) == 'F')
 		std::cout << KGRS << KINV << KRED << severity << KNRM << " ";
-	else if(severity.at(1) == 'D')
+	else if (severity.at(1) == 'D')
 		std::cout << KGRS << KINV << KCYN << severity << KNRM << " ";
 }
 #endif
@@ -94,6 +95,6 @@ void colorify(std::string severity) {
 ////////////////////////////////////////
 ////////////////////////////////////////
 void ConsoleOutput::write(const char *string) {
-    colorify(getCurrentSeverity());
+	colorify(getCurrentSeverity());
 	std::cout << string << "\n" << std::endl;
 }

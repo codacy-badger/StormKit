@@ -8,31 +8,35 @@
 
 namespace storm::engine {
 	template <typename RenderTaskData>
-	RenderTask<RenderTaskData> &RenderGraph::addRenderPass(const std::string name,
-														   typename RenderTask<RenderTaskData>::SetupFunction setup_func,
-														   typename RenderTask<RenderTaskData>::ExecuteFunction execute_func) {
-		auto task = std::make_unique<RenderTask<RenderTaskData>>(name, *this, setup_func, execute_func);
+	RenderTask<RenderTaskData> &RenderGraph::addRenderPass(
+	    const std::string                                    name,
+	    typename RenderTask<RenderTaskData>::SetupFunction   setup_func,
+	    typename RenderTask<RenderTaskData>::ExecuteFunction execute_func) {
+		auto task = std::make_unique<RenderTask<RenderTaskData>>(
+		    name, *this, setup_func, execute_func);
 
 		m_render_tasks.emplace_back(std::move(task));
 
 		auto &task_ref = *m_render_tasks.back();
-		task_ref.m_id = m_next_task_id++;
+		task_ref.m_id  = m_next_task_id++;
 
-		auto builder = RenderTaskBuilder{m_device, task_ref, m_resources};
+		auto builder = RenderTaskBuilder {m_device, task_ref, m_resources};
 		task_ref.setup(builder);
 
-		return static_cast<RenderTask<RenderTaskData>&>(task_ref);
+		return static_cast<RenderTask<RenderTaskData> &>(task_ref);
 	}
-	
+
 	template <typename T>
-	const T &RenderGraph::getRenderTaskAs(RenderTaskBase::ID render_task_id) const noexcept {
-		//static_assert (std::is_, )
-		
-		return static_cast<T&>(getRenderTask(render_task_id));
+	const T &RenderGraph::getRenderTaskAs(
+	    RenderTaskBase::ID render_task_id) const noexcept {
+		// static_assert (std::is_, )
+
+		return static_cast<T &>(getRenderTask(render_task_id));
 	}
-	
+
 	template <typename T>
-	T &RenderGraph::getRenderTaskAs(RenderTaskBase::ID render_task_id) noexcept {
-		return static_cast<T&>(getRenderTask(render_task_id));
+	T &RenderGraph::getRenderTaskAs(
+	    RenderTaskBase::ID render_task_id) noexcept {
+		return static_cast<T &>(getRenderTask(render_task_id));
 	}
 }

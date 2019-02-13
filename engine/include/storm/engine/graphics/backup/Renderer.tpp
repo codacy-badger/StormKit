@@ -12,4 +12,3 @@ namespace storm::engine {
 		m_graph_update_funcs.emplace(method, std::forward<T>(func));
 	}
 }
-

@@ -4,28 +4,27 @@
 
 #pragma once
 
-#include <storm/engine/render/ContextSettings.hpp>
-#include <storm/engine/render/PhysicalDevice.hpp>
-
 #include <storm/core/NonCopyable.hpp>
 #include <storm/core/Pimpl.hpp>
+#include <storm/engine/render/ContextSettings.hpp>
+#include <storm/engine/render/PhysicalDevice.hpp>
 
 namespace storm::engine {
 	class ContextImpl;
 	class Context : public core::NonCopyable {
-		public:
-			explicit Context(ContextSettings settings);
-			~Context();
-			
-			Context(Context &&);
-			Context &operator=(Context &&);
-			
-			PhysicalDevice bestPhysicalDevice();
-			
-			const ContextSettings &settings();
-			
-			IMPLEMENTATION(ContextImpl)
-		private:
-			core::Pimpl<ContextImpl> m_impl;
+	public:
+		explicit Context(ContextSettings settings);
+		~Context();
+
+		Context(Context &&);
+		Context &operator=(Context &&);
+
+		PhysicalDevice bestPhysicalDevice();
+
+		const ContextSettings &settings();
+
+		IMPLEMENTATION(ContextImpl)
+	private:
+		core::Pimpl<ContextImpl> m_impl;
 	};
 }

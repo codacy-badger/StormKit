@@ -1,5 +1,5 @@
-#include <storm/log/FileOutput.hpp>
 #include <storm/core/Assert.hpp>
+#include <storm/log/FileOutput.hpp>
 
 using namespace storm::log;
 
@@ -13,9 +13,8 @@ FileOutput::FileOutput(const _std::filesystem::path &filepath) {
 /////////////////////////////////////
 /////////////////////////////////////
 void FileOutput::write(const char *string) {
-	if(!m_file)
+	if (!m_file)
 		return;
 
-    m_file << getCurrentSeverity() << " " << string << std::endl;
+	m_file << getCurrentSeverity() << " " << string << std::endl;
 }
-

@@ -4,45 +4,49 @@
 
 #pragma once
 
-#include <storm/engine/render/Surface.hpp>
-
-#include <storm/engine/vulkan/UniqueHandle.hpp>
-#include <storm/engine/vulkan/SwapChain.hpp>
-
-#include <storm/window/Window.hpp>
-
 #include <storm/core/NonCopyable.hpp>
+#include <storm/engine/render/Surface.hpp>
+#include <storm/engine/vulkan/SwapChain.hpp>
+#include <storm/engine/vulkan/UniqueHandle.hpp>
+#include <storm/window/Window.hpp>
 
 namespace storm::engine {
 	class SurfaceImpl : public core::NonCopyable {
-		public:
-			explicit SurfaceImpl(const Device &device, const window::Window &window);
-			~SurfaceImpl();
-			
-			SurfaceImpl(SurfaceImpl &&);
+	public:
+		explicit SurfaceImpl(
+		    const Device &device, const window::Window &window);
+		~SurfaceImpl();
 
-			void presentFrame(const Framebuffer &framebuffer, const Semaphore &render_finished_semaphore, const Fence &signal_fence);
+		SurfaceImpl(SurfaceImpl &&);
 
-			inline vk::Extent2D size() const noexcept;
+		void presentFrame(const Framebuffer &framebuffer,
+		    const Semaphore &                render_finished_semaphore,
+		    const Fence &                    signal_fence);
 
-			inline const vk::SurfaceKHR &vkSurface() const noexcept;
-			inline const vk::SurfaceCapabilitiesKHR &vkSurfaceCapabilities() const noexcept;
-			inline const std::vector<vk::PresentModeKHR> &vkSurfacePresentMode() const noexcept;
-			inline const std::vector<vk::SurfaceFormatKHR> &vkSurfaceFormats() const noexcept;
-		private:
-			void createSurface();
-			
-			vk::SurfaceKHR m_surface;
-			vk::SurfaceCapabilitiesKHR        m_surface_capabilities;
-			std::vector<vk::SurfaceFormatKHR> m_surface_formats;
-			std::vector<vk::PresentModeKHR>   m_present_modes;
+		inline vk::Extent2D size() const noexcept;
 
-			vk::Extent2D m_size;
+		inline const vk::SurfaceKHR &            vkSurface() const noexcept;
+		inline const vk::SurfaceCapabilitiesKHR &vkSurfaceCapabilities() const
+		    noexcept;
+		inline const std::vector<vk::PresentModeKHR> &
+		                                                vkSurfacePresentMode() const noexcept;
+		inline const std::vector<vk::SurfaceFormatKHR> &vkSurfaceFormats() const
+		    noexcept;
 
-			SwapChain::Ptr m_swapchain;
-			
-			const Device         &m_device;
-			const window::Window &m_window;
+	private:
+		void createSurface();
+
+		vk::SurfaceKHR                    m_surface;
+		vk::SurfaceCapabilitiesKHR        m_surface_capabilities;
+		std::vector<vk::SurfaceFormatKHR> m_surface_formats;
+		std::vector<vk::PresentModeKHR>   m_present_modes;
+
+		vk::Extent2D m_size;
+
+		SwapChain::Ptr m_swapchain;
+
+		const Device &        m_device;
+		const window::Window &m_window;
 	};
 }
 

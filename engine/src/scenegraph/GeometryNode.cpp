@@ -2,18 +2,14 @@
 // This file is subject to the license terms in the LICENSE file
 // found in the top-level of this distribution
 
-#include <storm/engine/scenegraph/GeometryNode.hpp>
 #include <storm/engine/scenegraph/DirtyDefs.hpp>
+#include <storm/engine/scenegraph/GeometryNode.hpp>
 
 using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-GeometryNode::GeometryNode(Scene &graph)
-	: SceneNode{graph, "GeometryNode"}
-	{
-
-}
+GeometryNode::GeometryNode(Scene &graph) : SceneNode {graph, "GeometryNode"} {}
 
 /////////////////////////////////////
 /////////////////////////////////////

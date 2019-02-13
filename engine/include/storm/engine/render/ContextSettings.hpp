@@ -5,7 +5,7 @@
 
 namespace storm::engine {
 	struct ContextSettings {
-		std::string       app_name;
+		std::string app_name;
 		struct {
 			std::uint32_t major;
 			std::uint32_t minor;

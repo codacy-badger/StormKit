@@ -7,15 +7,9 @@
 #include "Scene.hpp"
 
 namespace storm::engine {
-	inline GroupNode &Scene::root() noexcept {
-		return m_root;
-	}
+	inline GroupNode &Scene::root() noexcept { return m_root; }
 
-	inline const GroupNode &Scene::root() const noexcept {
-		return m_root;
-	}
+	inline const GroupNode &Scene::root() const noexcept { return m_root; }
 
-	inline const MeshList &Scene::meshes() const noexcept {
-		return m_cache;
-	}
+	inline const MeshList &Scene::meshes() const noexcept { return m_cache; }
 }

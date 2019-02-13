@@ -12,7 +12,8 @@ namespace storm::engine {
 		return m_pipeline_state;
 	}
 
-	inline const PipelineState &CommandBufferImpl::pipelineState() const noexcept {
+	inline const PipelineState &CommandBufferImpl::pipelineState() const
+	    noexcept {
 		return m_pipeline_state;
 	}
 
@@ -21,11 +22,13 @@ namespace storm::engine {
 		return m_binding_state;
 	}
 
-	inline const BindingState &CommandBufferImpl::bindingState() const noexcept {
+	inline const BindingState &CommandBufferImpl::bindingState() const
+	    noexcept {
 		return m_binding_state;
 	}
 
-	inline const vk::CommandBuffer &CommandBufferImpl::vkCommandBuffer() const noexcept {
+	inline const vk::CommandBuffer &CommandBufferImpl::vkCommandBuffer() const
+	    noexcept {
 		return m_command_buffer.get();
 	}
 }

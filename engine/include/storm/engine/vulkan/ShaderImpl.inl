@@ -7,9 +7,7 @@
 #include "ShaderImpl.hpp"
 
 namespace storm::engine {
-	inline Shader::Stage ShaderImpl::stage() const noexcept {
-		return m_stage;
-	}
+	inline Shader::Stage ShaderImpl::stage() const noexcept { return m_stage; }
 
 	inline const std::vector<std::byte> &ShaderImpl::source() const noexcept {
 		return m_source;

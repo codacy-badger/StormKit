@@ -13,17 +13,20 @@ namespace storm::tools {
 	}
 
 	template <typename Event, typename CustomData>
-	inline typename Subject<Event, CustomData>::ObserverCRef Subject<Event, CustomData>::observer() const noexcept {
+	inline typename Subject<Event, CustomData>::ObserverCRef
+	Subject<Event, CustomData>::observer() const noexcept {
 		return *m_observer;
 	}
 
 	template <typename Event, typename CustomData>
-	inline typename Subject<Event, CustomData>::ObserverRef Subject<Event, CustomData>::observer() noexcept {
+	inline typename Subject<Event, CustomData>::ObserverRef
+	Subject<Event, CustomData>::observer() noexcept {
 		return *m_observer;
 	}
 
 	template <typename Event, typename CustomData>
-	inline typename Subject<Event, CustomData>::ObserverPtr Subject<Event, CustomData>::observerPtr() noexcept {
+	inline typename Subject<Event, CustomData>::ObserverPtr
+	Subject<Event, CustomData>::observerPtr() noexcept {
 		return m_observer;
 	}
 }

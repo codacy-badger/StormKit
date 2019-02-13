@@ -3,17 +3,13 @@
 // found in the top-level of this distribution
 
 #include <storm/engine/render/Context.hpp>
-
 #include <storm/engine/vulkan/ContextImpl.hpp>
 
 using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-Context::Context(ContextSettings settings)
-	: m_impl{settings} {
-	
-}
+Context::Context(ContextSettings settings) : m_impl {settings} {}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -35,6 +31,4 @@ PhysicalDevice Context::bestPhysicalDevice() {
 
 /////////////////////////////////////
 /////////////////////////////////////
-const ContextSettings &Context::settings() {
-	return m_impl->settings();
-}
+const ContextSettings &Context::settings() { return m_impl->settings(); }

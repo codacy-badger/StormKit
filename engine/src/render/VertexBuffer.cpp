@@ -9,10 +9,9 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-VertexBuffer::VertexBuffer(const Device &device, std::size_t size, std::size_t alignement)
-	: m_impl{device, size, alignement} {
-
-}
+VertexBuffer::VertexBuffer(
+    const Device &device, std::size_t size, std::size_t alignement)
+    : m_impl {device, size, alignement} {}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -28,9 +27,7 @@ VertexBuffer &VertexBuffer::operator=(VertexBuffer &&) = default;
 
 /////////////////////////////////////
 /////////////////////////////////////
-void VertexBuffer::reset() {
-	m_impl->reset();
-}
+void VertexBuffer::reset() { m_impl->reset(); }
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -40,15 +37,14 @@ std::size_t VertexBuffer::addData(const std::byte *data, std::size_t size) {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void VertexBuffer::updateData(const std::byte *data, std::size_t size, std::ptrdiff_t offset) {
+void VertexBuffer::updateData(
+    const std::byte *data, std::size_t size, std::ptrdiff_t offset) {
 	m_impl->updateData(data, size, offset);
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-std::byte *VertexBuffer::map() {
-	return m_impl->map();
-}
+std::byte *VertexBuffer::map() { return m_impl->map(); }
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -58,6 +54,4 @@ std::byte *VertexBuffer::map(std::size_t size, std::ptrdiff_t offset) {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void VertexBuffer::unmap() {
-	m_impl->unmap();
-}
+void VertexBuffer::unmap() { m_impl->unmap(); }

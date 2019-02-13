@@ -3,7 +3,8 @@
 #include "CommandBuffer.hpp"
 
 namespace storm::engine {
-	inline const CommandBufferProperties &CommandBuffer::properties() const noexcept {
+	inline const CommandBufferProperties &CommandBuffer::properties() const
+	    noexcept {
 		return m_properties;
 	}
 }

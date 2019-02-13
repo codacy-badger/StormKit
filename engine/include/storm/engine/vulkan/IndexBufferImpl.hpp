@@ -5,37 +5,39 @@
 #pragma once
 
 #include <storm/engine/render/IndexBuffer.hpp>
-
 #include <storm/engine/vulkan/DeviceImpl.hpp>
 
 namespace storm::engine {
 	class IndexBufferImpl {
-		public:
-			explicit IndexBufferImpl(const Device &device, std::size_t size, std::size_t alignement);
-			~IndexBufferImpl();
+	public:
+		explicit IndexBufferImpl(
+		    const Device &device, std::size_t size, std::size_t alignement);
+		~IndexBufferImpl();
 
-			IndexBufferImpl(IndexBufferImpl &&);
+		IndexBufferImpl(IndexBufferImpl &&);
 
-			void reset();
+		void reset();
 
-			std::size_t addData(const std::byte *data, std::size_t size);
-			void updateData(const std::byte *data, std::size_t size, std::ptrdiff_t offset);
+		std::size_t addData(const std::byte *data, std::size_t size);
+		void        updateData(
+		           const std::byte *data, std::size_t size, std::ptrdiff_t offset);
 
-			std::byte *map();
-			std::byte *map(std::size_t size, std::ptrdiff_t offset);
-			void       unmap();
+		std::byte *map();
+		std::byte *map(std::size_t size, std::ptrdiff_t offset);
+		void       unmap();
 
-			inline const BackedVkBuffer &backedVkBuffer() const noexcept;
-		private:
-			BackedVkBuffer m_buffer;
+		inline const BackedVkBuffer &backedVkBuffer() const noexcept;
 
-			std::size_t m_size;
-			std::size_t m_alignement;
-			std::ptrdiff_t m_current_offset;
+	private:
+		BackedVkBuffer m_buffer;
 
-			std::byte *m_mapped_data;
+		std::size_t    m_size;
+		std::size_t    m_alignement;
+		std::ptrdiff_t m_current_offset;
 
-			const DeviceImpl &m_device;
+		std::byte *m_mapped_data;
+
+		const DeviceImpl &m_device;
 	};
 }
 

@@ -5,37 +5,39 @@
 #pragma once
 
 #include <storm/engine/render/UniformBuffer.hpp>
-
 #include <storm/engine/vulkan/DeviceImpl.hpp>
 
 namespace storm::engine {
 	class UniformBufferImpl {
-		public:
-			explicit UniformBufferImpl(const Device &device, UniformBuffer::Description description);
-			~UniformBufferImpl();
+	public:
+		explicit UniformBufferImpl(
+		    const Device &device, UniformBuffer::Description description);
+		~UniformBufferImpl();
 
-			UniformBufferImpl(UniformBufferImpl &&);
+		UniformBufferImpl(UniformBufferImpl &&);
 
-			void reset();
+		void reset();
 
-			std::size_t addData(const std::byte *data, std::size_t size);
-			void updateData(const std::byte *data, std::size_t size, std::ptrdiff_t offset);
+		std::size_t addData(const std::byte *data, std::size_t size);
+		void        updateData(
+		           const std::byte *data, std::size_t size, std::ptrdiff_t offset);
 
-			std::byte *map();
-			std::byte *map(std::size_t size, std::ptrdiff_t offset);
-			void       unmap();
+		std::byte *map();
+		std::byte *map(std::size_t size, std::ptrdiff_t offset);
+		void       unmap();
 
-			inline const UniformBuffer::Description &description() const noexcept;
-			inline const BackedVkBuffer &backedVkBuffer() const noexcept;
-		private:
-			BackedVkBuffer m_buffer;
+		inline const UniformBuffer::Description &description() const noexcept;
+		inline const BackedVkBuffer &backedVkBuffer() const noexcept;
 
-			UniformBuffer::Description m_description;
-			std::ptrdiff_t m_current_offset;
+	private:
+		BackedVkBuffer m_buffer;
 
-			std::byte *m_mapped_data;
+		UniformBuffer::Description m_description;
+		std::ptrdiff_t             m_current_offset;
 
-			const DeviceImpl &m_device;
+		std::byte *m_mapped_data;
+
+		const DeviceImpl &m_device;
 	};
 }
 

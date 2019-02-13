@@ -4,27 +4,26 @@
 
 #pragma once
 
+#include <storm/core/NonCopyable.hpp>
+#include <storm/core/Pimpl.hpp>
 #include <storm/engine/render/ForwardDeclarations.hpp>
 #include <storm/engine/render/Utils.hpp>
-
-#include <storm/core/Pimpl.hpp>
-#include <storm/core/NonCopyable.hpp>
 
 namespace storm::engine {
 	class PhysicalDeviceImpl;
 	class PhysicalDevice : public core::NonCopyable {
-		public:
-			~PhysicalDevice();
-			
-			PhysicalDevice(PhysicalDevice &&);
-			PhysicalDevice &operator=(PhysicalDevice &&);
-			
-			IMPLEMENTATION(PhysicalDeviceImpl)
-		private:
-			explicit PhysicalDevice();
-			
-			core::Pimpl<PhysicalDeviceImpl, false> m_impl;
-			
-			friend class ContextImpl;
+	public:
+		~PhysicalDevice();
+
+		PhysicalDevice(PhysicalDevice &&);
+		PhysicalDevice &operator=(PhysicalDevice &&);
+
+		IMPLEMENTATION(PhysicalDeviceImpl)
+	private:
+		explicit PhysicalDevice();
+
+		core::Pimpl<PhysicalDeviceImpl, false> m_impl;
+
+		friend class ContextImpl;
 	};
 }

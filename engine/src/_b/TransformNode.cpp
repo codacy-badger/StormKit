@@ -1,5 +1,6 @@
-#include <storm/engine/scenegraph/TransformNode.hpp>
 #include "private/DirtyDefs.hpp"
+
+#include <storm/engine/scenegraph/TransformNode.hpp>
 
 using namespace storm::engine;
 

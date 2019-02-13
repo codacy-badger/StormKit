@@ -8,18 +8,19 @@ namespace storm::engine {
 	bool isColorFormat(vk::Format format) {
 		return !isDepthStencilFormat(format) && !isDepthOnlyFormat(format);
 	}
-	
 
 	bool isDepthFormat(vk::Format format) {
 		return isDepthStencilFormat(format) || isDepthOnlyFormat(format);
 	}
-	
+
 	bool isDepthOnlyFormat(vk::Format format) {
-		return format == vk::Format::eD16Unorm || format == vk::Format::eD32Sfloat;
+		return format == vk::Format::eD16Unorm
+		       || format == vk::Format::eD32Sfloat;
 	}
-	
+
 	bool isDepthStencilFormat(vk::Format format) {
-		return format == vk::Format::eD16UnormS8Uint || format == vk::Format::eD24UnormS8Uint ||
-			 format == vk::Format::eD32SfloatS8Uint;
+		return format == vk::Format::eD16UnormS8Uint
+		       || format == vk::Format::eD24UnormS8Uint
+		       || format == vk::Format::eD32SfloatS8Uint;
 	}
 }

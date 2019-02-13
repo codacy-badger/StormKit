@@ -1,34 +1,33 @@
 #pragma once
 
-#include <vector>
-
 #include <storm/engine/graphics/Geometry.hpp>
-
 #include <storm/engine/scenegraph/SceneNode.hpp>
+#include <vector>
 
 namespace storm::engine {
 	class STORM_PUBLIC GeometryNode : public SceneNode {
-		public:
-			SUR_Object(GeometryNode)
+	public:
+		SUR_Object(GeometryNode)
 
-			using DataType = Geometry;
+		    using DataType = Geometry;
 
-			~GeometryNode() override;
+		~GeometryNode() override;
 
-			GeometryNode(GeometryNode &&);
-			GeometryNode &operator=(GeometryNode &&);
+		GeometryNode(GeometryNode &&);
+		GeometryNode &operator=(GeometryNode &&);
 
-			inline const DataType &data() const noexcept;
-			inline void setGeometry(Geometry geometry) noexcept;
-		protected:
-			explicit GeometryNode(Scene &graph);
+		inline const DataType &data() const noexcept;
+		inline void            setGeometry(Geometry geometry) noexcept;
 
-			DirtyType dirtyValue() const noexcept override;
+	protected:
+		explicit GeometryNode(Scene &graph);
 
-			friend class Scene;
+		DirtyType dirtyValue() const noexcept override;
 
-		private:
-			DataType m_mesh;
+		friend class Scene;
+
+	private:
+		DataType m_mesh;
 	};
 }
 

@@ -4,35 +4,32 @@
 
 #pragma once
 
-#include <storm/engine/render/ForwardDeclarations.hpp>
+#include <storm/core/Memory.hpp>
 #include <storm/core/NonCopyable.hpp>
 #include <storm/core/Pimpl.hpp>
-#include <storm/core/Memory.hpp>
-
+#include <storm/engine/render/ForwardDeclarations.hpp>
 #include <storm/engine/render/Utils.hpp>
-
 #include <vector>
 
 namespace storm::engine {
 	class ProgramImpl;
 	class Program : public core::NonCopyable {
-		public:
-			Unique_Object(Program)
-			Ref_Object(Program)
+	public:
+		Unique_Object(Program) Ref_Object(Program)
 
-			explicit Program(const Device &device);
-			~Program();
+		    explicit Program(const Device &device);
+		~Program();
 
-			Program(Program &&);
-			Program &operator=(Program &&);
+		Program(Program &&);
+		Program &operator=(Program &&);
 
-			void addShaderModule(const Shader &module);
-			const std::vector<const Shader*> &shaderModules() const noexcept;
+		void addShaderModule(const Shader &module);
+		const std::vector<const Shader *> &shaderModules() const noexcept;
 
-			void link();
+		void link();
 
-			IMPLEMENTATION(ProgramImpl)
-		private:
-			core::Pimpl<ProgramImpl> m_impl;
+		IMPLEMENTATION(ProgramImpl)
+	private:
+		core::Pimpl<ProgramImpl> m_impl;
 	};
 }

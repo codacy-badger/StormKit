@@ -7,11 +7,9 @@
  * @version 0.1
  **/
 
-#include <storm/core/Filesystem.hpp>
-
-#include <storm/log/LogOutput.hpp>
-
 #include <fstream>
+#include <storm/core/Filesystem.hpp>
+#include <storm/log/LogOutput.hpp>
 
 namespace storm::log {
 	/**
@@ -22,24 +20,24 @@ namespace storm::log {
 	 * The class allow logging to a file
 	 */
 	class STORM_PUBLIC FileOutput final : public LogOutput {
-		public:
-			/**
-			 * @brief Constructor
-			 *
-			 * Default Constructor of FileOutput
-			 */
-			explicit FileOutput(const _std::filesystem::path &filepath);
+	public:
+		/**
+		 * @brief Constructor
+		 *
+		 * Default Constructor of FileOutput
+		 */
+		explicit FileOutput(const _std::filesystem::path &filepath);
 
-			/**
-			 * @brief Destructor
-			 *
-			 * Destructor of FileOutput
-			 */
-			~FileOutput() override = default;
+		/**
+		 * @brief Destructor
+		 *
+		 * Destructor of FileOutput
+		 */
+		~FileOutput() override = default;
 
-		private:
-			void write(const char *string) override;
+	private:
+		void write(const char *string) override;
 
-			std::ofstream m_file;
+		std::ofstream m_file;
 	};
 }

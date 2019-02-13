@@ -4,26 +4,24 @@
 
 #pragma once
 
-#include <storm/core/Pimpl.hpp>
-#include <storm/core/NonCopyable.hpp>
 #include <storm/core/Memory.hpp>
-
+#include <storm/core/NonCopyable.hpp>
+#include <storm/core/Pimpl.hpp>
 #include <storm/engine/render/ForwardDeclarations.hpp>
 #include <storm/engine/render/Utils.hpp>
 
 namespace storm::engine {
 	class SemaphoreImpl;
 	class Semaphore {
-		public:
-			Unique_Object(Semaphore)
-			explicit Semaphore(const Device &device);
-			~Semaphore();
+	public:
+		Unique_Object(Semaphore) explicit Semaphore(const Device &device);
+		~Semaphore();
 
-			Semaphore(Semaphore &&);
-			Semaphore &operator=(Semaphore &&);
+		Semaphore(Semaphore &&);
+		Semaphore &operator=(Semaphore &&);
 
-			IMPLEMENTATION(SemaphoreImpl)
-		private:
-			core::Pimpl<SemaphoreImpl> m_impl;
+		IMPLEMENTATION(SemaphoreImpl)
+	private:
+		core::Pimpl<SemaphoreImpl> m_impl;
 	};
 }

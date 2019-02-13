@@ -8,9 +8,7 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-PipelineCache::PipelineCache() {
-	
-}
+PipelineCache::PipelineCache() {}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -26,7 +24,8 @@ PipelineCache &PipelineCache::operator=(PipelineCache &&) = default;
 
 /////////////////////////////////////
 /////////////////////////////////////
-void PipelineCache::add(const PipelineCacheKey &key, UniqueHandle<vk::Pipeline> &&pipeline) {
+void PipelineCache::add(
+    const PipelineCacheKey &key, UniqueHandle<vk::Pipeline> &&pipeline) {
 	m_pipeline_cache.emplace(key, std::move(pipeline));
 }
 
@@ -34,7 +33,7 @@ void PipelineCache::add(const PipelineCacheKey &key, UniqueHandle<vk::Pipeline> 
 /////////////////////////////////////
 bool PipelineCache::has(const PipelineCacheKey &key) const {
 	auto it = m_pipeline_cache.find(key);
-	
+
 	return it != std::end(m_pipeline_cache);
 }
 

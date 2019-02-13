@@ -1,6 +1,5 @@
 #pragma once
 #include <cstdint>
-
 #include <storm/core/Flags.hpp>
 
 namespace storm::switchc {
@@ -41,9 +40,12 @@ namespace storm::switchc {
 	constexpr static T DEVICE_INFO_REQUEST = T(0x02);
 
 	enum class PlayerLed {
-		No_Player = 0, Player_One = 1, Player_Two = 2, Player_Three = 4, Player_Four = 8
+		No_Player    = 0,
+		Player_One   = 1,
+		Player_Two   = 2,
+		Player_Three = 4,
+		Player_Four  = 8
 	};
 }
-
 
 FLAG_ENUM(storm::switchc::PlayerLed)

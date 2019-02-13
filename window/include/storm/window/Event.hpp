@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-
 #include <storm/window/Key.hpp>
 #include <storm/window/MouseButton.hpp>
 
@@ -31,7 +30,7 @@ namespace storm::window {
 			Key key;
 		};
 		struct MouseEvent {
-			MouseButton button;
+			MouseButton  button;
 			std::int16_t x;
 			std::int16_t y;
 		};
@@ -40,7 +39,7 @@ namespace storm::window {
 			ResizedEvent resizedEvent;
 			KeyEvent     keyEvent;
 			MouseEvent   mouseEvent;
-			//MouseMoved       mouseMoved;
+			// MouseMoved       mouseMoved;
 		};
 	};
 }

@@ -7,11 +7,13 @@
 #include <storm/engine/vulkan/UniformBufferImpl.hpp>
 
 namespace storm::engine {
-	inline const UniformBuffer::Description &UniformBufferImpl::description() const noexcept {
+	inline const UniformBuffer::Description &
+	UniformBufferImpl::description() const noexcept {
 		return m_description;
 	}
 
-	inline const BackedVkBuffer &UniformBufferImpl::backedVkBuffer() const noexcept {
+	inline const BackedVkBuffer &UniformBufferImpl::backedVkBuffer() const
+	    noexcept {
 		return m_buffer;
 	}
 }

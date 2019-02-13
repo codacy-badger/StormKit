@@ -7,7 +7,8 @@
 #include <storm/engine/vulkan/VertexBufferImpl.hpp>
 
 namespace storm::engine {
-	inline const BackedVkBuffer &VertexBufferImpl::backedVkBuffer() const noexcept {
+	inline const BackedVkBuffer &VertexBufferImpl::backedVkBuffer() const
+	    noexcept {
 		return m_buffer;
 	}
 }

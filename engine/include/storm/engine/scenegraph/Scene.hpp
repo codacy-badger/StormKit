@@ -4,52 +4,50 @@
 
 #pragma once
 
-#include <storm/core/NonCopyable.hpp>
-#include <storm/core/Memory.hpp>
 #include <storm/core/Filesystem.hpp>
-
-#include <storm/engine/render/Fence.hpp>
-#include <storm/engine/render/Semaphore.hpp>
-
+#include <storm/core/Memory.hpp>
+#include <storm/core/NonCopyable.hpp>
 #include <storm/engine/graphics/MeshList.hpp>
 #include <storm/engine/graphics/RenderGraph.hpp>
 #include <storm/engine/graphics/ShaderLibrary.hpp>
-
+#include <storm/engine/render/Fence.hpp>
+#include <storm/engine/render/Semaphore.hpp>
 #include <storm/engine/scenegraph/GroupNode.hpp>
 #include <storm/engine/scenegraph/SceneTree.hpp>
 
 namespace storm::engine {
 	class Scene : public core::NonCopyable {
-		public:
-			SUR_Object(Scene)
+	public:
+		SUR_Object(Scene)
 
-			explicit Scene(const Device &device);
-			~Scene();
+		    explicit Scene(const Device &device);
+		~Scene();
 
-			Scene(Scene &&);
-			Scene &operator=(Scene &&);
+		Scene(Scene &&);
+		Scene &operator=(Scene &&);
 
-			inline GroupNode &root() noexcept;
-			inline const GroupNode &root() const noexcept;
+		inline GroupNode &      root() noexcept;
+		inline const GroupNode &root() const noexcept;
 
-			template <typename T, typename... Args>
-			T &createNode(Args &&...arg);
+		template <typename T, typename... Args>
+		T &createNode(Args &&... arg);
 
-			void update();
+		void update();
 
-			void exportSceneGraph(const _std::filesystem::path &filepath) const;
-			void exportSceneTree(const _std::filesystem::path &filepath) const;
+		void exportSceneGraph(const _std::filesystem::path &filepath) const;
+		void exportSceneTree(const _std::filesystem::path &filepath) const;
 
-			inline const MeshList &meshes() const noexcept;
-		private:
-			std::reference_wrapper<const Device>  m_device;
+		inline const MeshList &meshes() const noexcept;
 
-			GroupNode m_root;
-			std::vector<SceneNode::Ptr> m_nodes;
+	private:
+		std::reference_wrapper<const Device> m_device;
 
-			SceneTree m_tree;
+		GroupNode                   m_root;
+		std::vector<SceneNode::Ptr> m_nodes;
 
-			MeshList m_cache;
+		SceneTree m_tree;
+
+		MeshList m_cache;
 	};
 
 	template <typename T>

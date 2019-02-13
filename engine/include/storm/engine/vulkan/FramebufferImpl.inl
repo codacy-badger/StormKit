@@ -7,11 +7,13 @@
 #include <storm/engine/vulkan/FramebufferImpl.hpp>
 
 namespace storm::engine {
-	inline const vk::Framebuffer &FramebufferImpl::vkFramebuffer() const noexcept {
+	inline const vk::Framebuffer &FramebufferImpl::vkFramebuffer() const
+	    noexcept {
 		return m_framebuffer.get();
 	}
 
-	inline const std::vector<BackedVkImage> &FramebufferImpl::backedVkImages() const noexcept {
+	inline const std::vector<BackedVkImage> &
+	FramebufferImpl::backedVkImages() const noexcept {
 		return m_images;
 	}
 }

@@ -7,9 +7,7 @@
 #include "TreeNode.hpp"
 
 namespace storm::tools {
-	inline const std::string &TreeNode::name() const noexcept {
-		return m_name;
-	}
+	inline const std::string &TreeNode::name() const noexcept { return m_name; }
 
 	inline void TreeNode::setName(std::string_view name) noexcept {
 		m_name = name;
@@ -19,9 +17,7 @@ namespace storm::tools {
 		return m_parent;
 	}
 
-	inline void TreeNode::setParent(Index index) noexcept {
-		m_parent = index;
-	}
+	inline void TreeNode::setParent(Index index) noexcept { m_parent = index; }
 
 	inline TreeNode::Index TreeNode::nextSibling() const noexcept {
 		return m_next_sibling;
