@@ -38,7 +38,39 @@ ColorFormat DeviceImpl::bestDepthFormat() const noexcept {
 	    {vk::Format::eD32Sfloat, vk::Format::eD32SfloatS8Uint,
 	        vk::Format::eD24UnormS8Uint},
 	    vk::ImageTiling::eOptimal,
-	    vk::FormatFeatureFlagBits::eDepthStencilAttachment));
+					  vk::FormatFeatureFlagBits::eDepthStencilAttachment));
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+BackedSwapchainImage DeviceImpl::createBackedSwapchainImage(vk::Format format, vk::Image image) const {
+	const auto components = vk::ComponentMapping {}
+								.setR(vk::ComponentSwizzle::eIdentity)
+								.setG(vk::ComponentSwizzle::eIdentity)
+								.setB(vk::ComponentSwizzle::eIdentity)
+								.setA(vk::ComponentSwizzle::eIdentity);
+
+	const auto subressource_range
+		= vk::ImageSubresourceRange {}
+			  .setAspectMask(vk::ImageAspectFlagBits::eColor)
+			  .setBaseMipLevel(0)
+			  .setLevelCount(1)
+			  .setBaseArrayLayer(0)
+			  .setLayerCount(1);
+
+	const auto create_info = vk::ImageViewCreateInfo {}
+		.setImage(image)
+		.setViewType(vk::ImageViewType::e2D)
+		.setFormat(format)
+		.setComponents(components)
+		.setSubresourceRange(subressource_range);
+
+	auto image_view = m_logical_device->createImageViewUnique(create_info);
+
+	return BackedSwapchainImage{
+		image,
+		std::move(image_view)
+	};
 }
 
 /////////////////////////////////////

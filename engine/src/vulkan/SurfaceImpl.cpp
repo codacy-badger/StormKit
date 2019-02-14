@@ -32,7 +32,7 @@ SurfaceImpl::~SurfaceImpl() {
 	const auto &vk_instance = context.instance();
 
 	vk_instance.destroySurfaceKHR(m_surface);
-};
+}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -40,11 +40,15 @@ SurfaceImpl::SurfaceImpl(SurfaceImpl &&) = default;
 
 /////////////////////////////////////
 /////////////////////////////////////
-void SurfaceImpl::presentFrame(const Framebuffer &framebuffer,
-    const Semaphore &render_finished_semaphore, const Fence &signal_fence) {
-	m_swapchain->presentFrame(
-	    framebuffer, render_finished_semaphore, signal_fence);
+FrameToken SurfaceImpl::nextFrame() {
+	return m_swapchain->nextFrame();
 }
+
+/////////////////////////////////////
+/////////////////////////////////////
+void SurfaceImpl::present(Framebuffer &framebuffer, const FrameToken &token) {
+	m_swapchain->present(framebuffer, token);
+};
 
 /////////////////////////////////////
 /////////////////////////////////////

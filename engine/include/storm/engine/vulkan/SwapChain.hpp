@@ -4,31 +4,33 @@
 
 #pragma once
 
+#include <deque>
+
 #include <storm/core/Memory.hpp>
 #include <storm/core/NonCopyable.hpp>
+
 #include <storm/engine/vulkan/UniqueHandle.hpp>
+#include <storm/engine/vulkan/DeviceImpl.hpp>
+
+#include <storm/engine/render/FrameToken.hpp>
+#include <storm/engine/render/ForwardDeclarations.hpp>
+#include <storm/engine/render/Semaphore.hpp>
 
 namespace storm::engine {
-	class Device;
 	class SurfaceImpl;
-	class CommandBuffer;
-	class Semaphore;
-	class Fence;
-	class Framebuffer;
 	class SwapChain : public core::NonCopyable {
 	public:
 		Unique_Object(SwapChain)
 
-		    static constexpr const auto MAX_IMAGE_IN_FLIGHT = 3;
+		static constexpr const auto MAX_IMAGE_IN_FLIGHT = 3;
 
 		explicit SwapChain(const Device &device, const SurfaceImpl &surface);
 		~SwapChain();
 
 		SwapChain(SwapChain &&);
 
-		void presentFrame(const Framebuffer &framebuffer,
-		    const Semaphore &                render_finished_semaphore,
-		    const Fence &                    signal_fence);
+		FrameToken nextFrame();
+		void present(Framebuffer &framebuffer, const FrameToken &token);
 
 	private:
 		void createSwapChain();
@@ -38,10 +40,7 @@ namespace storm::engine {
 		void selectPresentation();
 
 		void acquireSwapchainImages();
-		void createImageViews();
-
 		void createSemaphoresAndFences();
-		void createPresentCommandBuffers();
 
 		UniqueHandle<vk::SwapchainKHR> m_swapchain;
 
@@ -52,16 +51,15 @@ namespace storm::engine {
 		vk::SurfaceTransformFlagBitsKHR m_pre_transform;
 		vk::PresentModeKHR              m_present_mode;
 
-		std::vector<vk::Image>                   m_swapchain_images;
-		std::vector<UniqueHandle<vk::ImageView>> m_swapchain_image_views;
+		std::vector<BackedSwapchainImage>            m_images;
+		std::vector<std::pair<Semaphore, Semaphore>> m_semaphores;
+		std::vector<Fence>                           m_in_flight_fences;
 
-		std::uint32_t m_current_present_index;
-		std::uint32_t m_current_image_index;
+		std::vector<Semaphore>     m_present_semaphores;
+		std::vector<CommandBuffer> m_present_cmd_buffers;
 
-		std::vector<Semaphore>     m_image_available_semaphores;
-		std::vector<Semaphore>     m_render_finished_semaphores;
-		std::vector<Fence>         m_in_flight_fences;
-		std::vector<CommandBuffer> m_present_command_buffers;
+		std::uint32_t m_current_in_flight;
+		std::uint64_t m_current_frame;
 
 		const Device &     m_device;
 		const SurfaceImpl &m_surface;

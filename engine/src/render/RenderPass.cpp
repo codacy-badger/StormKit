@@ -9,7 +9,10 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-RenderPass::RenderPass(const Device &device) : m_impl {device} {}
+RenderPass::RenderPass(const Device &device)
+	: m_impl {device}
+{}
+
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -21,26 +24,30 @@ RenderPass::RenderPass(RenderPass &&) = default;
 
 /////////////////////////////////////
 /////////////////////////////////////
-std::size_t RenderPass::addSubPass(SubPass subpass) {
+std::size_t RenderPass::addSubPass(RenderPass::SubPass &&subpass) {
 	return m_impl->addSubPass(std::move(subpass));
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-std::size_t RenderPass::addAttachment(ColorFormat format) {
-	return m_impl->addAttachment(format);
-}
-
-bool RenderPass::hasDepthAttachment() const noexcept {
-	return m_impl->hasDepthAttachment();
+void RenderPass::setFramebuffer(Framebuffer &framebuffer) {
+	m_impl->setFramebuffer(framebuffer);
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-void RenderPass::setExtent(uvec2 extent) {
-	m_impl->setExtent(std::move(extent));
+const Framebuffer *RenderPass::framebuffer() const noexcept {
+	return m_impl->framebuffer();
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-void RenderPass::build() { m_impl->init(); }
+void RenderPass::build() {
+	m_impl->build();
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+bool RenderPass::isBuilt() const noexcept {
+	return m_impl->isBuilt();
+}

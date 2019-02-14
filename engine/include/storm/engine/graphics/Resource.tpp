@@ -44,7 +44,7 @@ namespace storm::engine {
 		return m_description;
 	}
 
-	template <typename ResourceDescription_, typename ResourceType_>
+	/*template <typename ResourceDescription_, typename ResourceType_>
 	inline const typename Resource<ResourceDescription_,
 	    ResourceType_>::ResourceType &
 	Resource<ResourceDescription_, ResourceType_>::resource() const noexcept {
@@ -62,5 +62,5 @@ namespace storm::engine {
 			return *std::get<ResourcePtr>(m_resource);
 
 		return *std::get<ResourceType *>(m_resource);
-	}
+	}*/
 }

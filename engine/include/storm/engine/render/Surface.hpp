@@ -5,9 +5,10 @@
 #pragma once
 
 #include <storm/core/Pimpl.hpp>
+#include <storm/window/Window.hpp>
 #include <storm/engine/render/ForwardDeclarations.hpp>
 #include <storm/engine/render/Utils.hpp>
-#include <storm/window/Window.hpp>
+#include <storm/engine/render/FrameToken.hpp>
 
 namespace storm::engine {
 	class SurfaceImpl;
@@ -19,9 +20,8 @@ namespace storm::engine {
 		Surface(Surface &&);
 		Surface &operator=(Surface &&);
 
-		void presentFrame(const Framebuffer &framebuffer,
-		    const Semaphore &                render_finished_semaphore,
-		    const Fence &                    signal_fence);
+		FrameToken nextFrame();
+		void present(Framebuffer &framebuffer, const FrameToken &token);
 
 		IMPLEMENTATION(SurfaceImpl)
 	private:

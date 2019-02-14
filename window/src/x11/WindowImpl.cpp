@@ -199,7 +199,9 @@ bool WindowImpl::waitEvent(Event &event, void *native_event) noexcept {
 void WindowImpl::setTitle(const std::string &title) noexcept {
 	xcb_change_property(m_connection.get(), XCB_PROP_MODE_REPLACE, m_window,
 	    XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 8,
-	    static_cast<std::uint32_t>(title.length()), title.c_str());
+		static_cast<std::uint32_t>(title.length()), title.c_str());
+
+	xcb_flush(m_connection.get());
 }
 
 /////////////////////////////////////

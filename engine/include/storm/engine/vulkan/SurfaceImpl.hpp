@@ -5,9 +5,9 @@
 #pragma once
 
 #include <storm/core/NonCopyable.hpp>
-#include <storm/engine/render/Surface.hpp>
 #include <storm/engine/vulkan/SwapChain.hpp>
 #include <storm/engine/vulkan/UniqueHandle.hpp>
+#include <storm/engine/render/Surface.hpp>
 #include <storm/window/Window.hpp>
 
 namespace storm::engine {
@@ -19,9 +19,8 @@ namespace storm::engine {
 
 		SurfaceImpl(SurfaceImpl &&);
 
-		void presentFrame(const Framebuffer &framebuffer,
-		    const Semaphore &                render_finished_semaphore,
-		    const Fence &                    signal_fence);
+		FrameToken nextFrame();
+		void present(Framebuffer &framebuffer, const FrameToken &token);
 
 		inline vk::Extent2D size() const noexcept;
 

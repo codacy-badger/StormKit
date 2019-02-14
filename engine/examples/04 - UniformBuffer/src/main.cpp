@@ -51,6 +51,8 @@ void runApp() {
 	namespace window = storm::window;
 	namespace engine = storm::engine;
 
+	using Clock = std::chrono::high_resolution_clock;
+
 	auto settings              = engine::ContextSettings {};
 	settings.enable_validation = true;
 	settings.app_name          = "StormKit Uniform buffer Example";
@@ -86,16 +88,25 @@ void runApp() {
 	matrices.model = glm::mat4 {1.f};
 
 	auto vertex_buffer
-	    = device.createVertexBuffer(std::size(VERTICES) * sizeof(Vertex));
-	auto uniform_buffer = device.createUniformBuffer(sizeof(Matrices));
+		= device.createVertexBuffer(std::size(VERTICES) * sizeof(Vertex), alignof(Vertex));
+
+	auto buffer_description = engine::UniformBuffer::Description {
+		sizeof(Matrices),
+		alignof (Matrices)
+	};
+
+	auto uniform_buffer = device.createUniformBuffer(buffer_description);
 	vertex_buffer.addData(VERTICES);
 	uniform_buffer.addData(
 	    reinterpret_cast<std::byte *>(&matrices), sizeof(Matrices));
 
 	auto render_pass = device.createRenderPass(true);
-	render_pass.addAttachment(engine::ColorFormat::RGBA8888UNORM);
-	render_pass.setExtent(
-	    {WINDOW_WIDTH<std::uint32_t>, WINDOW_HEIGHT<std::uint32_t>});
+	auto framebuffer = device.createFramebuffer();
+	framebuffer.setExtent({WINDOW_WIDTH<std::uint32_t>, WINDOW_HEIGHT<std::uint32_t>, 1u});
+	framebuffer.addAttachment({1u, engine::Format::RGBA8888UNORM});
+
+	render_pass.setFramebuffer(framebuffer);
+	render_pass.build();
 
 	auto command_buffer = device.createCommandBuffer();
 	command_buffer.pipelineState().viewport
@@ -114,22 +125,27 @@ void runApp() {
 	        0, engine::Shader::Stage::VERTEX}};
 
 	command_buffer.begin();
-	command_buffer.beginRenderPass(render_pass);
+	command_buffer.beginRenderPass(render_pass, framebuffer);
 	command_buffer.setProgram(program);
 	command_buffer.bindVertexBuffer(0, vertex_buffer);
 	command_buffer.draw(std::size(VERTICES));
 	command_buffer.endRenderPass();
 	command_buffer.end();
 
-	auto render_fence     = device.createFence();
-	auto render_semaphore = device.createSemaphore();
-
-	auto start_time = std::chrono::high_resolution_clock::now();
+	auto last = Clock::now();
+	auto last_fps_update = Clock::now();
+	auto start_time = Clock::now();
 	while (render_window.isOpen()) {
-		auto current_time = std::chrono::high_resolution_clock::now();
-		auto time         = std::chrono::duration<float,
-            std::chrono::seconds::period> {current_time - start_time}
-		                .count();
+		auto now = Clock::now();
+		auto delta = std::chrono::duration<float, std::chrono::seconds::period>{now - last}.count();
+
+		if(std::chrono::duration_cast<std::chrono::seconds>(now - last_fps_update).count() >= 1.f) {
+			if(delta == 0.f) delta = 1.f;
+			render_window.setTitle(core::format("StormKit Triangle Example | Delta : %{1} | FPS : %{2}", delta, 1.f / delta));
+			last_fps_update = now;
+		}
+
+		last = now;
 
 		auto event = window::Event {};
 
@@ -140,19 +156,24 @@ void runApp() {
 			}
 		}
 
-		render_fence.wait();
-		render_fence.reset();
-
-		command_buffer.submit({}, {&render_semaphore});
+		const auto time = std::chrono::duration<float, std::chrono::seconds::period>{now - start_time}.count();
 
 		matrices.model = glm::rotate(glm::mat4 {1.f},
-		    time * glm::radians(90.0f), glm::vec3 {0.0f, 0.0f, 1.0f});
+			time * glm::radians(90.0f), glm::vec3 {0.0f, 0.0f, 1.0f});
 		uniform_buffer.updateData(
 		    reinterpret_cast<std::byte *>(&matrices.model), sizeof(glm::mat4),
 		    offsetof(Matrices, model));
 
-		surface.presentFrame(
-		    render_pass.framebuffer(), render_semaphore, render_fence);
+		auto frame = surface.nextFrame();
+
+		command_buffer.submit(
+			{},
+			{&frame.render_finished},
+			{engine::PipelineStage::COLOR_ATTACHMENT_OUTPUT},
+			&frame.fence
+		);
+
+		surface.present(framebuffer, frame);
 
 		render_window.display();
 	}

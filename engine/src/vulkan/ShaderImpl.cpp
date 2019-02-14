@@ -2,32 +2,12 @@
 // This file is subject to the license terms in the LICENSE file
 // found in the top-level of this distribution
 
-#include "shaders/DefaultShaders.hpp"
-
 #include <fstream>
 #include <storm/engine/vulkan/DeviceImpl.hpp>
 #include <storm/engine/vulkan/ShaderImpl.hpp>
 #include <storm/log/LogOutput.hpp>
 
 using namespace storm::engine;
-
-/////////////////////////////////////
-/////////////////////////////////////
-ShaderImpl::ShaderImpl(const Device &device, Shader::DefaultShader shader)
-    : m_device {device} {
-	switch (shader) {
-	case Shader::DefaultShader::DEFAULT_VERT_2D:
-		m_stage = Shader::Stage::VERTEX;
-		loadFromMemory(reinterpret_cast<const std::byte *>(default_vert_2D),
-		    sizeof(default_vert_2D));
-		break;
-	case Shader::DefaultShader::DEFAULT_FRAG_2D:
-		m_stage = Shader::Stage::FRAGMENT;
-		loadFromMemory(reinterpret_cast<const std::byte *>(default_frag_2D),
-		    sizeof(default_frag_2D));
-		break;
-	}
-}
 
 /////////////////////////////////////
 /////////////////////////////////////

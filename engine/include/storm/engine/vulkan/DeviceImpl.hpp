@@ -10,6 +10,11 @@
 #include <storm/window/Window.hpp>
 
 namespace storm::engine {
+	struct BackedSwapchainImage {
+		vk::Image                   image;
+		UniqueHandle<vk::ImageView> view;
+	};
+
 	struct BackedVkImage {
 		UniqueHandle<vk::Image>        image;
 		UniqueHandle<vk::ImageView>    view;
@@ -48,7 +53,8 @@ namespace storm::engine {
 
 		ColorFormat bestDepthFormat() const noexcept;
 
-		BackedVkImage   createBackedVkImage(const vk::ImageCreateInfo &infos,
+		BackedSwapchainImage createBackedSwapchainImage(vk::Format format, vk::Image image) const;
+		BackedVkImage createBackedVkImage(const vk::ImageCreateInfo &infos,
 		      vk::ImageViewType type, vk::ImageAspectFlags aspect,
 		      vk::ImageLayout         layout,
 		      vk::MemoryPropertyFlags memory_properties) const;

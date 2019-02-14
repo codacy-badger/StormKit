@@ -18,7 +18,7 @@ namespace storm::engine {
 	public:
 		Unique_Object(CommandBuffer)
 
-		    explicit CommandBuffer(const Device &device, bool primary = true);
+		explicit CommandBuffer(const Device &device, bool primary = true);
 		~CommandBuffer();
 
 		CommandBuffer(CommandBuffer &&);

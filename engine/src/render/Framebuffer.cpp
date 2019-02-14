@@ -10,14 +10,8 @@ using namespace storm::engine;
 /////////////////////////////////////
 /////////////////////////////////////
 Framebuffer::Framebuffer(
-    const Device &device, const RenderPassImpl &render_pass)
-    : m_impl {device, render_pass} {}
-
-/////////////////////////////////////
-/////////////////////////////////////
-Framebuffer::Framebuffer(
-    const Device &device, const RenderPass &render_pass)
-    : m_impl {device, render_pass} {}
+		const Device &device)
+	: m_impl {device} {}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -30,3 +24,33 @@ Framebuffer::Framebuffer(Framebuffer &&) = default;
 /////////////////////////////////////
 /////////////////////////////////////
 Framebuffer &Framebuffer::operator=(Framebuffer &&) = default;
+
+/////////////////////////////////////
+/////////////////////////////////////
+void Framebuffer::setExtent(uvec3 extent) {
+	m_impl->setExtent(std::move(extent));
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+const uvec3 &Framebuffer::extent() const noexcept {
+	return m_impl->extent();
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+uint32_t Framebuffer::addAttachment(Framebuffer::AttachmentDescription attachment) {
+	return m_impl->addAttachment(std::move(attachment));
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+const Framebuffer::AttachmentDescriptions &Framebuffer::attachments() const noexcept {
+	return m_impl->attachments();
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+bool Framebuffer::hasDepthAttachment() const noexcept {
+	return m_impl->hasDepthAttachment();
+}

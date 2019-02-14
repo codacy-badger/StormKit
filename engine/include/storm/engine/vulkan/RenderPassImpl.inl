@@ -7,19 +7,15 @@
 #include "RenderPassImpl.hpp"
 
 namespace storm::engine {
-	inline const uvec2 &RenderPassImpl::extent() const noexcept {
-		return m_extent;
+	inline void RenderPassImpl::setFramebuffer(Framebuffer &framebuffer) {
+		m_framebuffer = &framebuffer;
+	}
+	inline const Framebuffer *RenderPassImpl::framebuffer() const noexcept {
+		return m_framebuffer;
 	}
 
-	inline const std::vector<ColorFormat> &RenderPassImpl::attachments() const
-	    noexcept {
-		return m_attachments;
-	}
-
-	inline bool RenderPassImpl::isBuilt() const noexcept { return m_is_built; }
-
-	inline bool RenderPassImpl::hasDepthAttachment() const noexcept {
-		return m_has_depth_attachment;
+	inline bool RenderPassImpl::isBuilt() const noexcept {
+		return m_is_built;
 	}
 
 	inline const vk::RenderPass &RenderPassImpl::vkRenderPass() const noexcept {

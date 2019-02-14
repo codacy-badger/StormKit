@@ -13,7 +13,7 @@ using namespace storm::engine;
 /////////////////////////////////////
 /////////////////////////////////////
 RenderPassImpl::RenderPassImpl(const Device &device)
-    : m_is_built {false}, m_has_depth_attachment {false}, m_device {device} {}
+	: m_device {device}, m_framebuffer{nullptr}, m_is_built{false} {}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -25,8 +25,12 @@ RenderPassImpl::RenderPassImpl(RenderPassImpl &&) = default;
 
 /////////////////////////////////////
 /////////////////////////////////////
-void RenderPassImpl::init() {
+void RenderPassImpl::build() {
+	ASSERT(m_framebuffer != nullptr, "Framebuffer need to be set before call build");
+
 	createRenderPass();
+
+	m_framebuffer->implementation().build(*m_render_pass);
 
 	m_is_built = true;
 }
@@ -43,36 +47,29 @@ std::size_t RenderPassImpl::addSubPass(RenderPass::SubPass &&subpass) {
 
 /////////////////////////////////////
 /////////////////////////////////////
-std::size_t RenderPassImpl::addAttachment(ColorFormat format) {
-	m_attachments.emplace_back(format);
-
-	const auto id = std::size(m_attachments) - 1ul;
-
-	if (isDepthFormat(asVK(format)))
-		m_has_depth_attachment = true;
-
-	return id;
-}
-
-/////////////////////////////////////
-/////////////////////////////////////
-void RenderPassImpl::setExtent(uvec2 &&extent) noexcept {
-	m_extent = std::move(extent);
-}
-
-/////////////////////////////////////
-/////////////////////////////////////
 void RenderPassImpl::createRenderPass() {
-	const auto &vk_device = m_device.implementation().vkDevice();
+	const auto &vk_device        = m_device.implementation().vkDevice();
+	const auto &attachments = m_framebuffer->attachments();
+
+	auto attachment_formats = std::vector<ColorFormat>{};
+	attachment_formats.reserve(std::size(attachments));
+
+	std::transform(
+		std::cbegin(attachments),
+		std::cend(attachments),
+		std::back_inserter(attachment_formats),
+		[](const auto &attachment) { return attachment.format; }
+	);
+	const auto attachment_count = std::size(attachment_formats);
 
 	auto attachment_descriptions = std::vector<vk::AttachmentDescription> {};
 	auto attachment_references   = std::vector<vk::AttachmentReference> {};
-	attachment_descriptions.reserve(std::size(m_attachments));
-	attachment_references.reserve(std::size(m_attachments));
+	attachment_descriptions.reserve(attachment_count);
+	attachment_references.reserve(attachment_count);
 
 	auto depth_stencil_attachment_index = -1;
 
-	for (const auto &attachment : std::as_const(m_attachments)) {
+	for (const auto &attachment : std::as_const(attachment_formats)) {
 		auto final_layout     = vk::ImageLayout::eDepthStencilAttachmentOptimal;
 		auto stencil_load_op  = vk::AttachmentLoadOp::eClear;
 		auto stencil_store_op = vk::AttachmentStoreOp::eStore;

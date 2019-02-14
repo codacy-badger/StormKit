@@ -10,7 +10,6 @@
 namespace storm::engine {
 	class ShaderImpl {
 	public:
-		explicit ShaderImpl(const Device &device, Shader::DefaultShader shader);
 		explicit ShaderImpl(const Device &device, Shader::Stage stage,
 		    const _std::filesystem::path &path);
 		explicit ShaderImpl(const Device &device, Shader::Stage stage,

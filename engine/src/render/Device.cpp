@@ -43,12 +43,6 @@ Program::Ptr Device::createProgramPtr() const {
 
 /////////////////////////////////////
 /////////////////////////////////////
-Shader Device::createShader(Shader::DefaultShader shader) const {
-	return Shader {*this, shader};
-}
-
-/////////////////////////////////////
-/////////////////////////////////////
 Shader Device::createShader(
     Shader::Stage stage, const _std::filesystem::path &path) const {
 	return Shader {*this, stage, path};
@@ -59,12 +53,6 @@ Shader Device::createShader(
 Shader Device::createShader(
     Shader::Stage stage, const std::byte *data, std::size_t size) const {
 	return Shader {*this, stage, data, size};
-}
-
-/////////////////////////////////////
-/////////////////////////////////////
-Shader::Ptr Device::createShaderPtr(Shader::DefaultShader shader) const {
-	return Shader::makeUnique(*this, shader);
 }
 
 /////////////////////////////////////
@@ -117,6 +105,18 @@ RenderPass::Ptr Device::createRenderPassPtr(
 	render_pass->addSubPass(std::move(subpass));
 
 	return render_pass;
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+Framebuffer Device::createFramebuffer() const {
+	return Framebuffer{*this};
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+Framebuffer::Ptr Device::createFramebufferPtr() const {
+	return Framebuffer::makeUnique(*this);
 }
 
 /////////////////////////////////////

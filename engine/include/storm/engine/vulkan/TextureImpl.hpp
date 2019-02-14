@@ -22,7 +22,6 @@ namespace storm::engine {
 		inline const Texture::Description &description() const noexcept;
 		inline const image::Image &        image() const noexcept;
 		inline const BackedVkTexture &     backedVkTexture() const noexcept;
-
 	private:
 		void initialise();
 

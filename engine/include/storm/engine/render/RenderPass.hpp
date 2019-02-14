@@ -18,7 +18,7 @@ namespace storm::engine {
 	public:
 		Unique_Object(RenderPass)
 
-		    struct SubPass {
+		struct SubPass {
 			static constexpr const auto EXTERNAL
 			    = std::numeric_limits<std::uint32_t>::max();
 
@@ -31,15 +31,15 @@ namespace storm::engine {
 		~RenderPass();
 
 		RenderPass(RenderPass &&);
+		RenderPass &operator=(RenderPass &&);
 
-		std::size_t addSubPass(SubPass subpass);
-		std::size_t addAttachment(ColorFormat format);
+		std::size_t addSubPass(RenderPass::SubPass &&subpass);
 
-		bool hasDepthAttachment() const noexcept;
-
-		void setExtent(uvec2 extent);
+		void setFramebuffer(Framebuffer &framebuffer);
+		const Framebuffer *framebuffer() const noexcept;
 
 		void build();
+		bool isBuilt() const noexcept;
 
 		IMPLEMENTATION(RenderPassImpl)
 	private:

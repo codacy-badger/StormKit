@@ -17,7 +17,7 @@ namespace storm::engine {
 	public:
 		SUR_Object(ResourceBase)
 
-		    using ID = std::uint32_t;
+		using ID = std::uint32_t;
 
 		using RenderTaskBaseOptionalRef
 		    = std::optional<std::reference_wrapper<RenderTaskBase>>;
@@ -34,7 +34,6 @@ namespace storm::engine {
 
 		inline void               setName(std::string name);
 		inline const std::string &name() const noexcept;
-
 	protected:
 		virtual void realize(const Device &device) = 0;
 		virtual void derealize()                   = 0;

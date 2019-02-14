@@ -17,7 +17,7 @@ namespace storm::engine {
 	public:
 		Unique_Object(Texture)
 
-		    struct Description {
+		struct Description {
 			std::size_t mip_level;
 			Format      format;
 			uvec3       size;

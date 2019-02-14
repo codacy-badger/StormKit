@@ -7,27 +7,34 @@
 #include <storm/core/Memory.hpp>
 #include <storm/core/NonCopyable.hpp>
 #include <storm/core/Pimpl.hpp>
+
 #include <storm/engine/render/ForwardDeclarations.hpp>
 #include <storm/engine/render/Types.hpp>
 #include <storm/engine/render/Utils.hpp>
+#include <storm/engine/render/Texture.hpp>
 
 namespace storm::engine {
 	class FramebufferImpl;
-	class RenderPassImpl;
 	class Framebuffer {
 	public:
 		Unique_Object(Framebuffer)
 
-		    struct Description {};
+		using AttachmentDescription  = Texture::Description;
+		using AttachmentDescriptions = std::vector<AttachmentDescription>;
 
-		explicit Framebuffer(
-		    const Device &device, const RenderPass &render_pass);
-		explicit Framebuffer(
-		    const Device &device, const RenderPassImpl &render_pass);
+		explicit Framebuffer(const Device &device);
 		~Framebuffer();
 
 		Framebuffer(Framebuffer &&);
 		Framebuffer &operator=(Framebuffer &&);
+
+		void setExtent(uvec3 extent);
+		const uvec3 &extent() const noexcept;
+
+		std::uint32_t addAttachment(AttachmentDescription attachment);
+		const AttachmentDescriptions &attachments() const noexcept;
+
+		bool hasDepthAttachment() const noexcept;
 
 		IMPLEMENTATION(FramebufferImpl)
 	private:

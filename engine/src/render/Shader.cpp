@@ -9,11 +9,6 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-Shader::Shader(const Device &device, DefaultShader shader)
-    : m_impl {device, shader} {}
-
-/////////////////////////////////////
-/////////////////////////////////////
 Shader::Shader(
     const Device &device, Stage stage, const _std::filesystem::path &path)
     : m_impl {device, stage, path} {}

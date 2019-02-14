@@ -112,7 +112,7 @@ void SceneRenderer::updateRenderGraph(Scene &scene) {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void SceneRenderer::addDefaultForwardRenderTask(Scene &scene, const RendererResources &resources) {
+void SceneRenderer::addDefaultForwardRenderTask(Scene &scene, const RendererResources &resources) {/*
 	const auto &meshes         = scene.meshes().meshes();
 
 	auto &forward_render_task
@@ -120,10 +120,10 @@ void SceneRenderer::addDefaultForwardRenderTask(Scene &scene, const RendererReso
 	        "forward_render_task",
 	        [&](ForwardRenderTaskData &data, RenderTaskBuilder &builder) {
 		        const auto backbuffer_desc = Texture::Description {
-		            
+					1u, Format::RGBA8888UNORM, {m_render_extent, 1u}
 		        };
 		        
-		        data.backbuffer = builder.create<TextureResource>();
+				data.backbuffer = builder.create<TextureResource>("backbuffer", std::move(backbuffer_desc));
 		        
 		        data.meshdata_buffer = builder.create<UniformBufferResource>(
 		            begin_task_data.meshdata_buffer);
@@ -206,5 +206,5 @@ void SceneRenderer::addDefaultForwardRenderTask(Scene &scene, const RendererReso
 
 		        command_buffer.endRenderPass();
 	        });
-	forward_render_task.setCullImune(true);
+	forward_render_task.setCullImune(true);*/
 }

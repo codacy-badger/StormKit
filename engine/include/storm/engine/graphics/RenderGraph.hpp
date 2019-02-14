@@ -19,8 +19,6 @@
 namespace storm::engine {
 	using TextureResource
 	    = Resource<Texture::Description, Texture>;
-	using FramebufferResource
-	    = Resource<Framebuffer::Description, Framebuffer>;
 	using UniformBufferResource
 	    = Resource<UniformBuffer::Description, UniformBuffer>;
 	
@@ -82,10 +80,10 @@ namespace storm::engine {
 			std::vector<ResourceBase::ID> realized_resources;
 			std::vector<ResourceBase::ID> derealized_resources;
 
-			RenderPass *render_pass;
+			RenderPass  *render_pass;
 		};
 		
-		void buildRenderPass(RenderPass &render_pass, const RenderTaskBase &task);
+		void buildRenderPass(RenderPass &render_pass, Framebuffer &framebuffer, const RenderTaskBase &task);
 
 		std::reference_wrapper<const Device> m_device;
 
@@ -95,6 +93,8 @@ namespace storm::engine {
 
 		ResourcePool m_resources;
 
+		
+		
 		std::unordered_map<std::string, RenderPassAndHash> m_render_passes;
 		std::vector<CommandBuffer> m_command_buffers;
 		std::uint32_t m_current_command_buffer;	

@@ -89,9 +89,6 @@ void CommandBufferImpl::beginRenderPass(RenderPass &render_pass,
 
 	auto &render_pass_impl = render_pass.implementation();
 
-	if (!render_pass_impl.isBuilt())
-		render_pass_impl.init();
-
 	const auto &vk_render_pass = render_pass_impl.vkRenderPass();
 	const auto &vk_framebuffer = buffer.implementation().vkFramebuffer();
 
@@ -101,14 +98,14 @@ void CommandBufferImpl::beginRenderPass(RenderPass &render_pass,
 	auto clear_values = std::vector<vk::ClearValue> {};
 	clear_values.emplace_back(clear_color_value);
 
-	if (m_current_render_pass->implementation().hasDepthAttachment()) {
+	if (buffer.hasDepthAttachment()) {
 		const auto depth_color_value
 		    = vk::ClearDepthStencilValue {}.setDepth(1.f).setStencil(0.f);
 
 		clear_values.emplace_back(depth_color_value);
 	}
 
-	const auto &extent = render_pass_impl.extent();
+	const auto &extent = buffer.extent();
 	const auto  render_pass_info
 	    = vk::RenderPassBeginInfo {}
 	          .setRenderPass(vk_render_pass)

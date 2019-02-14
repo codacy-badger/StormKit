@@ -12,22 +12,6 @@
 #include <variant>
 
 namespace storm::engine {
-	template <typename ResourceDescription, typename ResourceType>
-	std::unique_ptr<ResourceType> realize(
-	    const Device &device, ResourceDescription);
-
-	template <>
-	Texture::Ptr realize(
-	    const Device &device, Texture::Description description);
-
-	template <>
-	UniformBuffer::Ptr realize(
-	    const Device &device, UniformBuffer::Description description);
-
-	template <>
-	Framebuffer::Ptr realize(
-	    const Device &device, Framebuffer::Description description);
-
 	template <typename ResourceDescription_, typename ResourceType_>
 	class Resource : public ResourceBase {
 		using MyType = Resource<ResourceDescription_, ResourceType_>;
@@ -51,21 +35,12 @@ namespace storm::engine {
 		Resource &operator=(Resource &&);
 
 		inline const ResourceDescription &description() const noexcept;
-		inline const ResourceType &       resource() const noexcept;
-		inline ResourceType &             resource() noexcept;
 
 	private:
 		using ResourcePtr     = std::unique_ptr<ResourceType>;
 		using ResourceVariant = std::variant<ResourceType *, ResourcePtr>;
 
 		void realize(const Device &device) override {
-			if (transient()) {
-				auto ptr
-				    = storm::engine::realize<ResourceDescription, ResourceType>(
-				        device, m_description);
-
-				m_resource = std::move(ptr);
-			}
 		}
 
 		void derealize() override {

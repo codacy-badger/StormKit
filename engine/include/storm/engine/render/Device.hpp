@@ -13,6 +13,7 @@
 #include <storm/engine/render/PhysicalDevice.hpp>
 #include <storm/engine/render/Program.hpp>
 #include <storm/engine/render/RenderPass.hpp>
+#include <storm/engine/render/Framebuffer.hpp>
 #include <storm/engine/render/Semaphore.hpp>
 #include <storm/engine/render/Shader.hpp>
 #include <storm/engine/render/Texture.hpp>
@@ -36,12 +37,10 @@ namespace storm::engine {
 		Program      createProgram() const;
 		Program::Ptr createProgramPtr() const;
 
-		Shader createShader(Shader::DefaultShader shader) const;
 		Shader createShader(
 		    Shader::Stage stage, const _std::filesystem::path &path) const;
 		Shader createShader(
 		    Shader::Stage stage, const std::byte *data, std::size_t size) const;
-		Shader::Ptr createShaderPtr(Shader::DefaultShader shader) const;
 		Shader::Ptr createShaderPtr(
 		    Shader::Stage stage, const _std::filesystem::path &path) const;
 		Shader::Ptr createShaderPtr(
@@ -51,6 +50,9 @@ namespace storm::engine {
 		         bool                         enable_depth_attachment = false) const;
 		RenderPass::Ptr createRenderPassPtr(bool default_subpass = false,
 		    bool enable_depth_attachment                         = false) const;
+
+		Framebuffer createFramebuffer() const;
+		Framebuffer::Ptr createFramebufferPtr() const;
 
 		VertexBuffer createVertexBuffer(
 		    std::size_t size, std::size_t alignement) const;

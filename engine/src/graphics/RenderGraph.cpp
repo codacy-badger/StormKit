@@ -13,8 +13,8 @@ using namespace storm::engine;
 /////////////////////////////////////
 RenderGraph::RenderGraph(const Device &device)
     : m_device {device},
-      m_next_task_id {1},
-      m_current_command_buffer{0u} {
+	m_next_task_id {1},
+	m_current_command_buffer{0u} {
 	m_command_buffers.reserve(4u);
 	
 	for (auto i = 0u; i < 4u; ++i)
@@ -205,10 +205,9 @@ void RenderGraph::compile() {
 		if(build_render_pass) continue;
 	
 		auto render_pass = RenderPass{m_device.get()};
-		
-		buildRenderPass(render_pass, task);
-		
-		auto framebuffer = Framebuffer{m_device.get(), render_pass};
+		auto framebuffer = Framebuffer{m_device.get()};
+
+		buildRenderPass(render_pass, framebuffer, task);
 		
 		m_render_passes.emplace(task.name(), RenderPassAndHash{hash, std::move(render_pass), std::move(framebuffer)});
 	}
@@ -334,16 +333,19 @@ RenderTaskBase &RenderGraph::getRenderTask(
 
 /////////////////////////////////////
 /////////////////////////////////////
-void RenderGraph::buildRenderPass(RenderPass &render_pass, const RenderTaskBase &task) {
+void RenderGraph::buildRenderPass(RenderPass &render_pass, Framebuffer &framebuffer, const RenderTaskBase &task) {
+	auto subpass = RenderPass::SubPass{
+		{RenderPass::SubPass::EXTERNAL}
+	};
+
 	for(const auto &resource : task.m_create_resources) {
 		const auto *resource_ptr = m_resources.acquireResourcePtrAs<TextureResource>(resource);
-		
-		render_pass.addAttachment(resource_ptr->description().format);
-		render_pass.setExtent(resource_ptr->description().size);
+
+		if(!resource_ptr) continue;
+
+		auto id = framebuffer.addAttachment(resource_ptr->description());
+	//	framebuffer.setExtent();
 	}
-	
-	const auto subpass
-	    = RenderPass::SubPass {{RenderPass::SubPass::EXTERNAL}, {}, core::genRange(0u, std::size(task.m_create_resources) - 1u)};
 	
 	render_pass.addSubPass(std::move(subpass));
 	render_pass.build();

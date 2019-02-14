@@ -16,12 +16,10 @@ using namespace storm::engine;
 /////////////////////////////////////
 /////////////////////////////////////
 SwapChain::SwapChain(const Device &device, const SurfaceImpl &surface)
-    : m_device {device}, m_surface {surface} {
+	: m_device {device}, m_surface {surface}, m_current_in_flight{0u}, m_current_frame{0u} {
 	createSwapChain();
 	acquireSwapchainImages();
-	createImageViews();
 	createSemaphoresAndFences();
-	createPresentCommandBuffers();
 }
 
 /////////////////////////////////////
@@ -34,101 +32,115 @@ SwapChain::SwapChain(SwapChain &&) = default;
 
 /////////////////////////////////////
 /////////////////////////////////////
-void SwapChain::presentFrame(const Framebuffer &framebuffer,
-    const Semaphore &render_finished_semaphore, const Fence &signal_fence) {
+FrameToken SwapChain::nextFrame() {
+	auto &fence = m_in_flight_fences[m_current_in_flight];
+	fence.wait();
+	fence.reset();
+
 	const auto &device_impl = m_device.implementation();
 	const auto &vk_device   = device_impl.vkDevice();
 
-	m_current_present_index
-	    = (m_current_present_index + 1) % MAX_IMAGE_IN_FLIGHT;
+	auto &[image_available, render_finished] = m_semaphores[m_current_in_flight];
 
-	m_current_image_index
-	    = vk_device
-	          .acquireNextImageKHR(*m_swapchain,
-	              std::numeric_limits<std::uint64_t>::max(),
-	              m_image_available_semaphores[m_current_present_index]
-	                  .implementation()
-	                  .vkSemaphore(),
-	              nullptr)
-	          .value;
+	const auto image_index = vk_device.acquireNextImageKHR(
+			*m_swapchain,
+			std::numeric_limits<std::uint64_t>::max(),
+			image_available.implementation().vkSemaphore(),
+			nullptr
+	).value;
 
-	{
-		auto &present_command_buffer
-		    = m_present_command_buffers[m_current_present_index];
-		present_command_buffer.reset();
-		present_command_buffer.begin();
+	return FrameToken {
+		m_current_frame,
+		image_index,
+		std::size(m_images),
+		image_available,
+		render_finished,
+		fence
+	};
+}
 
-		const auto sub_ressource
-		    = vk::ImageSubresourceLayers {}
-		          .setAspectMask(vk::ImageAspectFlagBits::eColor)
-		          .setBaseArrayLayer(0)
-		          .setMipLevel(0)
-		          .setLayerCount(1);
 
-		const auto &framebuffer_image
-		    = framebuffer.implementation().backedVkImages()[0];
+/////////////////////////////////////
+/////////////////////////////////////
+void SwapChain::present(Framebuffer &framebuffer, const FrameToken &token) {
+	const auto &device_impl = m_device.implementation();
+	const auto &vk_device   = device_impl.vkDevice();
 
-		// copy image to present queue image
-		present_command_buffer.implementation().transitionImageLayout(
-		    framebuffer_image.image.get(),
-		    vk::ImageLayout::eColorAttachmentOptimal,
-		    vk::ImageLayout::eTransferSrcOptimal,
-		    vk::PipelineStageFlagBits::eColorAttachmentOutput,
-		    vk::PipelineStageFlagBits::eTransfer);
+	auto &present_command_buffer = m_present_cmd_buffers[m_current_in_flight];
+	present_command_buffer.reset();
+	present_command_buffer.begin();
 
-		present_command_buffer.implementation().transitionImageLayout(
-		    m_swapchain_images[m_current_image_index],
-		    vk::ImageLayout::ePresentSrcKHR,
-		    vk::ImageLayout::eTransferDstOptimal,
-		    vk::PipelineStageFlagBits::eTransfer,
-		    vk::PipelineStageFlagBits::eTransfer);
+	const auto sub_ressource = vk::ImageSubresourceLayers{}
+		.setAspectMask(vk::ImageAspectFlagBits::eColor)
+		.setBaseArrayLayer(0)
+		.setMipLevel(0)
+		.setLayerCount(1);
 
-		present_command_buffer.implementation().blitImage(
-		    framebuffer_image.image.get(),
-		    m_swapchain_images[m_current_image_index], framebuffer_image.extent,
-		    {m_extent.width, m_extent.height}, vk::Filter::eNearest);
+	const auto &framebuffer_image = framebuffer.implementation().backedVkImages()[0];
 
-		present_command_buffer.implementation().transitionImageLayout(
-		    framebuffer_image.image.get(), vk::ImageLayout::eTransferSrcOptimal,
-		    vk::ImageLayout::eColorAttachmentOptimal,
-		    vk::PipelineStageFlagBits::eTransfer,
-		    vk::PipelineStageFlagBits::eColorAttachmentOutput);
+	//copy image to present queue image
+	present_command_buffer.implementation().transitionImageLayout(
+		framebuffer_image.image.get(),
+		vk::ImageLayout::eColorAttachmentOptimal,
+		vk::ImageLayout::eTransferSrcOptimal,
+		vk::PipelineStageFlagBits::eColorAttachmentOutput,
+		vk::PipelineStageFlagBits::eTransfer
+	);
 
-		present_command_buffer.implementation().transitionImageLayout(
-		    m_swapchain_images[m_current_image_index],
-		    vk::ImageLayout::eTransferDstOptimal,
-		    vk::ImageLayout::ePresentSrcKHR,
-		    vk::PipelineStageFlagBits::eTransfer,
-		    vk::PipelineStageFlagBits::eTransfer);
+	present_command_buffer.implementation().transitionImageLayout(
+		m_images[token.image_index].image,
+		vk::ImageLayout::ePresentSrcKHR,
+		vk::ImageLayout::eTransferDstOptimal,
+		vk::PipelineStageFlagBits::eTransfer,
+		vk::PipelineStageFlagBits::eTransfer
+	);
 
-		present_command_buffer.end();
-		present_command_buffer.submit(
-		    {&render_finished_semaphore,
-		        &m_image_available_semaphores[m_current_present_index]},
-		    {&m_render_finished_semaphores[m_current_present_index]},
-		    {PipelineStage::COLOR_ATTACHMENT_OUTPUT,
-		        PipelineStage::COLOR_ATTACHMENT_OUTPUT},
-		    &signal_fence);
-	}
+	present_command_buffer.implementation().blitImage(
+		framebuffer_image.image.get(),
+		m_images[token.image_index].image,
+		framebuffer_image.extent,
+		{m_extent.width, m_extent.height},
+		vk::Filter::eNearest
+	);
 
-	{
-		const auto semaphores = std::array<vk::Semaphore, 1> {
-		    m_render_finished_semaphores[m_current_present_index]
-		        .implementation()
-		        .vkSemaphore()};
-		const auto wait_stages = std::array<vk::PipelineStageFlags, 1> {
-		    vk::PipelineStageFlagBits::eColorAttachmentOutput};
+	present_command_buffer.implementation().transitionImageLayout(
+		framebuffer_image.image.get(),
+		vk::ImageLayout::eTransferSrcOptimal,
+		vk::ImageLayout::eColorAttachmentOptimal,
+		vk::PipelineStageFlagBits::eTransfer,
+		vk::PipelineStageFlagBits::eColorAttachmentOutput
+	);
 
-		const auto present_info
-		    = vk::PresentInfoKHR {}
-		          .setWaitSemaphoreCount(std::size(semaphores))
-		          .setPWaitSemaphores(std::data(semaphores))
-		          .setSwapchainCount(1)
-		          .setPSwapchains(&m_swapchain.get())
-		          .setPImageIndices(&m_current_image_index);
+	present_command_buffer.implementation().transitionImageLayout(
+		m_images[token.image_index].image,
+		vk::ImageLayout::eTransferDstOptimal,
+		vk::ImageLayout::ePresentSrcKHR,
+		vk::PipelineStageFlagBits::eTransfer,
+		vk::PipelineStageFlagBits::eTransfer
+	);
 
-		device_impl.vkGraphicsQueue().presentKHR(present_info);
-	}
+	present_command_buffer.end();
+	present_command_buffer.submit(
+		{
+			&token.render_finished,
+			&token.image_available
+		},
+		{&m_present_semaphores[m_current_in_flight]},
+		{PipelineStage::COLOR_ATTACHMENT_OUTPUT, PipelineStage::COLOR_ATTACHMENT_OUTPUT},
+		&token.fence
+	);
+
+
+	device_impl.vkGraphicsQueue().presentKHR(
+		vk::PresentInfoKHR{}
+		.setSwapchainCount(1)
+		.setPSwapchains(&m_swapchain.get())
+		.setPImageIndices(&token.image_index)
+		.setWaitSemaphoreCount(1)
+		.setPWaitSemaphores(&m_present_semaphores[m_current_in_flight].implementation().vkSemaphore())
+	);
+
+	m_current_in_flight = (m_current_in_flight + 1) % std::size(m_images);
 }
 
 /////////////////////////////////////
@@ -251,11 +263,11 @@ void SwapChain::selectPresentation() {
 void SwapChain::acquireSwapchainImages() {
 	const auto &vk_device = m_device.implementation().vkDevice();
 
-	m_swapchain_images = vk_device.getSwapchainImagesKHR(*m_swapchain);
-
 	auto cmd = m_device.createCommandBuffer();
 	cmd.begin(true);
-	for (const auto &image : m_swapchain_images) {
+	for(auto image : vk_device.getSwapchainImagesKHR(*m_swapchain)) {
+		m_images.emplace_back(m_device.implementation().createBackedSwapchainImage(m_color_format, image));
+
 		cmd.implementation().transitionImageLayout(image,
 		    vk::ImageLayout::eUndefined, vk::ImageLayout::ePresentSrcKHR,
 		    vk::PipelineStageFlagBits::eTopOfPipe,
@@ -269,58 +281,17 @@ void SwapChain::acquireSwapchainImages() {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void SwapChain::createImageViews() {
-	const auto &vk_device = m_device.implementation().vkDevice();
-
-	const auto components = vk::ComponentMapping {}
-	                            .setR(vk::ComponentSwizzle::eIdentity)
-	                            .setG(vk::ComponentSwizzle::eIdentity)
-	                            .setB(vk::ComponentSwizzle::eIdentity)
-	                            .setA(vk::ComponentSwizzle::eIdentity);
-
-	const auto subressource_range
-	    = vk::ImageSubresourceRange {}
-	          .setAspectMask(vk::ImageAspectFlagBits::eColor)
-	          .setBaseMipLevel(0)
-	          .setLevelCount(1)
-	          .setBaseArrayLayer(0)
-	          .setLayerCount(1);
-
-	for (const auto &image : m_swapchain_images) {
-		const auto create_info = vk::ImageViewCreateInfo {}
-		                             .setImage(image)
-		                             .setViewType(vk::ImageViewType::e2D)
-		                             .setFormat(m_color_format)
-		                             .setComponents(components)
-		                             .setSubresourceRange(subressource_range);
-
-		auto &image_view = m_swapchain_image_views.emplace_back(
-		    vk_device.createImageViewUnique(create_info));
-		storm::DLOG("Renderer (vulkan)"_module, "ImageView allocated at %{1}",
-		    &image_view.get());
-	}
-}
-
-/////////////////////////////////////
-/////////////////////////////////////
 void SwapChain::createSemaphoresAndFences() {
 	const auto &vk_device = m_device.implementation().vkDevice();
 
-	m_image_available_semaphores.reserve(MAX_IMAGE_IN_FLIGHT);
-	m_render_finished_semaphores.reserve(MAX_IMAGE_IN_FLIGHT);
-	m_in_flight_fences.reserve(MAX_IMAGE_IN_FLIGHT);
-	for (auto i = 0u; i < MAX_IMAGE_IN_FLIGHT; ++i) {
-		m_image_available_semaphores.emplace_back(m_device.createSemaphore());
-		m_render_finished_semaphores.emplace_back(m_device.createSemaphore());
+	const auto image_count = std::size(m_images);
+
+	m_semaphores.reserve(image_count );
+	m_in_flight_fences.reserve(image_count );
+	for (auto i = 0u; i < image_count; ++i) {
+		m_semaphores.emplace_back(m_device.createSemaphore(), m_device.createSemaphore());
+		m_present_semaphores.emplace_back(m_device.createSemaphore());
 		m_in_flight_fences.emplace_back(m_device.createFence());
+		m_present_cmd_buffers.emplace_back(m_device.createCommandBuffer());
 	}
-}
-
-/////////////////////////////////////
-/////////////////////////////////////
-void SwapChain::createPresentCommandBuffers() {
-	m_present_command_buffers.reserve(MAX_IMAGE_IN_FLIGHT);
-
-	for (auto i = 0u; i < MAX_IMAGE_IN_FLIGHT; ++i)
-		m_present_command_buffers.emplace_back(m_device.createCommandBuffer());
 }

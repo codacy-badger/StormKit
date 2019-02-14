@@ -27,9 +27,6 @@ namespace storm::engine {
 			    SIZE
 		    };
 
-		enum class DefaultShader { DEFAULT_VERT_2D, DEFAULT_FRAG_2D };
-
-		explicit Shader(const Device &device, DefaultShader shader);
 		explicit Shader(const Device &device, Stage stage,
 		    const _std::filesystem::path &path);
 		explicit Shader(const Device &device, Stage stage,
