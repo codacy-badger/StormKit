@@ -121,9 +121,6 @@ void SwapChain::present(Framebuffer &framebuffer, const FrameToken &token) {
 
 	present_command_buffer.end();
 
-	token.fence.wait();
-	token.fence.reset();
-
 	present_command_buffer.submit(
 		{
 			&token.render_finished,
@@ -133,7 +130,6 @@ void SwapChain::present(Framebuffer &framebuffer, const FrameToken &token) {
 		{PipelineStage::COLOR_ATTACHMENT_OUTPUT, PipelineStage::COLOR_ATTACHMENT_OUTPUT},
 		&token.fence
 	);
-
 
 	device_impl.vkGraphicsQueue().presentKHR(
 		vk::PresentInfoKHR{}
