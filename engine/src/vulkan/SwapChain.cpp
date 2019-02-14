@@ -120,6 +120,10 @@ void SwapChain::present(Framebuffer &framebuffer, const FrameToken &token) {
 	);
 
 	present_command_buffer.end();
+
+	token.fence.wait();
+	token.fence.reset();
+
 	present_command_buffer.submit(
 		{
 			&token.render_finished,
