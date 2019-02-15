@@ -148,7 +148,7 @@ void runApp() {
 
 		if(std::chrono::duration_cast<std::chrono::seconds>(now - last_fps_update).count() >= 1.f) {
 			if(delta == 0.f) delta = 1.f;
-			render_window.setTitle(core::format("StormKit Triangle Example | Delta : %{1} | FPS : %{2}", delta, 1.f / delta));
+			render_window.setTitle(core::format("StormKit Uniform Buffer Example | Delta : %{1} | FPS : %{2}", delta, 1.f / delta));
 			last_fps_update = now;
 		}
 

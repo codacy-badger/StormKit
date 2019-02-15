@@ -158,7 +158,7 @@ void runApp() {
 		if(std::chrono::duration_cast<std::chrono::seconds>(now - last_fps_update).count() >= 1.f) {
 			auto delta = std::chrono::duration<float, std::chrono::seconds::period>{now - last}.count();
 			if(delta == 0) delta = 1;
-			render_window.setTitle(core::format("StormKit Triangle Example | Delta : %{1} | FPS : %{2}", delta, 1.f / delta));
+			render_window.setTitle(core::format("StormKit Texture Example | Delta : %{1} | FPS : %{2}", delta, 1.f / delta));
 			last_fps_update = now;
 		}
 
