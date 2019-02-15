@@ -9,7 +9,7 @@
 #include <storm/engine/vulkan/UniqueHandle.hpp>
 
 namespace storm::engine {
-	vk::Format                 asVK(storm::engine::ColorFormat type) noexcept;
+	vk::Format asVK(storm::engine::ColorFormat type) noexcept;
 	storm::engine::ColorFormat fromVK(vk::Format type) noexcept;
 
 	vk::ShaderStageFlagBits asVK(storm::engine::Shader::Stage type) noexcept;
@@ -45,4 +45,7 @@ namespace storm::engine {
 
 	vk::CompareOp asVK(storm::engine::CompareOperation op) noexcept;
 	storm::engine::CompareOperation fromVK(vk::CompareOp op) noexcept;
+
+	vk::BufferUsageFlags asVK(storm::engine::BufferUsage usage) noexcept;
+	storm::engine::BufferUsage fromVK(vk::BufferUsageFlags op) noexcept;
 }

@@ -6,15 +6,13 @@
 #include <storm/engine/vulkan/CommandBufferImpl.hpp>
 #include <storm/engine/vulkan/DeviceImpl.hpp>
 #include <storm/engine/vulkan/FenceImpl.hpp>
-#include <storm/engine/vulkan/IndexBufferImpl.hpp>
 #include <storm/engine/vulkan/ProgramImpl.hpp>
 #include <storm/engine/vulkan/RenderPassImpl.hpp>
 #include <storm/engine/vulkan/SemaphoreImpl.hpp>
 #include <storm/engine/vulkan/ShaderImpl.hpp>
 #include <storm/engine/vulkan/TextureImpl.hpp>
 #include <storm/engine/vulkan/TypeConversions.hpp>
-#include <storm/engine/vulkan/UniformBufferImpl.hpp>
-#include <storm/engine/vulkan/VertexBufferImpl.hpp>
+#include <storm/engine/vulkan/HardwareBufferImpl.hpp>
 #include <storm/log/LogOutput.hpp>
 
 using namespace storm::engine;
@@ -151,7 +149,8 @@ void CommandBufferImpl::drawIndexed(std::size_t index_count,
 /////////////////////////////////////
 void CommandBufferImpl::submit(
     const std::vector<const Semaphore *> &wait_semaphores,
-    const std::vector<const Semaphore *> &signal_semaphores,
+	const std::vector<const Semaphore *> &signal_semaphores,
+	QueueType queue,
     std::vector<PipelineStage> pipeline_states, const Fence *fence) {
 	const auto &vk_device = m_device.implementation().vkDevice();
 
@@ -188,8 +187,15 @@ void CommandBufferImpl::submit(
 	          .setSignalSemaphoreCount(std::size(signal_vk_semaphores))
 	          .setPSignalSemaphores(std::data(signal_vk_semaphores));
 
-	m_device.implementation().vkGraphicsQueue().submit(
-	    submit_info, render_finished_fence);
+	if(queue == QueueType::GRAPHICS)
+		m_device.implementation().vkGraphicsQueue().submit(
+			submit_info, render_finished_fence);
+	else if(queue == QueueType::TRANSFERT)
+		m_device.implementation().vkTransfertQueue().submit(
+			submit_info, render_finished_fence);
+	else if(queue == QueueType::COMPUTE)
+		m_device.implementation().vkComputeQueue().submit(
+			submit_info, render_finished_fence);
 }
 
 /////////////////////////////////////
@@ -308,13 +314,13 @@ void CommandBufferImpl::copyBufferToImage(const vk::Buffer &src,
 /////////////////////////////////////
 /////////////////////////////////////
 void CommandBufferImpl::bindVertexBuffer(
-    std::uint32_t index, const VertexBuffer &buffer) {
+	std::uint32_t index, const HardwareBuffer &buffer) {
 	m_command_buffer->bindVertexBuffers(
 	    index, {buffer.implementation().backedVkBuffer().buffer.get()}, {0});
 }
 
 void CommandBufferImpl::bindIndexBuffer(
-    const IndexBuffer &buffer, bool large_indices) {
+	const HardwareBuffer &buffer, bool large_indices) {
 	const auto &vk_buffer
 	    = buffer.implementation().backedVkBuffer().buffer.get();
 

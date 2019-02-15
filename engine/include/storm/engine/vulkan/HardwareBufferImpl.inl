@@ -4,11 +4,15 @@
 
 #pragma once
 
-#include <storm/engine/vulkan/VertexBufferImpl.hpp>
+#include "HardwareBufferImpl.hpp"
 
 namespace storm::engine {
-	inline const BackedVkBuffer &VertexBufferImpl::backedVkBuffer() const
-	    noexcept {
+	inline const HardwareBuffer::Description &HardwareBufferImpl::description() {
+		return m_description;
+	}
+
+	inline const BackedVkBuffer &HardwareBufferImpl::backedVkBuffer() const
+		noexcept {
 		return m_buffer;
 	}
 }

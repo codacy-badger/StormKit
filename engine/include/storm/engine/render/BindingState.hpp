@@ -12,7 +12,7 @@ namespace storm::engine {
 	class UniformBuffer;
 	class Texture;
 	struct UniformBufferBinding {
-		const UniformBuffer *buffer;
+		const HardwareBuffer *buffer;
 		std::uint32_t        binding;
 		std::size_t          size;
 		std::ptrdiff_t       offset;

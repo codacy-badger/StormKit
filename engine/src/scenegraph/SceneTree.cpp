@@ -164,28 +164,40 @@ void SceneTree::traverseSubTree(
 			auto  id   = pair.first;
 			auto &mesh = pair.second;
 
-			mesh.get().vertex_buffer = m_device.get().createVertexBufferPtr(
-			    data.vertices.size, data.vertices.alignement);
+			const auto vertex_buffer_desc = HardwareBuffer::Description {
+				data.vertices.size,
+				data.vertices.alignement,
+				BufferUsage::VERTEX
+			};
+
+			mesh.get().vertex_buffer = m_device.get().createHardwareBufferPtr(
+				std::move(vertex_buffer_desc));
 			mesh.get().vertex_state = data.vertex_state;
 
 			std::visit(
 			    [&](const auto &vertices) {
-				    mesh.get().vertex_buffer->addData(vertices);
+					mesh.get().vertex_buffer->setData(vertices);
 				    mesh.get().vertex_count = std::size(vertices);
 			    },
 			    data.vertices.array);
 
 			if (data.indices.size) {
-				mesh.get().index_buffer = m_device.get().createIndexBufferPtr(
-				    data.indices.size, data.indices.alignement);
+				const auto index_buffer_desc = HardwareBuffer::Description {
+					data.indices.size,
+					data.indices.alignement,
+					BufferUsage::INDEX
+				};
+
+				mesh.get().index_buffer = m_device.get().createHardwareBufferPtr(
+					std::move(index_buffer_desc));
 
 				std::visit(core::overload {
 				               [&](const IndexArray &indices) {
-					               mesh.get().index_buffer->addData(indices);
+								   mesh.get().index_buffer->setData(indices);
 					               mesh.get().index_count = std::size(indices);
 				               },
 				               [&](const LargeIndexArray &indices) {
-					               mesh.get().index_buffer->addData(indices);
+								   mesh.get().index_buffer->setData(indices);
 					               mesh.get().large_indices = true;
 					               mesh.get().index_count = std::size(indices);
 				               }},

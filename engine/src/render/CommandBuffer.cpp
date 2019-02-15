@@ -67,10 +67,11 @@ void CommandBuffer::drawIndexed(std::size_t index_count,
 
 void CommandBuffer::submit(
     const std::vector<const Semaphore *> &wait_semaphores,
-    const std::vector<const Semaphore *> &signal_semaphores,
+	const std::vector<const Semaphore *> &signal_semaphores,
+	QueueType queue,
     std::vector<PipelineStage> pipeline_states, const Fence *fence) {
 	m_impl->submit(
-	    wait_semaphores, signal_semaphores, std::move(pipeline_states), fence);
+		wait_semaphores, signal_semaphores, queue, std::move(pipeline_states), fence);
 }
 
 /////////////////////////////////////
@@ -82,14 +83,14 @@ void CommandBuffer::setProgram(const Program &program) {
 /////////////////////////////////////
 /////////////////////////////////////
 void CommandBuffer::bindVertexBuffer(
-    uint32_t index, const VertexBuffer &buffer) {
+	uint32_t index, const HardwareBuffer &buffer) {
 	m_impl->bindVertexBuffer(index, buffer);
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
 void CommandBuffer::bindIndexBuffer(
-    const IndexBuffer &buffer, bool large_indices) {
+	const HardwareBuffer &buffer, bool large_indices) {
 	m_impl->bindIndexBuffer(buffer, large_indices);
 }
 

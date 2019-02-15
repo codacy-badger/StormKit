@@ -2,61 +2,62 @@
 // This file is subject to the license terms in the LICENSE file
 // found in the top-level of this distribution
 
-#include <storm/engine/render/UniformBuffer.hpp>
-#include <storm/engine/vulkan/UniformBufferImpl.hpp>
+#include <storm/engine/render/HardwareBuffer.hpp>
+#include <storm/engine/vulkan/HardwareBufferImpl.hpp>
 
 using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-UniformBuffer::UniformBuffer(const Device &device, Description description)
-    : m_impl {device, std::move(description)} {}
+HardwareBuffer::HardwareBuffer(const Device &device, Description description)
+	: m_impl{device, std::move(description)} {
 
-/////////////////////////////////////
-/////////////////////////////////////
-UniformBuffer::~UniformBuffer() = default;
-
-/////////////////////////////////////
-/////////////////////////////////////
-UniformBuffer::UniformBuffer(UniformBuffer &&) = default;
-
-/////////////////////////////////////
-/////////////////////////////////////
-UniformBuffer &UniformBuffer::operator=(UniformBuffer &&) = default;
-
-/////////////////////////////////////
-/////////////////////////////////////
-void UniformBuffer::reset() { m_impl->reset(); }
-
-/////////////////////////////////////
-/////////////////////////////////////
-std::size_t UniformBuffer::addData(const std::byte *data, std::size_t size) {
-	return m_impl->addData(data, size);
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-void UniformBuffer::updateData(
-    const std::byte *data, std::size_t size, std::ptrdiff_t offset) {
-	m_impl->updateData(data, size, offset);
+HardwareBuffer::~HardwareBuffer() = default;
+
+/////////////////////////////////////
+/////////////////////////////////////
+HardwareBuffer::HardwareBuffer(HardwareBuffer &&) = default;
+
+/////////////////////////////////////
+/////////////////////////////////////
+HardwareBuffer &HardwareBuffer::operator=(HardwareBuffer &&) = default;
+
+/////////////////////////////////////
+/////////////////////////////////////
+void HardwareBuffer::reset() {
+	m_impl->reset();
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-std::byte *UniformBuffer::map() { return m_impl->map(); }
+void HardwareBuffer::setData(const std::byte *data, std::size_t size, std::ptrdiff_t offset) {
+	m_impl->setData(data, size, offset);
+}
 
 /////////////////////////////////////
 /////////////////////////////////////
-std::byte *UniformBuffer::map(std::size_t size, std::ptrdiff_t offset) {
+std::byte *HardwareBuffer::map() {
+	return m_impl->map();
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+std::byte *HardwareBuffer::map(std::size_t size, std::ptrdiff_t offset) {
 	return m_impl->map(size, offset);
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-void UniformBuffer::unmap() { m_impl->unmap(); }
+void HardwareBuffer::unmap() {
+	m_impl->unmap();
+}
 
 /////////////////////////////////////
 /////////////////////////////////////
-const UniformBuffer::Description &UniformBuffer::description() const noexcept {
+const HardwareBuffer::Description &HardwareBuffer::description() {
 	return m_impl->description();
 }

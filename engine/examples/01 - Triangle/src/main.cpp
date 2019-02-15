@@ -108,9 +108,7 @@ void runApp() {
 
 		command_buffer.submit(
 			{},
-			{&frame.render_finished},
-			{engine::PipelineStage::COLOR_ATTACHMENT_OUTPUT},
-			&frame.fence
+			{&frame.render_finished}
 		);
 
 		surface.present(framebuffer, frame);

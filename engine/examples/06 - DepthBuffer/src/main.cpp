@@ -92,21 +92,35 @@ void runApp() {
 	    glm::vec3 {2.f, 2.f, 2.f}, {0.f, 0.f, 0.f}, {0.f, 0.f, 1.f});
 	matrices.model = glm::mat4 {1.f};
 
-	auto vertex_buffer
-		= device.createVertexBuffer(std::size(VERTICES) * sizeof(Vertex), alignof (Vertex));
-	auto index_buffer
-		= device.createIndexBuffer(std::size(INDICES) * sizeof(std::uint16_t), alignof (std::uint16_t));
-
-	auto buffer_description = engine::UniformBuffer::Description {
-		sizeof(Matrices),
-		alignof (Matrices)
+	const auto vertex_buffer_desc = engine::HardwareBuffer::Description {
+		std::size(VERTICES) * sizeof(Vertex),
+		alignof(Vertex),
+		engine::BufferUsage::VERTEX
 	};
 
-	auto uniform_buffer = device.createUniformBuffer(buffer_description);
-	vertex_buffer.addData(VERTICES);
-	index_buffer.addData(INDICES);
-	uniform_buffer.addData(
-	    reinterpret_cast<std::byte *>(&matrices), sizeof(Matrices));
+	auto vertex_buffer
+		= device.createHardwareBuffer(std::move(vertex_buffer_desc));
+	vertex_buffer.setData(VERTICES);
+
+	const auto index_buffer_desc = engine::HardwareBuffer::Description {
+		std::size(INDICES) * sizeof(std::uint16_t),
+		alignof(std::uint16_t),
+		engine::BufferUsage::INDEX
+	};
+
+	auto index_buffer
+		= device.createHardwareBuffer(std::move(index_buffer_desc));
+	index_buffer.setData(INDICES);
+
+	auto uniform_buffer_description = engine::HardwareBuffer::Description {
+		sizeof(Matrices),
+		alignof(Matrices),
+		engine::BufferUsage::UNIFORM
+	};
+
+	auto uniform_buffer = device.createHardwareBuffer(std::move(uniform_buffer_description));
+	uniform_buffer.setData(
+		reinterpret_cast<std::byte *>(&matrices), sizeof(Matrices), 0u);
 
 	auto render_pass = device.createRenderPass(true, true);
 	auto framebuffer = device.createFramebuffer();
@@ -169,9 +183,7 @@ void runApp() {
 
 		command_buffer.submit(
 			{},
-			{&frame.render_finished},
-			{engine::PipelineStage::COLOR_ATTACHMENT_OUTPUT},
-			&frame.fence
+			{&frame.render_finished}
 		);
 
 		surface.present(framebuffer, frame);

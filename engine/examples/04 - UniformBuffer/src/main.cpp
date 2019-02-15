@@ -87,18 +87,25 @@ void runApp() {
 	    glm::vec3 {2.f, 2.f, 2.f}, {0.f, 0.f, 0.f}, {0.f, 0.f, 1.f});
 	matrices.model = glm::mat4 {1.f};
 
-	auto vertex_buffer
-		= device.createVertexBuffer(std::size(VERTICES) * sizeof(Vertex), alignof(Vertex));
-
-	auto buffer_description = engine::UniformBuffer::Description {
-		sizeof(Matrices),
-		alignof (Matrices)
+	const auto vertex_buffer_desc = engine::HardwareBuffer::Description {
+		std::size(VERTICES) * sizeof(Vertex),
+		alignof(Vertex),
+		engine::BufferUsage::VERTEX
 	};
 
-	auto uniform_buffer = device.createUniformBuffer(buffer_description);
-	vertex_buffer.addData(VERTICES);
-	uniform_buffer.addData(
-	    reinterpret_cast<std::byte *>(&matrices), sizeof(Matrices));
+	auto vertex_buffer
+		= device.createHardwareBuffer(std::move(vertex_buffer_desc));
+	vertex_buffer.setData(VERTICES);
+
+	auto uniform_buffer_description = engine::HardwareBuffer::Description {
+		sizeof(Matrices),
+		alignof(Matrices),
+		engine::BufferUsage::UNIFORM
+	};
+
+	auto uniform_buffer = device.createHardwareBuffer(std::move(uniform_buffer_description));
+	uniform_buffer.setData(
+		reinterpret_cast<std::byte *>(&matrices), sizeof(Matrices), 0u);
 
 	auto render_pass = device.createRenderPass(true);
 	auto framebuffer = device.createFramebuffer();
@@ -160,7 +167,7 @@ void runApp() {
 
 		matrices.model = glm::rotate(glm::mat4 {1.f},
 			time * glm::radians(90.0f), glm::vec3 {0.0f, 0.0f, 1.0f});
-		uniform_buffer.updateData(
+		uniform_buffer.setData(
 		    reinterpret_cast<std::byte *>(&matrices.model), sizeof(glm::mat4),
 		    offsetof(Matrices, model));
 
@@ -168,9 +175,7 @@ void runApp() {
 
 		command_buffer.submit(
 			{},
-			{&frame.render_finished},
-			{engine::PipelineStage::COLOR_ATTACHMENT_OUTPUT},
-			&frame.fence
+			{&frame.render_finished}
 		);
 
 		surface.present(framebuffer, frame);

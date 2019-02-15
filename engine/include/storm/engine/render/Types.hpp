@@ -42,13 +42,32 @@ namespace storm::engine {
 		SIZE
 	};
 
-	enum class PrimitiveTopology { TRIANGLES, TRIANGLE_STRIP, SIZE };
+	enum class PrimitiveTopology {
+		TRIANGLES,
+		TRIANGLE_STRIP,
+		SIZE
+	};
 
-	enum class PolygonMode { POINT, LINE, FILL, SIZE };
+	enum class PolygonMode {
+		POINT,
+		LINE,
+		FILL,
+		SIZE
+	};
 
-	enum class CullMode { FRONT, BACK, FRONT_AND_BACK, NONE, SIZE };
+	enum class CullMode {
+		FRONT,
+		BACK,
+		FRONT_AND_BACK,
+		NONE,
+		SIZE
+	};
 
-	enum class FrontFace { CLOCKWISE, COUNTER_CLOCKWISE, SIZE };
+	enum class FrontFace {
+		CLOCKWISE,
+		COUNTER_CLOCKWISE,
+		SIZE
+	};
 
 	enum class Format {
 		BOOL,
@@ -116,6 +135,22 @@ namespace storm::engine {
 		SIZE
 	};
 
+	enum class BufferUsage {
+		VERTEX,
+		INDEX,
+		UNIFORM,
+		TRANSFER_SRC,
+		TRANSFER_DST,
+		SIZE
+	};
+
+	enum class QueueType {
+		GRAPHICS,
+		TRANSFERT,
+		COMPUTE,
+		SIZE
+	};
+
 	using ColorFormat = Format;
 
 	inline constexpr bool isDepthOnlyFormat(Format format) {
@@ -137,3 +172,4 @@ namespace storm::engine {
 }
 
 FLAG_ENUM(storm::engine::ColorComponent)
+FLAG_ENUM(storm::engine::BufferUsage)

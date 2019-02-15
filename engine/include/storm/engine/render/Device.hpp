@@ -9,7 +9,6 @@
 #include <storm/engine/render/CommandBuffer.hpp>
 #include <storm/engine/render/Fence.hpp>
 #include <storm/engine/render/ForwardDeclarations.hpp>
-#include <storm/engine/render/IndexBuffer.hpp>
 #include <storm/engine/render/PhysicalDevice.hpp>
 #include <storm/engine/render/Program.hpp>
 #include <storm/engine/render/RenderPass.hpp>
@@ -17,8 +16,7 @@
 #include <storm/engine/render/Semaphore.hpp>
 #include <storm/engine/render/Shader.hpp>
 #include <storm/engine/render/Texture.hpp>
-#include <storm/engine/render/UniformBuffer.hpp>
-#include <storm/engine/render/VertexBuffer.hpp>
+#include <storm/engine/render/HardwareBuffer.hpp>
 #include <storm/window/Window.hpp>
 
 namespace storm::engine {
@@ -54,18 +52,10 @@ namespace storm::engine {
 		Framebuffer createFramebuffer() const;
 		Framebuffer::Ptr createFramebufferPtr() const;
 
-		VertexBuffer createVertexBuffer(
-		    std::size_t size, std::size_t alignement) const;
-		VertexBuffer::Ptr createVertexBufferPtr(
-		    std::size_t size, std::size_t alignement) const;
-		IndexBuffer createIndexBuffer(
-		    std::size_t size, std::size_t alignement) const;
-		IndexBuffer::Ptr createIndexBufferPtr(
-		    std::size_t size, std::size_t alignement) const;
-		UniformBuffer createUniformBuffer(
-		    UniformBuffer::Description description) const;
-		UniformBuffer::Ptr createUniformBufferPtr(
-		    UniformBuffer::Description description) const;
+		HardwareBuffer createHardwareBuffer(
+			HardwareBuffer::Description description) const;
+		HardwareBuffer::Ptr createHardwareBufferPtr(
+			HardwareBuffer::Description description) const;
 
 		Fence      createFence() const;
 		Fence::Ptr createFencePtr() const;

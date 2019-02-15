@@ -24,8 +24,8 @@ SceneRenderer::SceneRenderer(
 
 	auto camera = CameraData {};
 
-	m_camera_buffer.updateData(
-	    reinterpret_cast<const std::byte *>(&camera), sizeof(camera), 0);
+	m_camera_buffer.setData(
+		reinterpret_cast<const std::byte *>(&camera), sizeof(camera), 0u);
 
 	const auto &vert_data
 	    = m_shader_library.getSource(ShaderLibrary::FORWARD_RENDER_VERT);

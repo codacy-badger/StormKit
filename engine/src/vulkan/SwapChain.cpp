@@ -127,6 +127,7 @@ void SwapChain::present(Framebuffer &framebuffer, const FrameToken &token) {
 			&token.image_available
 		},
 		{&m_present_semaphores[m_current_in_flight]},
+		QueueType::TRANSFERT,
 		{PipelineStage::COLOR_ATTACHMENT_OUTPUT, PipelineStage::COLOR_ATTACHMENT_OUTPUT},
 		&token.fence
 	);

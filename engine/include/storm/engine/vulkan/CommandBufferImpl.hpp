@@ -39,7 +39,8 @@ namespace storm::engine {
 		    std::uint32_t first_instance);
 
 		void submit(const std::vector<const Semaphore *> &wait_semaphores,
-		    const std::vector<const Semaphore *> &        signal_semaphores,
+			const std::vector<const Semaphore *> &        signal_semaphores,
+			QueueType queue,
 		    std::vector<PipelineStage> pipeline_states, const Fence *fence);
 
 		void setProgram(const Program &program);
@@ -61,8 +62,8 @@ namespace storm::engine {
 		void copyBufferToImage(const vk::Buffer &src, const vk::Image &dest,
 		    std::uint32_t width, std::uint32_t height) const;
 
-		void bindVertexBuffer(std::uint32_t index, const VertexBuffer &buffer);
-		void bindIndexBuffer(const IndexBuffer &buffer, bool large_indices);
+		void bindVertexBuffer(std::uint32_t index, const HardwareBuffer &buffer);
+		void bindIndexBuffer(const HardwareBuffer &buffer, bool large_indices);
 
 		void executeCommandBuffers(
 		    const std::vector<std::reference_wrapper<CommandBuffer>>

@@ -81,10 +81,6 @@ void runApp() {
 	program.addShaderModule(fragment_shader);
 	program.link();
 
-	auto vertex_buffer
-		= device.createVertexBuffer(std::size(VERTICES) * sizeof(Vertex), alignof(Vertex));
-	vertex_buffer.addData(VERTICES);
-
 	auto matrices = Matrices {};
 	matrices.projection
 	    = glm::ortho(0.f, WINDOW_WIDTH<float>, WINDOW_HEIGHT<float>, 0.f);
@@ -93,14 +89,26 @@ void runApp() {
 	    glm::mat4 {1.f}, {WINDOW_WIDTH<float> / 2.f - 150.f,
 	                         WINDOW_HEIGHT<float> / 2.f - 189.f, 0.f});
 
-	auto buffer_description = engine::UniformBuffer::Description {
-		sizeof(Matrices),
-		alignof (Matrices)
+
+	const auto vertex_buffer_desc = engine::HardwareBuffer::Description {
+		std::size(VERTICES) * sizeof(Vertex),
+		alignof(Vertex),
+		engine::BufferUsage::VERTEX
 	};
 
-	auto uniform_buffer = device.createUniformBuffer(buffer_description);
-	uniform_buffer.addData(
-	    reinterpret_cast<std::byte *>(&matrices), sizeof(Matrices));
+	auto vertex_buffer
+		= device.createHardwareBuffer(std::move(vertex_buffer_desc));
+	vertex_buffer.setData(VERTICES);
+
+	auto uniform_buffer_description = engine::HardwareBuffer::Description {
+		sizeof(Matrices),
+		alignof(Matrices),
+		engine::BufferUsage::UNIFORM
+	};
+
+	auto uniform_buffer = device.createHardwareBuffer(std::move(uniform_buffer_description));
+	uniform_buffer.setData(
+		reinterpret_cast<std::byte *>(&matrices), sizeof(Matrices), 0u);
 
 	auto image_file = image::Image {};
 	image_file.loadFromFile("textures/texture.png");
@@ -169,9 +177,7 @@ void runApp() {
 
 		command_buffer.submit(
 			{},
-			{&frame.render_finished},
-			{engine::PipelineStage::COLOR_ATTACHMENT_OUTPUT},
-			&frame.fence
+			{&frame.render_finished}
 		);
 
 		surface.present(framebuffer, frame);

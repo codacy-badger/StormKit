@@ -65,10 +65,10 @@ namespace storm::engine {
 		Texture::Description m_backbuffer_desc;
 		Texture::Description m_depthbuffer_desc;
 
-		UniformBuffer::Description m_camera_buffer_desc;
-		UniformBuffer              m_camera_buffer;
+		HardwareBuffer::Description m_camera_buffer_desc;
+		HardwareBuffer              m_camera_buffer;
 
-		UniformBuffer::Description m_meshdata_buffer_desc;
+		HardwareBuffer::Description m_meshdata_buffer_desc;
 
 		std::unordered_map<std::string, RenderPass::Ptr> m_render_passes;
 		Framebuffer::Ptr                                 m_backbuffer;

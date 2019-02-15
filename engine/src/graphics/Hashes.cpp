@@ -37,7 +37,7 @@ static auto vertex_p_c_n_vec_hasher  = std::hash<VertexArray<Vertex_P_C_N>> {};
 static auto vertex_p_c_n_hasher      = std::hash<Vertex_P_C_N> {};
 static auto index_vec_hasher         = std::hash<IndexArray> {};
 static auto large_index_vec_hasher   = std::hash<LargeIndexArray> {};
-static auto uniform_buffer_ptr_hasher = std::hash<const UniformBuffer *> {};
+static auto hardware_buffer_ptr_hasher = std::hash<const HardwareBuffer *> {};
 static auto texture_ptr_hasher        = std::hash<const Texture *> {};
 static auto stage_hasher              = std::hash<Shader::Stage> {};
 static auto bindings_hasher           = std::hash<std::vector<Binding>> {};
@@ -103,7 +103,7 @@ namespace std {
 	std::size_t hash<storm::engine::UniformBufferBinding>::operator()(
 	    const storm::engine::UniformBufferBinding &obj) const {
 		auto hash = size_t_hasher(obj.size);
-		hash_combine(hash, uniform_buffer_ptr_hasher(obj.buffer));
+		hash_combine(hash, hardware_buffer_ptr_hasher(obj.buffer));
 		hash_combine(hash, ptrdiff_t_hasher(obj.offset));
 		hash_combine(hash, stage_hasher(obj.stages));
 		hash_combine(hash, uint32_t_hasher(obj.binding));

@@ -19,8 +19,8 @@
 namespace storm::engine {
 	using TextureResource
 	    = Resource<Texture::Description, Texture>;
-	using UniformBufferResource
-	    = Resource<UniformBuffer::Description, UniformBuffer>;
+	using HardwareBufferResource
+		= Resource<HardwareBuffer::Description, HardwareBuffer>;
 	
 	class RenderGraph : public core::NonCopyable {
 		struct RenderPassAndHash {

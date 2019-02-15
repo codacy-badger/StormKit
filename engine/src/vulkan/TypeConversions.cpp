@@ -236,10 +236,49 @@ namespace storm::engine {
 	    };
 
 	vk::CompareOp asVK(storm::engine::CompareOperation op) noexcept {
-	    AS(op, COMPARE_OP_MAP)}
+		AS(op, COMPARE_OP_MAP)
+	}
 
 	storm::engine::CompareOperation fromVK(vk::CompareOp op) noexcept {
 		FROM(op, COMPARE_OP_MAP)
+	}
+
+	vk::BufferUsageFlags asVK(storm::engine::BufferUsage usage) noexcept {
+		using namespace storm::engine;
+
+		auto _usage = vk::BufferUsageFlags{};
+
+		if((usage & BufferUsage::VERTEX) == BufferUsage::VERTEX)
+			_usage |= vk::BufferUsageFlagBits::eVertexBuffer;
+		if((usage & BufferUsage::INDEX) == BufferUsage::INDEX)
+			_usage |= vk::BufferUsageFlagBits::eIndexBuffer;
+		if((usage & BufferUsage::UNIFORM) == BufferUsage::UNIFORM)
+			_usage |= vk::BufferUsageFlagBits::eUniformBuffer;
+		if((usage & BufferUsage::TRANSFER_SRC) == BufferUsage::TRANSFER_SRC)
+			_usage |= vk::BufferUsageFlagBits::eTransferSrc;
+		if((usage & BufferUsage::TRANSFER_DST) == BufferUsage::TRANSFER_DST)
+			_usage |= vk::BufferUsageFlagBits::eTransferDst;
+
+		return _usage;
+	}
+
+	storm::engine::BufferUsage fromVK(vk::BufferUsageFlags usage) noexcept {
+		using namespace storm::engine;
+
+		auto _usage = BufferUsage{};
+
+		if((usage & vk::BufferUsageFlagBits::eVertexBuffer) == vk::BufferUsageFlagBits::eVertexBuffer)
+			_usage |= BufferUsage::VERTEX;
+		if((usage & vk::BufferUsageFlagBits::eIndexBuffer) == vk::BufferUsageFlagBits::eIndexBuffer)
+			_usage |= BufferUsage::INDEX;
+		if((usage & vk::BufferUsageFlagBits::eUniformBuffer) == vk::BufferUsageFlagBits::eUniformBuffer)
+			_usage |= BufferUsage::UNIFORM;
+		if((usage & vk::BufferUsageFlagBits::eTransferSrc) == vk::BufferUsageFlagBits::eTransferSrc)
+			_usage |= BufferUsage::TRANSFER_SRC;
+		if((usage & vk::BufferUsageFlagBits::eTransferDst) == vk::BufferUsageFlagBits::eTransferDst)
+			_usage |= BufferUsage::TRANSFER_DST;
+
+		return _usage;
 	}
 
 	/*static inline constexpr const auto TEXTURE_TYPE_MAP =

@@ -121,44 +121,16 @@ Framebuffer::Ptr Device::createFramebufferPtr() const {
 
 /////////////////////////////////////
 /////////////////////////////////////
-VertexBuffer Device::createVertexBuffer(
-    std::size_t size, std::size_t alignement) const {
-	return VertexBuffer {*this, size, alignement};
+HardwareBuffer Device::createHardwareBuffer(
+	HardwareBuffer::Description description) const {
+	return HardwareBuffer {*this, std::move(description)};
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-VertexBuffer::Ptr Device::createVertexBufferPtr(
-    std::size_t size, std::size_t alignement) const {
-	return VertexBuffer::makeUnique(*this, size, alignement);
-}
-
-/////////////////////////////////////
-/////////////////////////////////////
-IndexBuffer Device::createIndexBuffer(
-    std::size_t size, std::size_t alignement) const {
-	return IndexBuffer {*this, size, alignement};
-}
-
-/////////////////////////////////////
-/////////////////////////////////////
-IndexBuffer::Ptr Device::createIndexBufferPtr(
-    std::size_t size, std::size_t alignement) const {
-	return IndexBuffer::makeUnique(*this, size, alignement);
-}
-
-/////////////////////////////////////
-/////////////////////////////////////
-UniformBuffer Device::createUniformBuffer(
-    UniformBuffer::Description description) const {
-	return UniformBuffer {*this, std::move(description)};
-}
-
-/////////////////////////////////////
-/////////////////////////////////////
-UniformBuffer::Ptr Device::createUniformBufferPtr(
-    UniformBuffer::Description description) const {
-	return UniformBuffer::makeUnique(*this, std::move(description));
+HardwareBuffer::Ptr Device::createHardwareBufferPtr(
+	HardwareBuffer::Description description) const {
+	return HardwareBuffer::makeUnique(*this, std::move(description));
 }
 
 /////////////////////////////////////

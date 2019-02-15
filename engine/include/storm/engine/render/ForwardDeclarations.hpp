@@ -14,11 +14,9 @@ namespace storm::engine {
 	class Semaphore;
 	class Fence;
 	class Framebuffer;
-	class VertexBuffer;
-	class IndexBuffer;
+	class HardwareBuffer;
 	class Shader;
 	class CommandBuffer;
-	class UniformBuffer;
 	class Texture;
 
 	struct ContextSettings;

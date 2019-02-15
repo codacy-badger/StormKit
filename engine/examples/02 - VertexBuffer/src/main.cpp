@@ -72,9 +72,15 @@ void runApp() {
 	program.addShaderModule(fragment_shader);
 	program.link();
 
+	const auto vertex_buffer_desc = engine::HardwareBuffer::Description {
+		std::size(VERTICES) * sizeof(Vertex),
+		alignof(Vertex),
+		engine::BufferUsage::VERTEX
+	};
+
 	auto vertex_buffer
-		= device.createVertexBuffer(std::size(VERTICES) * sizeof(Vertex), alignof(Vertex));
-	vertex_buffer.addData(VERTICES);
+		= device.createHardwareBuffer(std::move(vertex_buffer_desc));
+	vertex_buffer.setData(VERTICES);
 
 	auto render_pass = device.createRenderPass(true);
 	auto framebuffer = device.createFramebuffer();
@@ -131,9 +137,7 @@ void runApp() {
 
 		command_buffer.submit(
 			{},
-			{&frame.render_finished},
-			{engine::PipelineStage::COLOR_ATTACHMENT_OUTPUT},
-			&frame.fence
+			{&frame.render_finished}
 		);
 
 		surface.present(framebuffer, frame);

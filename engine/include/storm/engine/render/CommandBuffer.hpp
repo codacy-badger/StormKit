@@ -40,16 +40,17 @@ namespace storm::engine {
 		    std::int32_t vertex_offset = 0, std::uint32_t first_instance = 0);
 
 		void submit(const std::vector<const Semaphore *> &wait_semaphores,
-		    const std::vector<const Semaphore *> &        signal_semaphores,
+			const std::vector<const Semaphore *> &        signal_semaphores,
+			QueueType queue = QueueType::GRAPHICS,
 		    std::vector<PipelineStage>                    pipeline_states
 		    = {PipelineStage::COLOR_ATTACHMENT_OUTPUT},
 		    const Fence *fence = nullptr);
 
 		void setProgram(const Program &program);
 
-		void bindVertexBuffer(std::uint32_t index, const VertexBuffer &buffer);
+		void bindVertexBuffer(std::uint32_t index, const HardwareBuffer &buffer);
 		void bindIndexBuffer(
-		    const IndexBuffer &buffer, bool large_indices = false);
+			const HardwareBuffer &buffer, bool large_indices = false);
 
 		void executeCommandBuffers(
 		    const std::vector<std::reference_wrapper<CommandBuffer>>
