@@ -8,6 +8,8 @@
 #include <storm/core/Hash.hpp>
 #include <storm/engine/graphics/ForwardDeclarations.hpp>
 
+#include <glm/gtx/hash.hpp>
+
 namespace std {
 	/*HASH_FUNC(storm::engine::Material)
 	HASH_FUNC(storm::engine::Drawable)

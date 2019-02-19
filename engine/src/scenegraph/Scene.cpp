@@ -78,7 +78,7 @@ void Scene::exportSceneGraph(const _std::filesystem::path &filepath) const {
 	       << "    rankdir = LR\n"
 	       << "    bgcolor = black\n\n"
 	       << "    node [shape=rectangle, fontname=\"helvetica\", "
-	          "fontsize=12];\n\n";
+	       << "fontsize=12];\n\n";
 
 	auto node_stack = std::stack<const SceneNode *> {};
 	auto node_done  = std::vector<const SceneNode *> {};

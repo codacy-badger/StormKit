@@ -1,9 +1,16 @@
+#include <unordered_map>
+#include <functional>
+
+#include <storm/log/LogOutput.hpp>
+
+#include <storm/image/Image.hpp>
+
+#include <storm/window/Window.hpp>
+
 #include <storm/engine/render/Context.hpp>
 #include <storm/engine/render/Device.hpp>
 #include <storm/engine/render/Surface.hpp>
-#include <storm/image/Image.hpp>
-#include <storm/log/LogOutput.hpp>
-#include <storm/window/Window.hpp>
+#include <storm/engine/render/Hashes.hpp>
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
@@ -17,7 +24,26 @@ static constexpr const T WINDOW_HEIGHT = 600;
 struct Vertex {
 	storm::engine::vec3 position;
 	storm::engine::vec2 uv;
+
+	bool operator==(const Vertex& other) const {
+		return position == other.position && uv == other.uv;
+	}
+
 };
+
+namespace std {
+	template<> struct hash<Vertex> {
+		std::size_t operator()(const Vertex &vertex) const {
+			static auto vec2_hasher = std::hash<storm::engine::vec2>{};
+			static auto vec3_hasher = std::hash<storm::engine::vec3>{};
+
+			auto hash = vec3_hasher(vertex.position);
+			storm::core::hash_combine(hash, vec2_hasher(vertex.uv));
+
+			return hash;
+		}
+	};
+}
 
 using VertexArray = std::vector<Vertex>;
 using IndexArray  = std::vector<std::uint32_t>;
@@ -73,7 +99,7 @@ void runApp() {
 		auto attribs   = tinyobj::attrib_t {};
 		auto shapes    = std::vector<tinyobj::shape_t> {};
 		auto materials = std::vector<tinyobj::material_t> {};
-
+		auto deduplication_map = std::unordered_map<Vertex, std::uint32_t>{};
 		auto warn = std::string {}, err = std::string {};
 
 		if (!tinyobj::LoadObj(&attribs, &shapes, &materials, &warn, &err,
@@ -93,8 +119,12 @@ void runApp() {
 				vertex.uv = {attribs.texcoords[2 * index.texcoord_index],
 				    1.f - attribs.texcoords[2 * index.texcoord_index + 1]};
 
-				vertices.emplace_back(std::move(vertex));
-				indices.emplace_back(std::size(indices));
+				if(deduplication_map.count(vertex) == 0) {
+					deduplication_map.emplace(vertex, std::size(vertices));
+					vertices.emplace_back(std::move(vertex));
+				}
+				//indices.emplace_back(std::size(indices));
+				indices.emplace_back(deduplication_map[vertex]);
 			}
 		}
 	}
