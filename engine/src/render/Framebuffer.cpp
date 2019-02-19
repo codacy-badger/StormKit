@@ -9,9 +9,8 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-Framebuffer::Framebuffer(
-		const Device &device)
-	: m_impl {device} {}
+Framebuffer::Framebuffer(const Device &device)
+    : m_impl {device} {}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -39,14 +38,20 @@ const uvec3 &Framebuffer::extent() const noexcept {
 
 /////////////////////////////////////
 /////////////////////////////////////
-uint32_t Framebuffer::addAttachment(Framebuffer::AttachmentDescription attachment) {
-	return m_impl->addAttachment(std::move(attachment));
+uint32_t Framebuffer::addInputAttachment(Attachment attachment, Texture &texture) {
+    return m_impl->addInputAttachment(std::move(attachment), texture);
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-const Framebuffer::AttachmentDescriptions &Framebuffer::attachments() const noexcept {
-	return m_impl->attachments();
+uint32_t Framebuffer::addOutputAttachment(Attachment attachment) {
+    return m_impl->addOutputAttachment(std::move(attachment));
+}
+
+/////////////////////////////////////
+/////////////////////////////////////
+const std::vector<std::pair<Framebuffer::AttachmentType, Framebuffer::Attachment>> &Framebuffer::attachments() const noexcept {
+    return m_impl->attachments();
 }
 
 /////////////////////////////////////

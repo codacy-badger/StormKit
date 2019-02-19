@@ -167,7 +167,7 @@ void SceneTree::traverseSubTree(
 			const auto vertex_buffer_desc = HardwareBuffer::Description {
 				data.vertices.size,
 				data.vertices.alignement,
-				BufferUsage::VERTEX
+                BufferUsageFlag::VERTEX
 			};
 
 			mesh.get().vertex_buffer = m_device.get().createHardwareBufferPtr(
@@ -185,7 +185,7 @@ void SceneTree::traverseSubTree(
 				const auto index_buffer_desc = HardwareBuffer::Description {
 					data.indices.size,
 					data.indices.alignement,
-					BufferUsage::INDEX
+                    BufferUsageFlag::INDEX
 				};
 
 				mesh.get().index_buffer = m_device.get().createHardwareBufferPtr(

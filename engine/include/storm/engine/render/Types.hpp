@@ -33,7 +33,7 @@ namespace storm::engine {
 		float max_depth = 1.f;
 	};
 
-	enum class ColorComponent {
+    enum class ColorComponentFlag {
 		R    = 1,
 		G    = 2,
 		B    = 4,
@@ -135,7 +135,7 @@ namespace storm::engine {
 		SIZE
 	};
 
-	enum class BufferUsage {
+    enum class BufferUsageFlag {
 		VERTEX,
 		INDEX,
 		UNIFORM,
@@ -150,6 +150,32 @@ namespace storm::engine {
 		COMPUTE,
 		SIZE
 	};
+
+    enum class ImageUsageFlag {
+        COLOR_ATTACHMENT,
+        DEPTH_STENCIL_ATTACHMENT,
+        INPUT_ATTACHMENT,
+        TRANSFERT_SRC,
+        TRANSFERT_DST,
+        SAMPLED,
+        STORAGE,
+    };
+
+    enum class ImageLayout {
+        COLOR_ATTACHMENT_OPTIMAL,
+        DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+        DEPTH_STENCIL_READ_ONLY_OPTIMAL,
+        TRANSFERT_SRC_OPTIMAL,
+        TRANSFERT_DST_OPTIMAL,
+        SHADER_READ_ONLY_OPTIMAL,
+        SIZE
+    };
+
+    enum class ImageAspectFlag {
+        COLOR,
+        DEPTH,
+        STENCIL
+    };
 
 	using ColorFormat = Format;
 
@@ -171,5 +197,7 @@ namespace storm::engine {
 	}
 }
 
-FLAG_ENUM(storm::engine::ColorComponent)
-FLAG_ENUM(storm::engine::BufferUsage)
+FLAG_ENUM(storm::engine::ColorComponentFlag)
+FLAG_ENUM(storm::engine::BufferUsageFlag)
+FLAG_ENUM(storm::engine::ImageUsageFlag)
+FLAG_ENUM(storm::engine::ImageAspectFlag)

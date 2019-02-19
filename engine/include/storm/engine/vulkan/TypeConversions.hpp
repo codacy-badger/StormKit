@@ -29,8 +29,8 @@ namespace storm::engine {
 	vk::FrontFace            asVK(storm::engine::FrontFace face) noexcept;
 	storm::engine::FrontFace fromVK(vk::FrontFace face) noexcept;
 
-	vk::ColorComponentFlags asVK(storm::engine::ColorComponent color) noexcept;
-	storm::engine::ColorComponent fromVK(
+	vk::ColorComponentFlags asVK(storm::engine::ColorComponentFlag color) noexcept;
+	storm::engine::ColorComponentFlag fromVK(
 	    vk::ColorComponentFlags color) noexcept;
 
 	vk::PipelineStageFlagBits asVK(storm::engine::PipelineStage state) noexcept;
@@ -46,6 +46,13 @@ namespace storm::engine {
 	vk::CompareOp asVK(storm::engine::CompareOperation op) noexcept;
 	storm::engine::CompareOperation fromVK(vk::CompareOp op) noexcept;
 
-	vk::BufferUsageFlags asVK(storm::engine::BufferUsage usage) noexcept;
-	storm::engine::BufferUsage fromVK(vk::BufferUsageFlags op) noexcept;
+	vk::BufferUsageFlags asVK(storm::engine::BufferUsageFlag usage) noexcept;
+	storm::engine::BufferUsageFlag fromVK(vk::BufferUsageFlags op) noexcept;
+
+    vk::ImageUsageFlags asVK(storm::engine::ImageUsageFlag usage) noexcept;
+
+    vk::ImageLayout asVK(storm::engine::ImageLayout layout) noexcept;
+    storm::engine::ImageLayout fromVK(vk::ImageLayout layout) noexcept;
+
+    vk::ImageAspectFlags asVK(storm::engine::ImageAspectFlag aspect) noexcept;
 }

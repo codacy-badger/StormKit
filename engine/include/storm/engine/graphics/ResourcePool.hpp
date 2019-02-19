@@ -19,14 +19,18 @@ namespace storm::engine {
 		ResourcePool(ResourcePool &&);
 		ResourcePool &operator=(ResourcePool &&);
 
-		template <typename ResourceType, typename ResourceDescription>
-		ResourceBase::ID addRetainedResource(std::string name,
-		    ResourceDescription &&description, ResourceType &resource);
+        template <typename T>
+        ResourceBase::ID addRetainedResource(
+          std::string name,
+          T &resource
+        );
 
-		template <typename Resource, typename ResourceDescription>
-		ResourceBase::ID addTransientResource(const Device &device,
-		    std::string name, ResourceDescription &&description,
-		    std::optional<std::reference_wrapper<RenderTaskBase>> task);
+        template <typename T>
+        ResourceBase::ID addTransientResource(
+          std::string name,
+          typename T::ResourcePtr &&ptr,
+          std::optional<std::reference_wrapper<RenderTaskBase>> task
+        );
 
 		template <typename T>
 		const T &acquireResourceAs(ResourceBase::ID resource_id) const noexcept;
@@ -47,7 +51,7 @@ namespace storm::engine {
 		void clear();
 
 		inline const std::vector<ResourceBase::Ptr> &resourceArray() const
-		    noexcept {
+          noexcept {
 			return m_resources;
 		}
 

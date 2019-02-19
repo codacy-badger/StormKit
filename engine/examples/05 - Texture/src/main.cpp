@@ -93,7 +93,7 @@ void runApp() {
 	const auto vertex_buffer_desc = engine::HardwareBuffer::Description {
 		std::size(VERTICES) * sizeof(Vertex),
 		alignof(Vertex),
-		engine::BufferUsage::VERTEX
+        engine::BufferUsageFlag::VERTEX
 	};
 
 	auto vertex_buffer
@@ -103,7 +103,7 @@ void runApp() {
 	auto uniform_buffer_description = engine::HardwareBuffer::Description {
 		sizeof(Matrices),
 		alignof(Matrices),
-		engine::BufferUsage::UNIFORM
+        engine::BufferUsageFlag::UNIFORM
 	};
 
 	auto uniform_buffer = device.createHardwareBuffer(std::move(uniform_buffer_description));
@@ -113,12 +113,18 @@ void runApp() {
 	auto image_file = image::Image {};
 	image_file.loadFromFile("textures/texture.png");
 
-	auto texture = device.createTexture(image_file);
+    auto texture_desc = engine::Texture::Description {
+        1u,
+        engine::ColorFormat::RGBA8888UNORM,
+        {image_file.size().width, image_file.size().height, 1u}
+    };
+
+    auto texture = device.createTexture(std::move(texture_desc), image_file);
 
 	auto render_pass = device.createRenderPass(true);
 	auto framebuffer = device.createFramebuffer();
 	framebuffer.setExtent({WINDOW_WIDTH<std::uint32_t>, WINDOW_HEIGHT<std::uint32_t>, 1u});
-	framebuffer.addAttachment({1u, engine::Format::RGBA8888UNORM});
+    framebuffer.addOutputAttachment({engine::ColorFormat::RGBA8888UNORM, {WINDOW_WIDTH<std::uint32_t>, WINDOW_HEIGHT<std::uint32_t>, 1u}, 1u});
 
 	render_pass.setFramebuffer(framebuffer);
 	render_pass.build();

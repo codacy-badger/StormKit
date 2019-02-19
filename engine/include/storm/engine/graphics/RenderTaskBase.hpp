@@ -6,6 +6,7 @@
 
 #include <set>
 #include <storm/core/NonCopyable.hpp>
+#include <storm/engine/render/ForwardDeclarations.hpp>
 #include <storm/engine/graphics/ForwardDeclarations.hpp>
 #include <string>
 
@@ -29,7 +30,7 @@ namespace storm::engine {
 
 	private:
 		virtual void setup(RenderTaskBuilder &builder) = 0;
-		virtual void execute(ResourcePool &pool) const = 0;
+        virtual void execute(CommandBuffer &cmd, ResourcePool &pool) const = 0;
 
 		std::string m_name;
 		bool        m_cull_imune;

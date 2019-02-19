@@ -18,7 +18,7 @@ namespace storm::engine {
 			struct Description {
 				std::size_t size;
 				std::size_t alignement;
-				BufferUsage usage;
+                BufferUsageFlag usage;
 			};
 
 			Unique_Object(HardwareBuffer)

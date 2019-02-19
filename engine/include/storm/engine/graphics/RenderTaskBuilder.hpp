@@ -7,7 +7,7 @@
 #include <storm/core/NonCopyable.hpp>
 #include <storm/engine/graphics/ForwardDeclarations.hpp>
 #include <storm/engine/graphics/RenderTaskBase.hpp>
-#include <storm/engine/graphics/ResourceBase.hpp>
+#include <storm/engine/graphics/Resource.hpp>
 #include <storm/engine/render/ForwardDeclarations.hpp>
 #include <string>
 #include <utility>
@@ -21,9 +21,11 @@ namespace storm::engine {
 
 		RenderTaskBuilder(RenderTaskBuilder &&);
 
-		template <typename Resource, typename ResourceDescription>
+        template <typename T>
 		ResourceBase::ID create(
-		    std::string name, ResourceDescription &&description);
+          std::string name,
+          typename T::ResourcePtr &&ptr
+        );
 
 		template <typename Resource>
 		ResourceBase::ID write(ResourceBase::ID resource);

@@ -9,11 +9,6 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-Texture::Texture(const Device &device, const image::Image &image)
-    : m_impl {device, image} {}
-
-/////////////////////////////////////
-/////////////////////////////////////
 Texture::Texture(const Device &device, Description description)
     : m_impl {device, std::move(description)} {}
 
@@ -31,12 +26,12 @@ Texture &Texture::operator=(Texture &&) = default;
 
 /////////////////////////////////////
 /////////////////////////////////////
-const Texture::Description &Texture::description() const noexcept {
-	return m_impl->description();
+void Texture::setImage(storm::image::Image image) {
+    m_impl->setImage(image);
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-const storm::image::Image &Texture::image() const noexcept {
-	return m_impl->image();
+const Texture::Description &Texture::description() const noexcept {
+	return m_impl->description();
 }

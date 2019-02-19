@@ -16,14 +16,22 @@ namespace storm::engine {
 		return m_extent;
 	}
 
-	inline std::uint32_t FramebufferImpl::addAttachment(AttachmentDescription attachment) {
-		m_attachments.emplace_back(std::move(attachment));
+    inline std::uint32_t FramebufferImpl::addInputAttachment(Attachment attachment, Texture &texture) {
+        m_attachments.emplace_back(AttachmentType::INPUT, std::move(attachment));
+        m_input_textures.emplace(std::size(m_attachments) - 1u, &texture);
+
+        return std::size(m_attachments) - 1u;
+    }
+
+    inline std::uint32_t FramebufferImpl::addOutputAttachment(Attachment attachment) {
+        m_attachments.emplace_back(AttachmentType::OUTPUT, std::move(attachment));
+
 
 		return std::size(m_attachments) - 1u;
 	}
 
-	inline const FramebufferImpl::AttachmentDescriptions &FramebufferImpl::attachments() const noexcept {
-		return m_attachments;
+    inline const std::vector<std::pair<FramebufferImpl::AttachmentType, FramebufferImpl::Attachment>> &FramebufferImpl::attachments() const noexcept {
+        return m_attachments;
 	}
 
 	inline const vk::Framebuffer &FramebufferImpl::vkFramebuffer() const
@@ -31,8 +39,7 @@ namespace storm::engine {
 		return m_framebuffer.get();
 	}
 
-	inline const std::vector<BackedVkImage> &
-	FramebufferImpl::backedVkImages() const noexcept {
-		return m_backed_attachments;
-	}
+    inline const std::map<std::uint32_t, Texture> &FramebufferImpl::outputTextures() const noexcept {
+        return m_output_textures;
+    }
 }

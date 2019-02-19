@@ -76,7 +76,8 @@ void SwapChain::present(Framebuffer &framebuffer, const FrameToken &token) {
 		.setMipLevel(0)
 		.setLayerCount(1);
 
-	const auto &framebuffer_image = framebuffer.implementation().backedVkImages()[0];
+    const auto &framebuffer_image =
+      framebuffer.implementation().outputTextures().begin()->second.implementation().backedVkTexture().image;
 
 	//copy image to present queue image
 	present_command_buffer.implementation().transitionImageLayout(

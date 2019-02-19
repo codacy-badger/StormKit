@@ -7,36 +7,42 @@
 #include <storm/engine/graphics/ResourcePool.hpp>
 
 namespace storm::engine {
-	template <typename ResourceType, typename ResourceDescription>
-	ResourceBase::ID ResourcePool::addRetainedResource(std::string name,
-	    ResourceDescription &&description, ResourceType &resource) {
-		using RawResourceDescription = std::decay_t<ResourceDescription>;
-		using RawResourceType        = std::decay_t<ResourceType>;
+    template <typename T>
+    ResourceBase::ID ResourcePool::addRetainedResource(
+      std::string name,
+      T &resource
+    ) {
+        auto resource_ptr =
+          std::make_unique<Resource<T>>(std::move(name), resource);
 
-		m_resources.emplace_back(
-		    std::make_unique<Resource<ResourceDescription, ResourceType>>(
-		        std::move(name), std::forward<ResourceDescription>(description),
-		        resource));
+        resource_ptr->m_id = m_next_id++;
+        const auto resource_id = resource_ptr->id();
 
-		auto &resource_ = *m_resources.back();
-		resource_.m_id  = m_next_id++;
+        m_resources.emplace_back(std::move(resource_ptr));
 
-		return resource_.id();
-	}
+        return resource_id;
+    }
 
-	template <typename Resource, typename ResourceDescription>
-	ResourceBase::ID ResourcePool::addTransientResource(const Device &device,
-	    std::string name, ResourceDescription &&description,
-	    std::optional<std::reference_wrapper<RenderTaskBase>> task) {
-		m_resources.emplace_back(std::make_unique<Resource>(device,
-		    std::move(name), std::forward<ResourceDescription>(description),
-		    std::move(task)));
+    template <typename T>
+    ResourceBase::ID ResourcePool::addTransientResource(
+        std::string name,
+        typename T::ResourcePtr &&ptr,
+        std::optional<std::reference_wrapper<RenderTaskBase>> task
+    ) {
+        auto resource_ptr =
+          std::make_unique<T>(
+            std::move(name),
+            std::move(ptr),
+            std::move(task)
+          );
 
-		auto &resource_ = *m_resources.back();
-		resource_.m_id  = m_next_id++;
+        resource_ptr->m_id = m_next_id++;
+        const auto resource_id = resource_ptr->id();
 
-		return resource_.id();
-	}
+        m_resources.emplace_back(std::move(resource_ptr));
+
+        return resource_id;
+    }
 
 	template <typename T>
 	const T &ResourcePool::acquireResourceAs(ResourceBase::ID resource_id) const

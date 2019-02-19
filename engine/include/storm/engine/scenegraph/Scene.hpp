@@ -20,7 +20,7 @@ namespace storm::engine {
 	public:
 		SUR_Object(Scene)
 
-		    explicit Scene(const Device &device);
+        explicit Scene(const Device &device);
 		~Scene();
 
 		Scene(Scene &&);

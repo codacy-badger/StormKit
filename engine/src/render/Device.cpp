@@ -165,8 +165,10 @@ CommandBuffer::Ptr Device::createCommandBufferPtr() const {
 
 /////////////////////////////////////
 /////////////////////////////////////
-Texture Device::createTexture(const storm::image::Image &image) const {
-	return Texture {*this, image};
+Texture Device::createTexture(Texture::Description description, const storm::image::Image &image) const {
+    auto texture = Texture{*this, std::move(description)};
+    texture.setImage(image);
+    return texture;
 }
 
 /////////////////////////////////////
@@ -177,8 +179,10 @@ Texture Device::createTexture(Texture::Description description) const {
 
 /////////////////////////////////////
 /////////////////////////////////////
-Texture::Ptr Device::createTexturePtr(const storm::image::Image &image) const {
-	return Texture::makeUnique(*this, image);
+Texture::Ptr Device::createTexturePtr(Texture::Description description, const storm::image::Image &image) const {
+    auto texture = Texture::makeUnique(*this, std::move(description));
+    texture->setImage(image);
+    return texture;
 }
 
 /////////////////////////////////////

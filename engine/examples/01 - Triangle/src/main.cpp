@@ -63,7 +63,7 @@ void runApp() {
 	auto render_pass = device.createRenderPass(true);
 	auto framebuffer = device.createFramebuffer();
 	framebuffer.setExtent({WINDOW_WIDTH<std::uint32_t>, WINDOW_HEIGHT<std::uint32_t>, 1u});
-	framebuffer.addAttachment({1u, engine::Format::RGBA8888UNORM});
+    framebuffer.addOutputAttachment({engine::ColorFormat::RGBA8888UNORM, {WINDOW_WIDTH<std::uint32_t>, WINDOW_HEIGHT<std::uint32_t>, 1u}, 1u});
 
 	render_pass.setFramebuffer(framebuffer);
 	render_pass.build();

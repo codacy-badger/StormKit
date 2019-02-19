@@ -8,18 +8,16 @@
 #include "RenderTaskBuilder.hpp"
 
 namespace storm::engine {
-	template <typename Resource, typename ResourceDescription>
+    template <typename T>
 	ResourceBase::ID RenderTaskBuilder::create(
-	    std::string name, ResourceDescription &&description) {
-		static_assert(std::is_same_v<typename Resource::ResourceDescription,
-		                  std::decay_t<ResourceDescription>>,
-		    "Description does not match the resource.");
-		;
+      std::string name,
+      typename T::ResourcePtr &&ptr
+    ) {
 		auto &create_resources = m_task.m_create_resources;
 
-		auto id = m_pool.addTransientResource<Resource, ResourceDescription>(
-		    m_device, std::move(name),
-		    std::forward<ResourceDescription>(description), m_task);
+        auto id = m_pool.addTransientResource<T>(
+            std::move(name),
+            std::move(ptr), m_task);
 
 		create_resources.emplace(id);
 

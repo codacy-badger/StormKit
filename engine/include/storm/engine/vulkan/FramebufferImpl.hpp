@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <map>
+
 #include <storm/engine/render/Framebuffer.hpp>
 #include <storm/engine/vulkan/DeviceImpl.hpp>
 #include <storm/engine/vulkan/UniqueHandle.hpp>
@@ -11,8 +13,9 @@
 namespace storm::engine {
 	class FramebufferImpl {
 	public:
-		using AttachmentDescription    = Framebuffer::AttachmentDescription;
-		using AttachmentDescriptions   = Framebuffer::AttachmentDescriptions;
+        using AttachmentType = Framebuffer::AttachmentType;
+        using Attachment     = Framebuffer::Attachment;
+        using Attachments    = Framebuffer::Attachments;
 
 		explicit FramebufferImpl(
 			const Device &device);
@@ -23,27 +26,28 @@ namespace storm::engine {
 		inline void setExtent(uvec3 extent);
 		inline const uvec3 &extent() const noexcept;
 
-		inline std::uint32_t addAttachment(AttachmentDescription attachment);
-		inline const AttachmentDescriptions &attachments() const noexcept;
+        inline std::uint32_t addInputAttachment(Attachment attachment, Texture &texture);
+        inline std::uint32_t addOutputAttachment(Attachment attachment);
+        inline const std::vector<std::pair<AttachmentType, Attachment>> &attachments() const noexcept;
 
 		bool hasDepthAttachment() const noexcept;
 
-		inline const vk::Framebuffer &           vkFramebuffer() const noexcept;
-		inline const std::vector<BackedVkImage> &backedVkImages() const
-			noexcept;
+        inline const vk::Framebuffer &vkFramebuffer() const noexcept;
+        inline const std::map<std::uint32_t, Texture> &outputTextures() const noexcept;
 
 		void build(const vk::RenderPass &render_pass);
 	private:
-		void addAttachment(std::uint8_t mip_level, ColorFormat format);
+        void addAttachment(std::uint32_t id, const Framebuffer::Attachment &attachment);
 
-		const DeviceImpl &m_device;
+        const Device &m_device;
 
 		uvec3 m_extent;
 
-		AttachmentDescriptions m_attachments;
+        std::vector<std::pair<AttachmentType, Attachment>> m_attachments;
+        std::map<std::uint32_t, Texture*> m_input_textures;
+        std::map<std::uint32_t, Texture> m_output_textures;
 
-		UniqueHandle<vk::Framebuffer> m_framebuffer;
-		std::vector<BackedVkImage>    m_backed_attachments;
+        UniqueHandle<vk::Framebuffer> m_framebuffer;
 	};
 }
 

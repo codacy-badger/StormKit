@@ -7,60 +7,50 @@
 #include "Resource.hpp"
 
 namespace storm::engine {
-	template <typename ResourceDescription_, typename ResourceType_>
-	template <typename ResourceDescription__>
-	Resource<ResourceDescription_, ResourceType_>::Resource(
-	    const Device &device, std::string name,
-	    ResourceDescription__ &&                description,
+    template <typename T>
+    Resource<T>::Resource(
+        std::string name,
+        ResourcePtr &&ptr,
 	    ResourceBase::RenderTaskBaseOptionalRef creator)
-	    : ResourceBase {std::move(name), std::move(creator)},
-	      m_description {std::forward<ResourceDescription__>(description)} {
-		m_resource = std::make_unique<ResourceType>(device, m_description);
+        : ResourceBase {std::move(name), std::move(creator)}
+          {
+        m_resource = std::move(ptr);
 	}
 
-	template <typename ResourceDescription_, typename ResourceType_>
-	template <typename ResourceDescription__>
-	Resource<ResourceDescription_, ResourceType_>::Resource(std::string name,
-	    ResourceDescription__ &&description, ResourceType_ &resource)
-	    : ResourceBase {std::move(name), std::nullopt},
-	      m_description {std::forward<ResourceDescription__>(description)} {
+    template <typename T>
+    Resource<T>::Resource(std::string name, T&resource)
+        : ResourceBase {std::move(name), std::nullopt}
+          {
 		m_resource = &resource;
 	}
 
-	template <typename ResourceDescription_, typename ResourceType_>
-	Resource<ResourceDescription_, ResourceType_>::Resource(Resource &&)
-	    = default;
+    template <typename T>
+    Resource<T>::Resource(Resource &&) = default;
 
-	template <typename ResourceDescription_, typename ResourceType_>
-	Resource<ResourceDescription_, ResourceType_> &
-	Resource<ResourceDescription_, ResourceType_>::operator=(Resource &&)
-	    = default;
+    template <typename T>
+    Resource<T>& Resource<T>::operator=(Resource &&) = default;
 
-	template <typename ResourceDescription_, typename ResourceType_>
-	inline const typename Resource<ResourceDescription_,
-	    ResourceType_>::ResourceDescription &
-	Resource<ResourceDescription_, ResourceType_>::description() const
-	    noexcept {
-		return m_description;
-	}
+    template <typename T>
+    void Resource<T>::derealize() {
+       if (transient())
+          std::get<ResourcePtr>(m_resource).reset(nullptr);
+    }
 
-	/*template <typename ResourceDescription_, typename ResourceType_>
-	inline const typename Resource<ResourceDescription_,
-	    ResourceType_>::ResourceType &
-	Resource<ResourceDescription_, ResourceType_>::resource() const noexcept {
-		if (std::holds_alternative<ResourcePtr>(m_resource))
-			return *std::get<ResourcePtr>(m_resource);
+    template <typename T>
+    inline const typename Resource<T>::ResourceType &
+    Resource<T>::resource() const noexcept {
+        if (std::holds_alternative<ResourcePtr>(m_resource))
+            return *std::get<ResourcePtr>(m_resource);
 
-		return *std::get<ResourceType *>(m_resource);
-	}
+        return *std::get<ResourceType *>(m_resource);
+    }
 
-	template <typename ResourceDescription_, typename ResourceType_>
-	inline
-	    typename Resource<ResourceDescription_, ResourceType_>::ResourceType &
-	    Resource<ResourceDescription_, ResourceType_>::resource() noexcept {
-		if (std::holds_alternative<ResourcePtr>(m_resource))
-			return *std::get<ResourcePtr>(m_resource);
+    template <typename T>
+    inline typename Resource<T>::ResourceType &
+    Resource<T>::resource() noexcept {
+        if (std::holds_alternative<ResourcePtr>(m_resource))
+            return *std::get<ResourcePtr>(m_resource);
 
-		return *std::get<ResourceType *>(m_resource);
-	}*/
+        return *std::get<ResourceType *>(m_resource);
+    }
 }

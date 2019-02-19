@@ -19,10 +19,20 @@ namespace storm::engine {
 	public:
 		Unique_Object(Framebuffer)
 
-		using AttachmentDescription  = Texture::Description;
-		using AttachmentDescriptions = std::vector<AttachmentDescription>;
+        struct Attachment {
+            ColorFormat   format;
+            uvec3         size;
+            std::uint32_t mip_level;
+        };
 
-		explicit Framebuffer(const Device &device);
+        enum class AttachmentType {
+            INPUT,
+            OUTPUT
+        };
+
+        using Attachments = std::vector<Attachment>;
+
+        explicit Framebuffer(const Device &device);
 		~Framebuffer();
 
 		Framebuffer(Framebuffer &&);
@@ -31,8 +41,9 @@ namespace storm::engine {
 		void setExtent(uvec3 extent);
 		const uvec3 &extent() const noexcept;
 
-		std::uint32_t addAttachment(AttachmentDescription attachment);
-		const AttachmentDescriptions &attachments() const noexcept;
+        std::uint32_t addInputAttachment(Attachment attachment, Texture &texture);
+        std::uint32_t addOutputAttachment(Attachment attachment);
+        const std::vector<std::pair<Framebuffer::AttachmentType, Framebuffer::Attachment>> &attachments() const noexcept;
 
 		bool hasDepthAttachment() const noexcept;
 

@@ -18,17 +18,21 @@ namespace storm::engine {
 		Unique_Object(Texture)
 
 		struct Description {
-			std::size_t mip_level;
-			Format      format;
-			uvec3       size;
+            std::size_t     mip_level;
+            ColorFormat     format;
+            uvec3           size;
+            ImageUsageFlag  image_usage  = ImageUsageFlag::SAMPLED;
+            ImageAspectFlag image_aspect = ImageAspectFlag::COLOR;
+            ImageLayout     image_layout = ImageLayout::TRANSFERT_DST_OPTIMAL;
 		};
 
-		explicit Texture(const Device &device, const image::Image &image);
 		explicit Texture(const Device &device, Description description);
 		~Texture();
 
 		Texture(Texture &&);
 		Texture &operator=(Texture &&);
+
+        void setImage(image::Image image);
 
 		const Texture::Description &description() const noexcept;
 		const image::Image &        image() const noexcept;

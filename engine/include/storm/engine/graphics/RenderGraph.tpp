@@ -9,11 +9,15 @@
 namespace storm::engine {
 	template <typename RenderTaskData>
 	RenderTask<RenderTaskData> &RenderGraph::addRenderPass(
-	    const std::string                                    name,
-	    typename RenderTask<RenderTaskData>::SetupFunction   setup_func,
-	    typename RenderTask<RenderTaskData>::ExecuteFunction execute_func) {
-		auto task = std::make_unique<RenderTask<RenderTaskData>>(
-		    name, setup_func, execute_func);
+      const std::string                                    name,
+      typename RenderTask<RenderTaskData>::SetupFunction   setup_func,
+      typename RenderTask<RenderTaskData>::ExecuteFunction execute_func
+    ) {
+        auto task = std::make_unique<RenderTask<RenderTaskData>>(
+            name,
+            setup_func,
+            execute_func
+        );
 
 		m_render_tasks.emplace_back(std::move(task));
 
@@ -26,18 +30,18 @@ namespace storm::engine {
 		return static_cast<RenderTask<RenderTaskData> &>(task_ref);
 	}
 
-	template <typename ResourceType, typename ResourceDescription>
-	std::uint32_t RenderGraph::addRetainedResource(std::string name,
-	    ResourceDescription &&description, ResourceType &resource) {
-		return m_resources
-		    .addRetainedResource<ResourceType, ResourceDescription>(
-		        std::move(name), std::forward<ResourceDescription>(description),
-		        resource);
-	}
+    template <typename T>
+    ResourceBase::ID RenderGraph::addRetainedResource(
+      std::string name,
+      T &resource
+     ) {
+        m_resources.addRetainedResource<T>(std::move(name), resource);
+     }
 
 	template <typename T>
 	const T &RenderGraph::getRenderTaskAs(
-	    RenderTaskBase::ID render_task_id) const noexcept {
+      RenderTaskBase::ID render_task_id
+    ) const noexcept {
 		// static_assert (std::is_, )
 
 		return static_cast<T &>(getRenderTask(render_task_id));
@@ -45,7 +49,8 @@ namespace storm::engine {
 
 	template <typename T>
 	T &RenderGraph::getRenderTaskAs(
-	    RenderTaskBase::ID render_task_id) noexcept {
+      RenderTaskBase::ID render_task_id
+    ) noexcept {
 		return static_cast<T &>(getRenderTask(render_task_id));
 	}
 }

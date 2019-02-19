@@ -18,9 +18,11 @@
 
 namespace storm::engine {
 	using TextureResource
-	    = Resource<Texture::Description, Texture>;
-	using HardwareBufferResource
-		= Resource<HardwareBuffer::Description, HardwareBuffer>;
+        = Resource<Texture>;
+    using FramebufferAttachmentResource
+        = Resource<Framebuffer::Attachment>;
+    using HardwareBufferResource
+        = Resource<HardwareBuffer>;
 	
 	class RenderGraph : public core::NonCopyable {
 		struct RenderPassAndHash {
@@ -29,32 +31,38 @@ namespace storm::engine {
 			Framebuffer   framebuffer;
 		};
 	public:
-		explicit RenderGraph(const Device &device);
+        explicit RenderGraph(const Device &device, uvec2 extent, const Surface &surface);
 		~RenderGraph();
 
 		RenderGraph(RenderGraph &&);
 		RenderGraph &operator=(RenderGraph &&);
 
 		template <typename RenderTaskData>
-		RenderTask<RenderTaskData> &addRenderPass(const std::string name,
-		    typename RenderTask<RenderTaskData>::SetupFunction      setup_func,
-		    typename RenderTask<RenderTaskData>::ExecuteFunction execute_func);
+        RenderTask<RenderTaskData> &addRenderPass(
+          const std::string name,
+          typename RenderTask<RenderTaskData>::SetupFunction   setup_func,
+          typename RenderTask<RenderTaskData>::ExecuteFunction execute_func
+        );
 
-		template <typename ResourceType, typename ResourceDescription>
-		std::uint32_t addRetainedResource(std::string name,
-		    ResourceDescription &&description, ResourceType &resource);
+        template <typename T>
+        ResourceBase::ID addRetainedResource(
+          std::string name,
+          T &resource
+        );
 
-		void compile();
-		void execute();
+        void compile();
+        void render();
 
 		void clear();
 
 		void exportGraphviz(const _std::filesystem::path &filepath) const;
 
 		const RenderTaskBase &getRenderTask(
-		    RenderTaskBase::ID render_task_id) const noexcept;
+          RenderTaskBase::ID render_task_id
+        ) const noexcept;
 		RenderTaskBase &getRenderTask(
-		    RenderTaskBase::ID render_task_id) noexcept;
+          RenderTaskBase::ID render_task_id
+        ) noexcept;
 
 		template <typename T>
 		const T &getRenderTaskAs(RenderTaskBase::ID render_task_id) const
@@ -86,18 +94,18 @@ namespace storm::engine {
 		void buildRenderPass(RenderPass &render_pass, Framebuffer &framebuffer, const RenderTaskBase &task);
 
 		std::reference_wrapper<const Device> m_device;
+        uvec2 m_extent;
 
+        std::unique_ptr<RenderTaskBase> m_submit_task;
+        Framebuffer::Attachment         m_backbuffer;
 		std::vector<std::unique_ptr<RenderTaskBase>> m_render_tasks;
 
 		std::vector<Step> m_timeline;
 
 		ResourcePool m_resources;
 
-		
-		
 		std::unordered_map<std::string, RenderPassAndHash> m_render_passes;
-		std::vector<CommandBuffer> m_command_buffers;
-		std::uint32_t m_current_command_buffer;	
+        CommandBuffer m_command_buffer;
 		
 		std::uint32_t m_next_task_id;
 		friend class RenderTaskBuilder;

@@ -58,7 +58,7 @@ void RenderPassImpl::createRenderPass() {
 		std::cbegin(attachments),
 		std::cend(attachments),
 		std::back_inserter(attachment_formats),
-		[](const auto &attachment) { return attachment.format; }
+        [](const auto &pair) { return pair.second.format; }
 	);
 	const auto attachment_count = std::size(attachment_formats);
 

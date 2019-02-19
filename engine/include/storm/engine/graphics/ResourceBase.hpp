@@ -34,8 +34,7 @@ namespace storm::engine {
 
 		inline void               setName(std::string name);
 		inline const std::string &name() const noexcept;
-	protected:
-		virtual void realize(const Device &device) = 0;
+    protected:
 		virtual void derealize()                   = 0;
 
 		std::string m_name;

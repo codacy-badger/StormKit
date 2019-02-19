@@ -19,8 +19,9 @@ namespace storm::engine {
 	struct ForwardRenderTaskData {
 		ResourceBase::ID meshdata_buffer;
 		ResourceBase::ID camera_buffer;
-		ResourceBase::ID backbuffer;
-	};
+        ResourceBase::ID color_output;
+        ResourceBase::ID depth_output;
+    };
 
 	struct SubmitTaskData {
 		ResourceBase::ID meshdata_buffer;

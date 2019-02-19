@@ -10,7 +10,7 @@
 namespace storm::engine {
 	struct PipelineState {
 		bool           is_blending_enabled    = false;
-		ColorComponent blend_write_color_mask = ColorComponent::RGBA;
+		ColorComponentFlag blend_write_color_mask = ColorComponentFlag::RGBA;
 
 		bool             is_depth_test_enabled   = false;
 		CompareOperation depth_compare_operation = CompareOperation::LESS;

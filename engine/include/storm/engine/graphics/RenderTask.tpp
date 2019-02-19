@@ -36,7 +36,7 @@ namespace storm::engine {
 	}
 
 	template <typename RenderTaskData>
-	void RenderTask<RenderTaskData>::execute(ResourcePool &pool) const {
-		m_execute_func(m_data, pool);
+    void RenderTask<RenderTaskData>::execute(CommandBuffer &cmd, ResourcePool &pool) const {
+        m_execute_func(cmd, m_data, pool);
 	}
 }

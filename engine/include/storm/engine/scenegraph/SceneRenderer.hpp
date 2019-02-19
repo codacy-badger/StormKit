@@ -32,7 +32,8 @@ namespace storm::engine {
 	private:
 		struct RendererResources {
 			ResourceBase::ID camera_buffer;
-		};
+            ResourceBase::ID meshdata_buffer;
+        };
 		
 		void updateRenderGraph(Scene &scene);
 		void addDefaultForwardRenderTask(Scene &scene, const RendererResources &resources);
@@ -62,15 +63,13 @@ namespace storm::engine {
 		std::vector<CommandBuffer> m_command_buffers;
 		std::uint32_t              m_current_command_buffer;
 
-		Texture::Description m_backbuffer_desc;
-		Texture::Description m_depthbuffer_desc;
-
 		HardwareBuffer::Description m_camera_buffer_desc;
-		HardwareBuffer              m_camera_buffer;
+        HardwareBuffer              m_camera_buffer;
 
-		HardwareBuffer::Description m_meshdata_buffer_desc;
+        HardwareBuffer::Description m_mesh_data_buffer_desc;
+        HardwareBuffer              m_mesh_data_buffer;
 
 		std::unordered_map<std::string, RenderPass::Ptr> m_render_passes;
-		Framebuffer::Ptr                                 m_backbuffer;
+        Framebuffer::Ptr                                 m_backbuffer;
 	};
 }

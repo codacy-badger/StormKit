@@ -66,9 +66,9 @@ namespace storm::engine {
 		CommandBuffer      createCommandBuffer() const;
 		CommandBuffer::Ptr createCommandBufferPtr() const;
 
-		Texture      createTexture(const storm::image::Image &image) const;
+        Texture      createTexture(Texture::Description description, const storm::image::Image &image) const;
 		Texture      createTexture(Texture::Description description) const;
-		Texture::Ptr createTexturePtr(const storm::image::Image &image) const;
+        Texture::Ptr createTexturePtr(Texture::Description description, const storm::image::Image &image) const;
 		Texture::Ptr createTexturePtr(Texture::Description description) const;
 
 		void waitIdle() const;

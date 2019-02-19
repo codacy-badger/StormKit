@@ -10,19 +10,28 @@
 
 using namespace storm::engine;
 
+static constexpr const auto DEFAULT_MESH_DATA_BUFFER_SIZE = 100 * sizeof(mat4);
+
 /////////////////////////////////////
 /////////////////////////////////////
 SceneRenderer::SceneRenderer(
     const Device &device, const Surface &surface, uvec2 render_extent)
     : m_device {device}, m_surface {surface}, m_render_extent {render_extent},
-      m_render_graph {m_device}, m_fence {m_device}, m_semaphore {m_device},
-      m_backbuffer_desc {1u, Format::RGBA8888UNORM, {m_render_extent, 1u}},
-      m_depthbuffer_desc {
-          1u, m_device.get().bestDepthFormat(), {m_render_extent, 1u}},
-      m_camera_buffer_desc {sizeof(CameraData), alignof(CameraData)},
-      m_camera_buffer {m_device, m_camera_buffer_desc} {
+      m_render_graph {m_device, render_extent, m_surface}, m_fence {m_device}, m_semaphore {m_device},
+      m_camera_buffer_desc {
+        sizeof(CameraData),
+        alignof(CameraData),
+        BufferUsageFlag::UNIFORM
+      },
+      m_camera_buffer {m_device, m_camera_buffer_desc},
+      m_mesh_data_buffer_desc {
+        DEFAULT_MESH_DATA_BUFFER_SIZE,
+        alignof (MeshData),
+        BufferUsageFlag::UNIFORM
+      },
+      m_mesh_data_buffer{m_device, m_mesh_data_buffer_desc} {
 
-	auto camera = CameraData {};
+    auto camera = CameraData {};
 
 	m_camera_buffer.setData(
 		reinterpret_cast<const std::byte *>(&camera), sizeof(camera), 0u);
@@ -62,7 +71,7 @@ SceneRenderer &SceneRenderer::operator=(SceneRenderer &&) = default;
 void SceneRenderer::render(Scene &scene) {
 	updateRenderGraph(scene);
 
-	m_render_graph.execute();
+    m_render_graph.render();
 }
 
 /////////////////////////////////////
@@ -80,9 +89,43 @@ void SceneRenderer::updateRenderGraph(Scene &scene) {
 	auto renderer_resources = RendererResources{};
 
 	renderer_resources.camera_buffer = m_render_graph.addRetainedResource(
-	    "camera_buffer", m_camera_buffer_desc, m_camera_buffer);
+        "camera_buffer",
+        m_camera_buffer
+    );
 
-	addDefaultForwardRenderTask(scene, renderer_resources);
+    renderer_resources.camera_buffer = m_render_graph.addRetainedResource(
+        "meshdata_buffer",
+        m_mesh_data_buffer
+    );
+
+    auto &forward_task = m_render_graph.addRenderPass<ForwardRenderTaskData>(
+        "forward_render_task",
+        [&](ForwardRenderTaskData &data, RenderTaskBuilder &builder) {
+            const auto mesh_data_description = HardwareBuffer::Description {
+            };
+
+            data.camera_buffer   = renderer_resources.camera_buffer;
+            data.meshdata_buffer = renderer_resources.meshdata_buffer;
+
+            data.color_output = builder.create<FramebufferAttachmentResource>(
+              "color_output",
+              std::make_unique<Framebuffer::Attachment>(
+                Framebuffer::Attachment{ColorFormat::RGBA8888UNORM, {m_render_extent, 1u}, 1}
+              )
+            );
+            data.depth_output = builder.create<FramebufferAttachmentResource>(
+              "depth_output",
+              std::make_unique<Framebuffer::Attachment>(
+                Framebuffer::Attachment{m_device.get().bestDepthFormat(), {m_render_extent, 1u}, 1}
+              )
+            );
+        },
+        [&](CommandBuffer &cmd, const ForwardRenderTaskData &data, ResourcePool &resource) {
+        }
+
+    );
+
+    //addDefaultForwardRenderTask(scene, renderer_resources);
 /*
 	auto &submit_task = m_render_graph.addRenderPass<SubmitTaskData>(
 	    "submit_task",

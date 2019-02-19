@@ -5,20 +5,51 @@
 #include <fstream>
 #include <stack>
 #include <storm/core/Strings.hpp>
+
+#include <storm/engine/render/Surface.hpp>
 #include <storm/engine/graphics/RenderGraph.hpp>
 
 using namespace storm::engine;
 
+struct SubmitTaskData {
+    ResourceBase::ID backbuffer;
+    const Surface *surface;
+};
+
 /////////////////////////////////////
 /////////////////////////////////////
-RenderGraph::RenderGraph(const Device &device)
+RenderGraph::RenderGraph(const Device &device, uvec2 extent, const Surface &surface)
     : m_device {device},
-	m_next_task_id {1},
-	m_current_command_buffer{0u} {
-	m_command_buffers.reserve(4u);
-	
-	for (auto i = 0u; i < 4u; ++i)
-		m_command_buffers.emplace_back(m_device);
+      m_extent{extent},
+      m_next_task_id{1u},
+      m_command_buffer{m_device} {
+    auto backbuffer = m_resources.addRetainedResource("backbuffer", m_backbuffer);
+
+    m_submit_task = std::make_unique<RenderTask<SubmitTaskData>>(
+      "present_task",
+      [&](SubmitTaskData &data, RenderTaskBuilder &builder) {
+          data.backbuffer = builder.read<FramebufferAttachmentResource>(backbuffer);
+          data.surface = &surface;
+      },
+      [&](CommandBuffer &cmd, const SubmitTaskData &data, ResourcePool &resource) {
+          auto &[hash, render_pass, framebuffer] = m_render_passes.at("present_task");
+          auto frame = const_cast<Surface*>(data.surface)->nextFrame();
+
+          cmd.submit(
+            {},
+            {&frame.render_finished}
+          );
+
+          const_cast<Surface*>(data.surface)->present(framebuffer, frame);
+      }
+    );
+
+    auto render_pass = RenderPass{m_device.get()};
+    auto framebuffer = Framebuffer{m_device.get()};
+
+    buildRenderPass(render_pass, framebuffer, *m_submit_task);
+
+    m_render_passes.emplace(m_submit_task->name(), RenderPassAndHash{0u, std::move(render_pass), std::move(framebuffer)});
 }
 
 
@@ -215,28 +246,21 @@ void RenderGraph::compile() {
 
 /////////////////////////////////////
 /////////////////////////////////////
-void RenderGraph::execute() {
-	auto &command_buffer = m_command_buffers[m_current_command_buffer];
-	command_buffer.reset();
-	
+void RenderGraph::render() {
+    m_command_buffer.reset();
+    m_command_buffer.begin();
+
 	for (auto &step : m_timeline) {
-		for (auto resource_id : step.realized_resources) {
-			auto &resource = m_resources.acquireResource(resource_id);
-			resource.realize(m_device.get());
-		}
+        auto &task = getRenderTask(step.task);
+        auto &[hash, render_pass, framebuffer] = m_render_passes.at(task.name());
 
-		auto &task = getRenderTask(step.task);
+        m_command_buffer.beginRenderPass(render_pass, framebuffer);
+        task.execute(m_command_buffer, m_resources);
+        m_command_buffer.endRenderPass();
+    }
 
-		task.execute(m_resources);
-
-		for (auto resource_id : step.derealized_resources) {
-			auto &resource = m_resources.acquireResource(resource_id);
-			resource.derealize();
-		}
-	}
-	
-	m_current_command_buffer =
-	    (m_current_command_buffer + 1) % std::size(m_command_buffers);
+    m_command_buffer.end();
+    m_submit_task->execute(m_command_buffer, m_resources);
 }
 
 /////////////////////////////////////
@@ -322,8 +346,10 @@ RenderTaskBase &RenderGraph::getRenderTask(
 	ASSERT(render_task_id < m_next_task_id, "Render task id out of bound");
 
 	auto it = std::find_if(std::begin(m_render_tasks), std::end(m_render_tasks),
-	    [render_task_id](
-	        const auto &task) { return task->id() == render_task_id; });
+      [render_task_id](const auto &task) {
+          return task->id() == render_task_id;
+      }
+    );
 
 	ASSERT(it != std::end(m_render_tasks),
 	    core::format("Failed to find render task, id %{1}", render_task_id));
@@ -334,17 +360,20 @@ RenderTaskBase &RenderGraph::getRenderTask(
 /////////////////////////////////////
 /////////////////////////////////////
 void RenderGraph::buildRenderPass(RenderPass &render_pass, Framebuffer &framebuffer, const RenderTaskBase &task) {
-	auto subpass = RenderPass::SubPass{
+    framebuffer.setExtent({m_extent, 1u});
+
+    auto subpass = RenderPass::SubPass {
 		{RenderPass::SubPass::EXTERNAL}
 	};
 
 	for(const auto &resource : task.m_create_resources) {
-		const auto *resource_ptr = m_resources.acquireResourcePtrAs<TextureResource>(resource);
+        const auto *resource_ptr = m_resources.acquireResourcePtrAs<FramebufferAttachmentResource>(resource);
 
 		if(!resource_ptr) continue;
 
-		auto id = framebuffer.addAttachment(resource_ptr->description());
-	//	framebuffer.setExtent();
+        const auto id = framebuffer.addOutputAttachment(resource_ptr->resource());
+
+        subpass.output_attachments.emplace_back(id);
 	}
 	
 	render_pass.addSubPass(std::move(subpass));
