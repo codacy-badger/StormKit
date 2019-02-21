@@ -15,6 +15,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           package:
+            - gcc-7
             - g++-7
             - libassimp-dev 
             - libglm-dev 
