@@ -37,3 +37,6 @@ matrix:
         - cd build-linux-C++17-gcc-7-release
         - cmake -DCMAKE_CXX_COMPILER=$COMPILER -DCMAKE_BUILD_TYPE=Release ..
         - cmake -E time cmake --build .
+
+before_install:
+  - eval "${MATRIX_EVAL}"
