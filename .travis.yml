@@ -30,7 +30,7 @@ matrix:
             - libx11-xcb-dev
             - libwayland-dev 
             - libxrandr-dev
-            - libvulkan-dev
+            - vulkan
       env:
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && INFO=linux-C++17-gcc-7-release"
       script:
