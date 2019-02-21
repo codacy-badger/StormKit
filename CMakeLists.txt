@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
 set_property(GLOBAL PROPERTY RULE_MESSAGES OFF)
+cmake_policy(SET CMP0067 NEW)
+set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build (Debug or Release)")
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}/cmake/Modules")
