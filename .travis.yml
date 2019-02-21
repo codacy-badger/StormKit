@@ -14,7 +14,7 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - xorg-edgers/ppa
+            - sourceline: "ppa:xorg-edgers/ppa"
           packages:
             - gcc-7
             - g++-7
