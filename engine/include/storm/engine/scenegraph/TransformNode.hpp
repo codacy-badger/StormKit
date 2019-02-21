@@ -4,30 +4,30 @@
 #include <storm/engine/scenegraph/SceneNode.hpp>
 
 namespace storm::engine {
-	class STORM_PUBLIC TransformNode : public SceneNode {
-	public:
-		SUR_Object(TransformNode)
+    class STORM_PUBLIC TransformNode : public SceneNode {
+    public:
+        SUR_Object(TransformNode)
 
-		    using DataType = Transform;
+          using DataType = Transform;
 
-		~TransformNode() override;
+        ~TransformNode() override;
 
-		TransformNode(TransformNode &&);
-		TransformNode &operator=(TransformNode &&);
+        TransformNode(TransformNode &&);
+        TransformNode &operator=(TransformNode &&);
 
-		inline const DataType &data() const noexcept;
-		inline void            setTransform(Transform transform) noexcept;
+        inline const DataType &data() const noexcept;
+        inline void setTransform(Transform transform) noexcept;
 
-	protected:
-		explicit TransformNode(Scene &graph);
+    protected:
+        explicit TransformNode(Scene &graph);
 
-		DirtyType dirtyValue() const noexcept override;
+        DirtyType dirtyValue() const noexcept override;
 
-		friend class Scene;
+        friend class Scene;
 
-	private:
-		DataType m_transform;
-	};
-}
+    private:
+        DataType m_transform;
+    };
+} // namespace storm::engine
 
 #include "TransformNode.inl"

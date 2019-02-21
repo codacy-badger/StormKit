@@ -9,15 +9,15 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-Shader::Shader(
-    const Device &device, Stage stage, const _std::filesystem::path &path)
-    : m_impl {device, stage, path} {}
+Shader::Shader(const Device &device, Stage stage, const _std::filesystem::path &path)
+      : m_impl{device, stage, path} {
+}
 
 /////////////////////////////////////
 /////////////////////////////////////
-Shader::Shader(
-    const Device &device, Stage stage, const std::byte *data, std::size_t size)
-    : m_impl {device, stage, data, size} {}
+Shader::Shader(const Device &device, Stage stage, const std::byte *data, std::size_t size)
+      : m_impl{device, stage, data, size} {
+}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -29,10 +29,12 @@ Shader::Shader(Shader &&) = default;
 
 /////////////////////////////////////
 /////////////////////////////////////
-Shader::Stage Shader::stage() const noexcept { return m_impl->stage(); }
+Shader::Stage Shader::stage() const noexcept {
+    return m_impl->stage();
+}
 
 /////////////////////////////////////
 /////////////////////////////////////
 const std::vector<std::byte> &Shader::source() const noexcept {
-	return m_impl->source();
+    return m_impl->source();
 }

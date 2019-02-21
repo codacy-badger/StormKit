@@ -7,4 +7,4 @@
 namespace storm::engine {
 #include "DefaultFrag2D.hpp"
 #include "DefaultVert2D.hpp"
-}
+} // namespace storm::engine

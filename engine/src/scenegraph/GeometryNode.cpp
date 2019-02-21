@@ -9,7 +9,8 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-GeometryNode::GeometryNode(Scene &graph) : SceneNode {graph, "GeometryNode"} {}
+GeometryNode::GeometryNode(Scene &graph) : SceneNode{graph, "GeometryNode"} {
+}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -26,5 +27,5 @@ GeometryNode &GeometryNode::operator=(GeometryNode &&) = default;
 /////////////////////////////////////
 /////////////////////////////////////
 SceneNode::DirtyType GeometryNode::dirtyValue() const noexcept {
-	return GEOMETRY_BITS;
+    return GEOMETRY_BITS;
 }

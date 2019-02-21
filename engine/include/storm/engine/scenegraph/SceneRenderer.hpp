@@ -9,67 +9,63 @@
 #include <storm/core/NonCopyable.hpp>
 #include <storm/engine/graphics/RenderGraph.hpp>
 #include <storm/engine/graphics/ShaderLibrary.hpp>
+#include <storm/engine/render/Fence.hpp>
 #include <storm/engine/render/ForwardDeclarations.hpp>
 #include <storm/engine/render/Framebuffer.hpp>
+#include <storm/engine/render/HardwareBuffer.hpp>
+#include <storm/engine/render/Program.hpp>
+#include <storm/engine/render/RenderPass.hpp>
+#include <storm/engine/render/Semaphore.hpp>
+#include <storm/engine/render/Shader.hpp>
 #include <storm/engine/render/Types.hpp>
 #include <storm/engine/scenegraph/ForwardDeclarations.hpp>
 
 namespace storm::engine {
-	struct BeginTaskData;
-	class SceneRenderer : public core::NonCopyable {
-	public:
-		explicit SceneRenderer(
-		    const Device &device, const Surface &surface, uvec2 render_extent);
-		~SceneRenderer();
+    class SceneRenderer : public core::NonCopyable {
+    public:
+        explicit SceneRenderer(const Device &device, const Surface &surface, uvec2 render_extent);
+        ~SceneRenderer();
 
-		SceneRenderer(SceneRenderer &&);
-		SceneRenderer &operator=(SceneRenderer &&);
+        SceneRenderer(SceneRenderer &&);
+        SceneRenderer &operator=(SceneRenderer &&);
 
-		void render(Scene &scene);
+        void render(Scene &scene);
 
-		void exportRenderGraph(const _std::filesystem::path &filepath) const;
+        void exportRenderGraph(const _std::filesystem::path &filepath) const;
 
-	private:
-		struct RendererResources {
-			ResourceBase::ID camera_buffer;
-            ResourceBase::ID meshdata_buffer;
+    private:
+        struct MeshData {
+            mat4 transform;
         };
-		
-		void updateRenderGraph(Scene &scene);
-		void addDefaultForwardRenderTask(Scene &scene, const RendererResources &resources);
 
-		struct MeshData {
-			mat4 transform;
-		};
+        struct CameraData {
+            mat4 projection = mat4{1.f};
+            mat4 view       = mat4{1.f};
+        } m_camera;
 
-		struct CameraData {
-			mat4 projection = mat4 {1.f};
-			mat4 view       = mat4 {1.f};
-		} m_camera;
+        std::reference_wrapper<const Device> m_device;
+        std::reference_wrapper<const Surface> m_surface;
+        uvec2 m_render_extent;
 
-		std::reference_wrapper<const Device>  m_device;
-		std::reference_wrapper<const Surface> m_surface;
-		uvec2                                 m_render_extent;
+        RenderGraph m_render_graph;
+        ShaderLibrary m_shader_library;
 
-		RenderGraph   m_render_graph;
-		ShaderLibrary m_shader_library;
+        Shader::Ptr m_forward_vert;
+        Shader::Ptr m_forward_frag;
+        Program::Ptr m_forward_program;
 
-		Shader::Ptr  m_forward_vert;
-		Shader::Ptr  m_forward_frag;
-		Program::Ptr m_forward_program;
+        Fence m_fence;
+        Semaphore m_semaphore;
+        std::vector<CommandBuffer> m_command_buffers;
+        std::uint32_t m_current_command_buffer;
 
-		Fence                      m_fence;
-		Semaphore                  m_semaphore;
-		std::vector<CommandBuffer> m_command_buffers;
-		std::uint32_t              m_current_command_buffer;
-
-		HardwareBuffer::Description m_camera_buffer_desc;
-        HardwareBuffer              m_camera_buffer;
+        HardwareBuffer::Description m_camera_buffer_desc;
+        HardwareBuffer m_camera_buffer;
 
         HardwareBuffer::Description m_mesh_data_buffer_desc;
-        HardwareBuffer              m_mesh_data_buffer;
+        HardwareBuffer m_mesh_data_buffer;
 
-		std::unordered_map<std::string, RenderPass::Ptr> m_render_passes;
-        Framebuffer::Ptr                                 m_backbuffer;
-	};
-}
+        std::unordered_map<std::string, RenderPass::Ptr> m_render_passes;
+        Framebuffer::Ptr m_backbuffer;
+    };
+} // namespace storm::engine

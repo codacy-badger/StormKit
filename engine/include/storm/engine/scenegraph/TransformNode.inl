@@ -7,12 +7,12 @@
 #include "TransformNode.hpp"
 
 namespace storm::engine {
-	inline const TransformNode::DataType &TransformNode::data() const noexcept {
-		return m_transform;
-	}
+    inline const TransformNode::DataType &TransformNode::data() const noexcept {
+        return m_transform;
+    }
 
-	inline void TransformNode::setTransform(Transform transform) noexcept {
-		m_transform = std::move(transform);
-		notify(NodeEvent::UPDATED);
-	}
-}
+    inline void TransformNode::setTransform(Transform transform) noexcept {
+        m_transform = std::move(transform);
+        notify(NodeEvent::UPDATED);
+    }
+} // namespace storm::engine

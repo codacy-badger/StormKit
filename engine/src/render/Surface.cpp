@@ -9,8 +9,8 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-Surface::Surface(const Device &device, const window::Window &window)
-	: m_impl {device, window} {}
+Surface::Surface(const Device &device, const window::Window &window) : m_impl{device, window} {
+}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -27,11 +27,11 @@ Surface &Surface::operator=(Surface &&) = default;
 /////////////////////////////////////
 /////////////////////////////////////
 FrameToken Surface::nextFrame() {
-	return m_impl->nextFrame();
+    return m_impl->nextFrame();
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
 void Surface::present(Framebuffer &framebuffer, const FrameToken &token) {
-	m_impl->present(framebuffer, token);
+    m_impl->present(framebuffer, token);
 }

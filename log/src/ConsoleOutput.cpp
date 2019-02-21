@@ -5,7 +5,7 @@
 using namespace storm::log;
 
 #if defined(STORM_OS_WINDOWS)
-#include <windows.h>
+#    include <windows.h>
 
 static constexpr const std::uint8_t KBLA = 0;
 static constexpr const std::uint8_t KRED = 12;
@@ -20,48 +20,48 @@ static constexpr const std::uint8_t KGRS = 8;
 /////////////////////////////////////
 /////////////////////////////////////
 void colorify(std::string severity) {
-	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	std::uint8_t background = KBLA;
-	std::uint8_t text       = KWHT;
-	if (severity.at(1) == 'I') {
-		background = KGRN;
-		text       = KGRS;
-	} else if (severity.at(1) == 'W') {
-		background = KMAG;
-		text       = KGRS;
-	}
-	if (severity.at(1) == 'E') {
-		background = KYEL;
-		text       = KGRS;
-	}
-	if (severity.at(1) == 'F') {
-		background = KRED;
-		text       = KGRS;
-	}
-	if (severity.at(1) == 'D') {
-		background = KCYN;
-		text       = KGRS;
-	}
+    std::uint8_t background = KBLA;
+    std::uint8_t text       = KWHT;
+    if(severity.at(1) == 'I') {
+        background = KGRN;
+        text       = KGRS;
+    } else if(severity.at(1) == 'W') {
+        background = KMAG;
+        text       = KGRS;
+    }
+    if(severity.at(1) == 'E') {
+        background = KYEL;
+        text       = KGRS;
+    }
+    if(severity.at(1) == 'F') {
+        background = KRED;
+        text       = KGRS;
+    }
+    if(severity.at(1) == 'D') {
+        background = KCYN;
+        text       = KGRS;
+    }
 
-	SetConsoleTextAttribute(handle, (background << 4) + text);
-	std::cout << severity;
-	SetConsoleTextAttribute(handle, (KBLA << 4) + KWHT);
+    SetConsoleTextAttribute(handle, (background << 4) + text);
+    std::cout << severity;
+    SetConsoleTextAttribute(handle, (KBLA << 4) + KWHT);
 }
 #elif defined(STORM_OS_IOS)
 /////////////////////////////////////
 /////////////////////////////////////
 void colorify(std::string severity) {
-	/*if(severity == "[Information] ")
+    /*if(severity == "[Information] ")
 
-	 else if(severity == "[Warning] ")
+     else if(severity == "[Warning] ")
 
-	 if(severity == "[Error] ")
+     if(severity == "[Error] ")
 
-	 if(severity == "[FatalError] ")
+     if(severity == "[FatalError] ")
 
-	 if(severity == "[Debug] ")*/
-	std::cout << severity;
+     if(severity == "[Debug] ")*/
+    std::cout << severity;
 }
 #elif defined(STORM_POSIX)
 
@@ -79,22 +79,22 @@ static constexpr const char *const KINV = "\e[7m";
 /////////////////////////////////////
 /////////////////////////////////////
 void colorify(std::string severity) {
-	if (severity.at(1) == 'I')
-		std::cout << KGRS << KINV << KGRN << severity << KNRM << " ";
-	else if (severity.at(1) == 'W')
-		std::cout << KGRS << KINV << KMAG << severity << KNRM << " ";
-	else if (severity.at(1) == 'E')
-		std::cout << KGRS << KINV << KYEL << severity << KNRM << " ";
-	else if (severity.at(1) == 'F')
-		std::cout << KGRS << KINV << KRED << severity << KNRM << " ";
-	else if (severity.at(1) == 'D')
-		std::cout << KGRS << KINV << KCYN << severity << KNRM << " ";
+    if(severity.at(1) == 'I')
+        std::cout << KGRS << KINV << KGRN << severity << KNRM << " ";
+    else if(severity.at(1) == 'W')
+        std::cout << KGRS << KINV << KMAG << severity << KNRM << " ";
+    else if(severity.at(1) == 'E')
+        std::cout << KGRS << KINV << KYEL << severity << KNRM << " ";
+    else if(severity.at(1) == 'F')
+        std::cout << KGRS << KINV << KRED << severity << KNRM << " ";
+    else if(severity.at(1) == 'D')
+        std::cout << KGRS << KINV << KCYN << severity << KNRM << " ";
 }
 #endif
 
 ////////////////////////////////////////
 ////////////////////////////////////////
 void ConsoleOutput::write(const char *string) {
-	colorify(getCurrentSeverity());
-	std::cout << string << "\n" << std::endl;
+    colorify(getCurrentSeverity());
+    std::cout << string << "\n" << std::endl;
 }

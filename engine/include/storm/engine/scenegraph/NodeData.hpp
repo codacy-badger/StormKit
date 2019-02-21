@@ -7,16 +7,16 @@
 #include <vector>
 
 namespace storm::engine {
-	class SceneNode;
-	using SceneNodeArray = std::vector<std::reference_wrapper<SceneNode>>;
+    class SceneNode;
+    using SceneNodeArray = std::vector<std::reference_wrapper<SceneNode>>;
 
-	enum class NodeEvent { ADDED = 1, REMOVED = 2, UPDATED = 3 };
+    enum class NodeEvent { ADDED = 1, REMOVED = 2, UPDATED = 3 };
 
-	struct NodePayload {
-		std::reference_wrapper<SceneNode> node;
-		std::uint32_t                     index;
-	};
+    struct NodePayload {
+        std::reference_wrapper<SceneNode> node;
+        std::uint32_t index;
+    };
 
-	using NodeObserver = tools::Observer<NodeEvent, NodePayload>;
-	using NodeSubject  = tools::Subject<NodeEvent, NodePayload>;
-}
+    using NodeObserver = tools::Observer<NodeEvent, NodePayload>;
+    using NodeSubject  = tools::Subject<NodeEvent, NodePayload>;
+} // namespace storm::engine

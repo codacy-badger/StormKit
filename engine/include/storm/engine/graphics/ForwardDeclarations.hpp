@@ -5,20 +5,20 @@
 #pragma once
 
 namespace storm::engine {
-	class Transform;
-	class RenderGraph;
-	class RenderTaskBase;
-	class RenderTaskBuilder;
-	class ResourceBase;
-	class ResourcePool;
+    class Transform;
+    class RenderGraph;
+    class RenderTaskBase;
+    class RenderTaskBuilder;
+    class ResourceBase;
+    class ResourcePool;
 
-	struct MeshInstance;
+    struct MeshInstance;
 
-	struct Vertex_P;
-	struct Vertex_P_C;
-	struct Vertex_P_C_N;
-	struct Vertex_P_C_UV;
-	struct Vertex_P_UV;
-	struct Vertex_P_UV_N;
-	struct Vertex_P_UV_N_T_BT;
-}
+    struct Vertex_P;
+    struct Vertex_P_C;
+    struct Vertex_P_C_N;
+    struct Vertex_P_C_UV;
+    struct Vertex_P_UV;
+    struct Vertex_P_UV_N;
+    struct Vertex_P_UV_N_T_BT;
+} // namespace storm::engine

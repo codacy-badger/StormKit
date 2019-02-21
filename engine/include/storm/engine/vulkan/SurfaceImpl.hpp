@@ -5,48 +5,44 @@
 #pragma once
 
 #include <storm/core/NonCopyable.hpp>
+#include <storm/engine/render/Surface.hpp>
 #include <storm/engine/vulkan/SwapChain.hpp>
 #include <storm/engine/vulkan/UniqueHandle.hpp>
-#include <storm/engine/render/Surface.hpp>
 #include <storm/window/Window.hpp>
 
 namespace storm::engine {
-	class SurfaceImpl : public core::NonCopyable {
-	public:
-		explicit SurfaceImpl(
-		    const Device &device, const window::Window &window);
-		~SurfaceImpl();
+    class SurfaceImpl : public core::NonCopyable {
+    public:
+        explicit SurfaceImpl(const Device &device, const window::Window &window);
+        ~SurfaceImpl();
 
-		SurfaceImpl(SurfaceImpl &&);
+        SurfaceImpl(SurfaceImpl &&);
 
-		FrameToken nextFrame();
-		void present(Framebuffer &framebuffer, const FrameToken &token);
+        FrameToken nextFrame();
+        void present(Framebuffer &framebuffer, const FrameToken &token);
 
-		inline vk::Extent2D size() const noexcept;
+        inline vk::Extent2D size() const noexcept;
 
-		inline const vk::SurfaceKHR &            vkSurface() const noexcept;
-		inline const vk::SurfaceCapabilitiesKHR &vkSurfaceCapabilities() const
-		    noexcept;
-		inline const std::vector<vk::PresentModeKHR> &
-		                                                vkSurfacePresentMode() const noexcept;
-		inline const std::vector<vk::SurfaceFormatKHR> &vkSurfaceFormats() const
-		    noexcept;
+        inline const vk::SurfaceKHR &vkSurface() const noexcept;
+        inline const vk::SurfaceCapabilitiesKHR &vkSurfaceCapabilities() const noexcept;
+        inline const std::vector<vk::PresentModeKHR> &vkSurfacePresentMode() const noexcept;
+        inline const std::vector<vk::SurfaceFormatKHR> &vkSurfaceFormats() const noexcept;
 
-	private:
-		void createSurface();
+    private:
+        void createSurface();
 
-		vk::SurfaceKHR                    m_surface;
-		vk::SurfaceCapabilitiesKHR        m_surface_capabilities;
-		std::vector<vk::SurfaceFormatKHR> m_surface_formats;
-		std::vector<vk::PresentModeKHR>   m_present_modes;
+        vk::SurfaceKHR m_surface;
+        vk::SurfaceCapabilitiesKHR m_surface_capabilities;
+        std::vector<vk::SurfaceFormatKHR> m_surface_formats;
+        std::vector<vk::PresentModeKHR> m_present_modes;
 
-		vk::Extent2D m_size;
+        vk::Extent2D m_size;
 
-		SwapChain::Ptr m_swapchain;
+        SwapChain::Ptr m_swapchain;
 
-		const Device &        m_device;
-		const window::Window &m_window;
-	};
-}
+        const Device &m_device;
+        const window::Window &m_window;
+    };
+} // namespace storm::engine
 
 #include "SurfaceImpl.inl"

@@ -1,5 +1,4 @@
 language: cpp
-sudo: false
 branches:
   only:
     - dev
@@ -11,15 +10,12 @@ env:
 matrix:
   include:
     - os: linux
-      dist: xenial
-      compiler: clang
-      sudo: required
       addons:
         apt:
-          update: true
           sources:
-            - sourceline: ''
+            - ubuntu-toolchain-r-test
           package:
+            - g++-7
             - libassimp-dev 
             - libglm-dev 
             - libxcb-dri3-0 
@@ -32,30 +28,12 @@ matrix:
             - libx11-xcb-dev
             - libwayland-dev 
             - libxrandr-dev
-      before_script:
-        - wget -O vulkan.run https://sdk.lunarg.com/sdk/download/1.1.97.0/linux/vulkansdk-linux-x86_64-1.1.97.0.tar.gz?u=
-        - chmod ugo+x vulkan.run
-        - ./vulkan.run
-    - os: osx
-      compiler: clang
-      cache:
-        ccache: true
-        directories:
-          - ~/Library/Caches/Homebrew
-      addons:
-        homebrew:
-          update: true
-          taps: apenngrace/vulkan
-          package:
-            - cmake
-            - ccache
-            - libpng
-            - libjpeg-turbo
-            - boost
-            - vulkan-sdk
-
-before_script:
-  - ccache -s 
-  - cmake -G "Unix Makefiles"
-  - cmake --build . -- -j
-  - ccache -s
+            - libvulkan-dev
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && INFO=linux-C++17-gcc-7-release"
+      script:
+        - cmake --version
+        - mkdir build-linux-C++17-gcc-7-release
+        - cd build-linux-C++17-gcc-7-release
+        - cmake -DCMAKE_CXX_COMPILER=$COMPILER -DCMAKE_BUILD_TYPE=Release ..
+        - cmake -E time cmake --build .

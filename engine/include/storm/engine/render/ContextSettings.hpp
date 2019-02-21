@@ -4,14 +4,14 @@
 #include <string>
 
 namespace storm::engine {
-	struct ContextSettings {
-		std::string app_name;
-		struct {
-			std::uint32_t major;
-			std::uint32_t minor;
-			std::uint32_t patch;
-		} app_version;
+    struct ContextSettings {
+        std::string app_name;
+        struct {
+            std::uint32_t major;
+            std::uint32_t minor;
+            std::uint32_t patch;
+        } app_version;
 
-		bool enable_validation = false;
-	};
-}
+        bool enable_validation = false;
+    };
+} // namespace storm::engine

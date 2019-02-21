@@ -7,13 +7,12 @@
 #include <storm/engine/vulkan/ProgramImpl.hpp>
 
 namespace storm::engine {
-	inline const vk::PipelineLayout &ProgramImpl::vkPipelineLayout() const
-	    noexcept {
-		return m_pipeline_layout.get();
-	}
+    inline const vk::PipelineLayout &ProgramImpl::vkPipelineLayout() const noexcept {
+        return m_pipeline_layout.get();
+    }
 
-	inline const std::vector<vk::DescriptorSetLayout> &
-	ProgramImpl::vkDescriptorSetLayouts() const noexcept {
-		return m_flat_descriptor_set_layouts;
-	}
-}
+    inline const std::vector<vk::DescriptorSetLayout> &ProgramImpl::vkDescriptorSetLayouts() const
+      noexcept {
+        return m_flat_descriptor_set_layouts;
+    }
+} // namespace storm::engine

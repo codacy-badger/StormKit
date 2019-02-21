@@ -12,32 +12,32 @@
 #include <storm/log/LogOutput.hpp>
 
 namespace storm::log {
-	/**
-	 * @class FileLog
-	 * @ingroup Log
-	 * @brief File Logger
-	 *
-	 * The class allow logging to a file
-	 */
-	class STORM_PUBLIC FileOutput final : public LogOutput {
-	public:
-		/**
-		 * @brief Constructor
-		 *
-		 * Default Constructor of FileOutput
-		 */
-		explicit FileOutput(const _std::filesystem::path &filepath);
+    /**
+     * @class FileLog
+     * @ingroup Log
+     * @brief File Logger
+     *
+     * The class allow logging to a file
+     */
+    class STORM_PUBLIC FileOutput final : public LogOutput {
+    public:
+        /**
+         * @brief Constructor
+         *
+         * Default Constructor of FileOutput
+         */
+        explicit FileOutput(const _std::filesystem::path &filepath);
 
-		/**
-		 * @brief Destructor
-		 *
-		 * Destructor of FileOutput
-		 */
-		~FileOutput() override = default;
+        /**
+         * @brief Destructor
+         *
+         * Destructor of FileOutput
+         */
+        ~FileOutput() override = default;
 
-	private:
-		void write(const char *string) override;
+    private:
+        void write(const char *string) override;
 
-		std::ofstream m_file;
-	};
-}
+        std::ofstream m_file;
+    };
+} // namespace storm::log

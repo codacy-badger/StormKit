@@ -9,8 +9,8 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-TransformNode::TransformNode(Scene &graph)
-    : SceneNode {graph, "TransformNode"} {}
+TransformNode::TransformNode(Scene &graph) : SceneNode{graph, "TransformNode"} {
+}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -27,5 +27,5 @@ TransformNode &TransformNode::operator=(TransformNode &&) = default;
 /////////////////////////////////////
 /////////////////////////////////////
 SceneNode::DirtyType TransformNode::dirtyValue() const noexcept {
-	return TRANSFORM_BITS;
+    return TRANSFORM_BITS;
 }

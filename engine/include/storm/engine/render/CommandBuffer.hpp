@@ -13,57 +13,63 @@
 #include <storm/engine/render/Utils.hpp>
 
 namespace storm::engine {
-	class CommandBufferImpl;
-	class CommandBuffer : public core::NonCopyable {
-	public:
-		Unique_Object(CommandBuffer)
+    class CommandBufferImpl;
+    class CommandBuffer : public core::NonCopyable {
+    public:
+        Unique_Object(CommandBuffer)
 
-		explicit CommandBuffer(const Device &device, bool primary = true);
-		~CommandBuffer();
+          explicit CommandBuffer(const Device &device, bool primary = true);
+        ~CommandBuffer();
 
-		CommandBuffer(CommandBuffer &&);
-		CommandBuffer &operator=(CommandBuffer &&);
+        CommandBuffer(CommandBuffer &&);
+        CommandBuffer &operator=(CommandBuffer &&);
 
-		void reset();
+        void reset();
 
-		void begin(bool one_time_submit = false);
-		void end();
+        void begin(bool one_time_submit = false);
+        void end();
 
-		void beginRenderPass(RenderPass &render_pass, const Framebuffer &buffer,
-		    core::RGBColorF clear_color = core::RGBColorDef::Black);
-		void endRenderPass();
+        void beginRenderPass(
+          RenderPass &render_pass,
+          const Framebuffer &buffer,
+          core::RGBColorF clear_color = core::RGBColorDef::Black);
+        void endRenderPass();
 
-		void draw(std::size_t vertex_count, std::size_t instance_count = 1,
-		    std::uint32_t first_vertex = 0, std::uint32_t first_instance = 0);
-		void drawIndexed(std::size_t index_count,
-		    std::size_t instance_count = 1, std::uint32_t first_index = 0,
-		    std::int32_t vertex_offset = 0, std::uint32_t first_instance = 0);
+        void draw(
+          std::size_t vertex_count,
+          std::size_t instance_count   = 1,
+          std::uint32_t first_vertex   = 0,
+          std::uint32_t first_instance = 0);
+        void drawIndexed(
+          std::size_t index_count,
+          std::size_t instance_count   = 1,
+          std::uint32_t first_index    = 0,
+          std::int32_t vertex_offset   = 0,
+          std::uint32_t first_instance = 0);
 
-		void submit(const std::vector<const Semaphore *> &wait_semaphores,
-			const std::vector<const Semaphore *> &        signal_semaphores,
-			QueueType queue = QueueType::GRAPHICS,
-		    std::vector<PipelineStage>                    pipeline_states
-		    = {PipelineStage::COLOR_ATTACHMENT_OUTPUT},
-		    const Fence *fence = nullptr);
+        void submit(
+          const std::vector<const Semaphore *> &wait_semaphores,
+          const std::vector<const Semaphore *> &signal_semaphores,
+          QueueType queue                            = QueueType::GRAPHICS,
+          std::vector<PipelineStage> pipeline_states = {PipelineStage::COLOR_ATTACHMENT_OUTPUT},
+          const Fence *fence                         = nullptr);
 
-		void setProgram(const Program &program);
+        void setProgram(const Program &program);
 
-		void bindVertexBuffer(std::uint32_t index, const HardwareBuffer &buffer);
-		void bindIndexBuffer(
-			const HardwareBuffer &buffer, bool large_indices = false);
+        void bindVertexBuffer(std::uint32_t index, const HardwareBuffer &buffer);
+        void bindIndexBuffer(const HardwareBuffer &buffer, bool large_indices = false);
 
-		void executeCommandBuffers(
-		    const std::vector<std::reference_wrapper<CommandBuffer>>
-		        &command_buffers);
+        void executeCommandBuffers(
+          const std::vector<std::reference_wrapper<CommandBuffer>> &command_buffers);
 
-		PipelineState &      pipelineState() noexcept;
-		const PipelineState &pipelineState() const noexcept;
+        PipelineState &pipelineState() noexcept;
+        const PipelineState &pipelineState() const noexcept;
 
-		BindingState &      bindingState() noexcept;
-		const BindingState &bindingState() const noexcept;
+        BindingState &bindingState() noexcept;
+        const BindingState &bindingState() const noexcept;
 
-		IMPLEMENTATION(CommandBufferImpl)
-	private:
-		core::Pimpl<CommandBufferImpl> m_impl;
-	};
-}
+        IMPLEMENTATION(CommandBufferImpl)
+    private:
+        core::Pimpl<CommandBufferImpl> m_impl;
+    };
+} // namespace storm::engine

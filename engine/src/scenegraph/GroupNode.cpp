@@ -9,7 +9,8 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-GroupNode::GroupNode(Scene &graph) : SceneNode {graph, "GroupNode"} {}
+GroupNode::GroupNode(Scene &graph) : SceneNode{graph, "GroupNode"} {
+}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -26,5 +27,5 @@ GroupNode &GroupNode::operator=(GroupNode &&) = default;
 /////////////////////////////////////
 /////////////////////////////////////
 SceneNode::DirtyType GroupNode::dirtyValue() const noexcept {
-	return GROUP_BITS;
+    return GROUP_BITS;
 }

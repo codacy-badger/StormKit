@@ -12,24 +12,24 @@
 #include <vector>
 
 namespace storm::engine {
-	class ProgramImpl;
-	class Program : public core::NonCopyable {
-	public:
-		Unique_Object(Program) Ref_Object(Program)
+    class ProgramImpl;
+    class Program : public core::NonCopyable {
+    public:
+        Unique_Object(Program) Ref_Object(Program)
 
-		    explicit Program(const Device &device);
-		~Program();
+          explicit Program(const Device &device);
+        ~Program();
 
-		Program(Program &&);
-		Program &operator=(Program &&);
+        Program(Program &&);
+        Program &operator=(Program &&);
 
-		void addShaderModule(const Shader &module);
-		const std::vector<const Shader *> &shaderModules() const noexcept;
+        void addShaderModule(const Shader &module);
+        const std::vector<const Shader *> &shaderModules() const noexcept;
 
-		void link();
+        void link();
 
-		IMPLEMENTATION(ProgramImpl)
-	private:
-		core::Pimpl<ProgramImpl> m_impl;
-	};
-}
+        IMPLEMENTATION(ProgramImpl)
+    private:
+        core::Pimpl<ProgramImpl> m_impl;
+    };
+} // namespace storm::engine

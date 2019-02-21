@@ -11,21 +11,20 @@
 #include <storm/engine/render/Utils.hpp>
 
 namespace storm::engine {
-	class FenceImpl;
-	class Fence {
-	public:
-		Unique_Object(Fence) explicit Fence(const Device &device);
-		~Fence();
+    class FenceImpl;
+    class Fence {
+    public:
+        Unique_Object(Fence) explicit Fence(const Device &device);
+        ~Fence();
 
-		Fence(Fence &&);
-		Fence &operator=(Fence &&);
+        Fence(Fence &&);
+        Fence &operator=(Fence &&);
 
-		void wait(
-		    std::uint64_t timeout = std::numeric_limits<std::uint64_t>::max());
-		void reset();
+        void wait(std::uint64_t timeout = std::numeric_limits<std::uint64_t>::max());
+        void reset();
 
-		IMPLEMENTATION(FenceImpl)
-	private:
-		core::Pimpl<FenceImpl> m_impl;
-	};
-}
+        IMPLEMENTATION(FenceImpl)
+    private:
+        core::Pimpl<FenceImpl> m_impl;
+    };
+} // namespace storm::engine

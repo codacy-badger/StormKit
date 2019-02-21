@@ -16,54 +16,54 @@
 #include <storm/engine/scenegraph/SceneTree.hpp>
 
 namespace storm::engine {
-	class Scene : public core::NonCopyable {
-	public:
-		SUR_Object(Scene)
+    class Scene : public core::NonCopyable {
+    public:
+        SUR_Object(Scene)
 
-        explicit Scene(const Device &device);
-		~Scene();
+          explicit Scene(const Device &device);
+        ~Scene();
 
-		Scene(Scene &&);
-		Scene &operator=(Scene &&);
+        Scene(Scene &&);
+        Scene &operator=(Scene &&);
 
-		inline GroupNode &      root() noexcept;
-		inline const GroupNode &root() const noexcept;
+        inline GroupNode &root() noexcept;
+        inline const GroupNode &root() const noexcept;
 
-		template <typename T, typename... Args>
-		T &createNode(Args &&... arg);
+        template<typename T, typename... Args>
+        T &createNode(Args &&... arg);
 
-		void update();
+        void update();
 
-		void exportSceneGraph(const _std::filesystem::path &filepath) const;
-		void exportSceneTree(const _std::filesystem::path &filepath) const;
+        void exportSceneGraph(const _std::filesystem::path &filepath) const;
+        void exportSceneTree(const _std::filesystem::path &filepath) const;
 
-		inline const MeshList &meshes() const noexcept;
+        inline const MeshList &meshes() const noexcept;
 
-	private:
-		std::reference_wrapper<const Device> m_device;
+    private:
+        std::reference_wrapper<const Device> m_device;
 
-		GroupNode                   m_root;
-		std::vector<SceneNode::Ptr> m_nodes;
+        GroupNode m_root;
+        std::vector<SceneNode::Ptr> m_nodes;
 
-		SceneTree m_tree;
+        SceneTree m_tree;
 
-		MeshList m_cache;
-	};
+        MeshList m_cache;
+    };
 
-	template <typename T>
-	constexpr std::string_view nameOfNode() {
-		if constexpr (std::is_same_v<GroupNode, T>)
-			return "GroupNode";
-		else if constexpr (std::is_same_v<CameraNode, T>)
-			return "CameraNode";
-		else if constexpr (std::is_same_v<GeometryNode, T>)
-			return "GeometryNode";
-		else if constexpr (std::is_same_v<TransformNode, T>)
-			return "TransformNode";
-		else
-			return "Unknown Node";
-	}
-}
+    template<typename T>
+    constexpr std::string_view nameOfNode() {
+        if constexpr(std::is_same_v<GroupNode, T>)
+            return "GroupNode";
+        else if constexpr(std::is_same_v<CameraNode, T>)
+            return "CameraNode";
+        else if constexpr(std::is_same_v<GeometryNode, T>)
+            return "GeometryNode";
+        else if constexpr(std::is_same_v<TransformNode, T>)
+            return "TransformNode";
+        else
+            return "Unknown Node";
+    }
+} // namespace storm::engine
 
 #include "Scene.inl"
 #include "Scene.tpp"

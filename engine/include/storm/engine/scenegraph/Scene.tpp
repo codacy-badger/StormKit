@@ -7,11 +7,10 @@
 #include "Scene.hpp"
 
 namespace storm::engine {
-	template <typename T, typename... Args>
-	T &Scene::createNode(Args &&... args) {
-		auto &node_ref
-		    = *m_nodes.emplace_back(new T {*this, std::forward<Args>(args)...});
+    template<typename T, typename... Args>
+    T &Scene::createNode(Args &&... args) {
+        auto &node_ref = *m_nodes.emplace_back(new T{*this, std::forward<Args>(args)...});
 
-		return static_cast<T &>(node_ref);
-	}
-}
+        return static_cast<T &>(node_ref);
+    }
+} // namespace storm::engine

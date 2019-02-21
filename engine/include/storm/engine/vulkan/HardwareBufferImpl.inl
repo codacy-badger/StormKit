@@ -7,12 +7,11 @@
 #include "HardwareBufferImpl.hpp"
 
 namespace storm::engine {
-	inline const HardwareBuffer::Description &HardwareBufferImpl::description() {
-		return m_description;
-	}
+    inline const HardwareBuffer::Description &HardwareBufferImpl::description() {
+        return m_description;
+    }
 
-	inline const BackedVkBuffer &HardwareBufferImpl::backedVkBuffer() const
-		noexcept {
-		return m_buffer;
-	}
-}
+    inline const BackedVkBuffer &HardwareBufferImpl::backedVkBuffer() const noexcept {
+        return m_buffer;
+    }
+} // namespace storm::engine

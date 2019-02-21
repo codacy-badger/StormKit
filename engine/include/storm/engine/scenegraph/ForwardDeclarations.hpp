@@ -5,11 +5,11 @@
 #pragma once
 
 namespace storm::engine {
-	class Scene;
+    class Scene;
 
-	class SceneNode;
-	class GroupNode;
-	class CameraNode;
-	class GeometryNode;
-	class TransformNode;
-}
+    class SceneNode;
+    class GroupNode;
+    class CameraNode;
+    class GeometryNode;
+    class TransformNode;
+} // namespace storm::engine

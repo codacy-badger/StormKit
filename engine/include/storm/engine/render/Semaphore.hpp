@@ -11,17 +11,17 @@
 #include <storm/engine/render/Utils.hpp>
 
 namespace storm::engine {
-	class SemaphoreImpl;
-	class Semaphore {
-	public:
-		Unique_Object(Semaphore) explicit Semaphore(const Device &device);
-		~Semaphore();
+    class SemaphoreImpl;
+    class Semaphore {
+    public:
+        Unique_Object(Semaphore) explicit Semaphore(const Device &device);
+        ~Semaphore();
 
-		Semaphore(Semaphore &&);
-		Semaphore &operator=(Semaphore &&);
+        Semaphore(Semaphore &&);
+        Semaphore &operator=(Semaphore &&);
 
-		IMPLEMENTATION(SemaphoreImpl)
-	private:
-		core::Pimpl<SemaphoreImpl> m_impl;
-	};
-}
+        IMPLEMENTATION(SemaphoreImpl)
+    private:
+        core::Pimpl<SemaphoreImpl> m_impl;
+    };
+} // namespace storm::engine

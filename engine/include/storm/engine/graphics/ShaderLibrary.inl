@@ -7,8 +7,7 @@
 #include "ShaderLibrary.hpp"
 
 namespace storm::engine {
-	inline const std::vector<std::byte> &ShaderLibrary::getSource(
-	    std::string name) const noexcept {
-		return m_sources.at(name);
-	}
-}
+    inline const std::vector<std::byte> &ShaderLibrary::getSource(std::string name) const noexcept {
+        return m_sources.at(name);
+    }
+} // namespace storm::engine

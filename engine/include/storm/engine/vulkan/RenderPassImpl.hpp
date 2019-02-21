@@ -9,35 +9,36 @@
 #include <storm/engine/vulkan/UniqueHandle.hpp>
 
 namespace storm::engine {
-	class RenderPassImpl : public core::NonCopyable {
-	public:
-		explicit RenderPassImpl(const Device &device);
-		~RenderPassImpl();
+    class RenderPassImpl : public core::NonCopyable {
+    public:
+        explicit RenderPassImpl(const Device &device);
+        ~RenderPassImpl();
 
-		RenderPassImpl(RenderPassImpl &&);
+        RenderPassImpl(RenderPassImpl &&);
 
-		std::size_t addSubPass(RenderPass::SubPass &&subpass);
+        std::size_t addSubPass(RenderPass::SubPass &&subpass);
 
-		inline void setFramebuffer(Framebuffer &framebuffer);
-		inline const Framebuffer *framebuffer() const noexcept;
+        inline void setFramebuffer(Framebuffer &framebuffer);
+        inline const Framebuffer *framebuffer() const noexcept;
 
-		void build();
-		inline bool isBuilt() const noexcept;
+        void build();
+        inline bool isBuilt() const noexcept;
 
-		inline const vk::RenderPass &vkRenderPass() const noexcept;
-	private:
-		void createRenderPass();
+        inline const vk::RenderPass &vkRenderPass() const noexcept;
 
-		const Device &m_device;
+    private:
+        void createRenderPass();
 
-		Framebuffer *m_framebuffer;
+        const Device &m_device;
 
-		bool m_is_built;
+        Framebuffer *m_framebuffer;
 
-		std::vector<RenderPass::SubPass>   m_subpasses;
+        bool m_is_built;
 
-		UniqueHandle<vk::RenderPass> m_render_pass;
-	};
-}
+        std::vector<RenderPass::SubPass> m_subpasses;
+
+        UniqueHandle<vk::RenderPass> m_render_pass;
+    };
+} // namespace storm::engine
 
 #include "RenderPassImpl.inl"

@@ -7,7 +7,7 @@
 #include <storm/engine/vulkan/SemaphoreImpl.hpp>
 
 namespace storm::engine {
-	inline const vk::Semaphore &SemaphoreImpl::vkSemaphore() const noexcept {
-		return m_semaphore.get();
-	}
-}
+    inline const vk::Semaphore &SemaphoreImpl::vkSemaphore() const noexcept {
+        return m_semaphore.get();
+    }
+} // namespace storm::engine

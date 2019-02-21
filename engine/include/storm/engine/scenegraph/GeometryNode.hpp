@@ -5,30 +5,30 @@
 #include <vector>
 
 namespace storm::engine {
-	class STORM_PUBLIC GeometryNode : public SceneNode {
-	public:
-		SUR_Object(GeometryNode)
+    class STORM_PUBLIC GeometryNode : public SceneNode {
+    public:
+        SUR_Object(GeometryNode)
 
-		    using DataType = Geometry;
+          using DataType = Geometry;
 
-		~GeometryNode() override;
+        ~GeometryNode() override;
 
-		GeometryNode(GeometryNode &&);
-		GeometryNode &operator=(GeometryNode &&);
+        GeometryNode(GeometryNode &&);
+        GeometryNode &operator=(GeometryNode &&);
 
-		inline const DataType &data() const noexcept;
-		inline void            setGeometry(Geometry geometry) noexcept;
+        inline const DataType &data() const noexcept;
+        inline void setGeometry(Geometry geometry) noexcept;
 
-	protected:
-		explicit GeometryNode(Scene &graph);
+    protected:
+        explicit GeometryNode(Scene &graph);
 
-		DirtyType dirtyValue() const noexcept override;
+        DirtyType dirtyValue() const noexcept override;
 
-		friend class Scene;
+        friend class Scene;
 
-	private:
-		DataType m_mesh;
-	};
-}
+    private:
+        DataType m_mesh;
+    };
+} // namespace storm::engine
 
 #include "GeometryNode.inl"

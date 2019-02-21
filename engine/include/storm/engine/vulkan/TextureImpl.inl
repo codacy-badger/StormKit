@@ -7,13 +7,11 @@
 #include <storm/engine/vulkan/TextureImpl.hpp>
 
 namespace storm::engine {
-	inline const Texture::Description &TextureImpl::description() const
-	    noexcept {
-		return m_description;
-	}
+    inline const Texture::Description &TextureImpl::description() const noexcept {
+        return m_description;
+    }
 
-	inline const BackedVkTexture &TextureImpl::backedVkTexture() const
-	    noexcept {
-		return m_texture;
-	}
-}
+    inline const BackedVkTexture &TextureImpl::backedVkTexture() const noexcept {
+        return m_texture;
+    }
+} // namespace storm::engine

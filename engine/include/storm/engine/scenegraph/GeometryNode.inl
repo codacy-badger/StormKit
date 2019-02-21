@@ -7,12 +7,10 @@
 #include "GeometryNode.hpp"
 
 namespace storm::engine {
-	inline const GeometryNode::DataType &GeometryNode::data() const noexcept {
-		return m_mesh;
-	}
+    inline const GeometryNode::DataType &GeometryNode::data() const noexcept { return m_mesh; }
 
-	inline void GeometryNode::setGeometry(Geometry geometry) noexcept {
-		m_mesh = std::move(geometry);
-		notify(NodeEvent::UPDATED);
-	}
-}
+    inline void GeometryNode::setGeometry(Geometry geometry) noexcept {
+        m_mesh = std::move(geometry);
+        notify(NodeEvent::UPDATED);
+    }
+} // namespace storm::engine

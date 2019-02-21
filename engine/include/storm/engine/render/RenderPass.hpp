@@ -13,36 +13,35 @@
 #include <vector>
 
 namespace storm::engine {
-	class RenderPassImpl;
-	class RenderPass : public core::NonCopyable {
-	public:
-		Unique_Object(RenderPass)
+    class RenderPassImpl;
+    class RenderPass : public core::NonCopyable {
+    public:
+        Unique_Object(RenderPass)
 
-		struct SubPass {
-			static constexpr const auto EXTERNAL
-			    = std::numeric_limits<std::uint32_t>::max();
+          struct SubPass {
+            static constexpr const auto EXTERNAL = std::numeric_limits<std::uint32_t>::max();
 
-			std::vector<std::uint32_t> previous_subpass;
-			std::vector<std::size_t>   input_attachments;
-			std::vector<std::size_t>   output_attachments;
-		};
+            std::vector<std::uint32_t> previous_subpass;
+            std::vector<std::size_t> input_attachments;
+            std::vector<std::size_t> output_attachments;
+        };
 
-		explicit RenderPass(const Device &device);
-		~RenderPass();
+        explicit RenderPass(const Device &device);
+        ~RenderPass();
 
-		RenderPass(RenderPass &&);
-		RenderPass &operator=(RenderPass &&);
+        RenderPass(RenderPass &&);
+        RenderPass &operator=(RenderPass &&);
 
-		std::size_t addSubPass(RenderPass::SubPass &&subpass);
+        std::size_t addSubPass(RenderPass::SubPass &&subpass);
 
-		void setFramebuffer(Framebuffer &framebuffer);
-		const Framebuffer *framebuffer() const noexcept;
+        void setFramebuffer(Framebuffer &framebuffer);
+        const Framebuffer *framebuffer() const noexcept;
 
-		void build();
-		bool isBuilt() const noexcept;
+        void build();
+        bool isBuilt() const noexcept;
 
-		IMPLEMENTATION(RenderPassImpl)
-	private:
-		core::Pimpl<RenderPassImpl> m_impl;
-	};
-}
+        IMPLEMENTATION(RenderPassImpl)
+    private:
+        core::Pimpl<RenderPassImpl> m_impl;
+    };
+} // namespace storm::engine

@@ -9,7 +9,8 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-Context::Context(ContextSettings settings) : m_impl {settings} {}
+Context::Context(ContextSettings settings) : m_impl{settings} {
+}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -26,9 +27,11 @@ Context &Context::operator=(Context &&) = default;
 /////////////////////////////////////
 /////////////////////////////////////
 PhysicalDevice Context::bestPhysicalDevice() {
-	return m_impl->bestPhysicalDevice();
+    return m_impl->bestPhysicalDevice();
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-const ContextSettings &Context::settings() { return m_impl->settings(); }
+const ContextSettings &Context::settings() {
+    return m_impl->settings();
+}

@@ -10,110 +10,118 @@
 #include <storm/window/Window.hpp>
 
 namespace storm::engine {
-	struct BackedSwapchainImage {
-		vk::Image                   image;
-		UniqueHandle<vk::ImageView> view;
-	};
+    struct BackedSwapchainImage {
+        vk::Image image;
+        UniqueHandle<vk::ImageView> view;
+    };
 
-	struct BackedVkImage {
-		UniqueHandle<vk::Image>        image;
-		UniqueHandle<vk::ImageView>    view;
-		UniqueHandle<vk::DeviceMemory> memory;
+    struct BackedVkImage {
+        UniqueHandle<vk::Image> image;
+        UniqueHandle<vk::ImageView> view;
+        UniqueHandle<vk::DeviceMemory> memory;
 
-		uvec2 extent;
+        uvec2 extent;
 
-		vk::ImageLayout layout = vk::ImageLayout::eUndefined;
-	};
+        vk::ImageLayout layout = vk::ImageLayout::eUndefined;
+    };
 
-	struct BackedVkTexture {
-		UniqueHandle<vk::Sampler> sampler;
-		BackedVkImage             image;
-	};
+    struct BackedVkTexture {
+        UniqueHandle<vk::Sampler> sampler;
+        BackedVkImage image;
+    };
 
-	struct BackedVkBuffer {
-		UniqueHandle<vk::Buffer>       buffer;
-		UniqueHandle<vk::DeviceMemory> memory;
-	};
+    struct BackedVkBuffer {
+        UniqueHandle<vk::Buffer> buffer;
+        UniqueHandle<vk::DeviceMemory> memory;
+    };
 
-	class DeviceImpl : public core::NonCopyable {
-	public:
-		struct FamilyQueueIndices {
-			std::uint8_t graphics_queue_index  = 255u;
-			std::uint8_t compute_queue_index   = 255u;
-			std::uint8_t transfert_queue_index = 255u;
-		};
+    class DeviceImpl : public core::NonCopyable {
+    public:
+        struct FamilyQueueIndices {
+            std::uint8_t graphics_queue_index  = 255u;
+            std::uint8_t compute_queue_index   = 255u;
+            std::uint8_t transfert_queue_index = 255u;
+        };
 
-		enum class QueueType { GRAPHICS = 0, COMPUTE = 1, TRANSFERT = 2 };
+        enum class QueueType { GRAPHICS = 0, COMPUTE = 1, TRANSFERT = 2 };
 
-		explicit DeviceImpl(const Device &parent, const Context &context,
-		    window::NativeHandle handle, PhysicalDevice &&device);
-		~DeviceImpl();
+        explicit DeviceImpl(
+          const Device &parent,
+          const Context &context,
+          window::NativeHandle handle,
+          PhysicalDevice &&device);
+        ~DeviceImpl();
 
-		DeviceImpl(DeviceImpl &&);
+        DeviceImpl(DeviceImpl &&);
 
-		ColorFormat bestDepthFormat() const noexcept;
+        ColorFormat bestDepthFormat() const noexcept;
 
-		BackedSwapchainImage createBackedSwapchainImage(vk::Format format, vk::Image image) const;
-		BackedVkImage createBackedVkImage(const vk::ImageCreateInfo &infos,
-		      vk::ImageViewType type, vk::ImageAspectFlags aspect,
-		      vk::ImageLayout         layout,
-		      vk::MemoryPropertyFlags memory_properties) const;
-		BackedVkTexture createBackedVkTexture(
-		    const vk::SamplerCreateInfo &sampler_info,
-		    const vk::ImageCreateInfo &infos, vk::ImageViewType type,
-		    vk::ImageAspectFlags aspect, vk::ImageLayout layout,
-		    vk::MemoryPropertyFlags memory_properties) const;
-		BackedVkBuffer createBackedVkBuffer(vk::BufferUsageFlags usage,
-		    vk::MemoryPropertyFlags memory_properties,
-		    vk::DeviceSize          size) const;
+        BackedSwapchainImage createBackedSwapchainImage(vk::Format format, vk::Image image) const;
+        BackedVkImage createBackedVkImage(
+          const vk::ImageCreateInfo &infos,
+          vk::ImageViewType type,
+          vk::ImageAspectFlags aspect,
+          vk::ImageLayout layout,
+          vk::MemoryPropertyFlags memory_properties) const;
+        BackedVkTexture createBackedVkTexture(
+          const vk::SamplerCreateInfo &sampler_info,
+          const vk::ImageCreateInfo &infos,
+          vk::ImageViewType type,
+          vk::ImageAspectFlags aspect,
+          vk::ImageLayout layout,
+          vk::MemoryPropertyFlags memory_properties) const;
+        BackedVkBuffer createBackedVkBuffer(
+          vk::BufferUsageFlags usage,
+          vk::MemoryPropertyFlags memory_properties,
+          vk::DeviceSize size) const;
 
-		UniqueHandle<vk::CommandBuffer> allocateCommandBuffer(
-		    QueueType              type = QueueType::GRAPHICS,
-		    vk::CommandBufferLevel level
-		    = vk::CommandBufferLevel::ePrimary) const;
+        UniqueHandle<vk::CommandBuffer> allocateCommandBuffer(
+          QueueType type               = QueueType::GRAPHICS,
+          vk::CommandBufferLevel level = vk::CommandBufferLevel::ePrimary) const;
 
-		std::int32_t findMemoryRequirement(
-		    std::uint32_t filter, vk::MemoryPropertyFlags properties) const;
+        std::int32_t
+        findMemoryRequirement(std::uint32_t filter, vk::MemoryPropertyFlags properties) const;
 
-		void waitIdle() const;
+        void waitIdle() const;
 
-		vk::Format findSupportedFormat(
-		    const std::vector<vk::Format> &candidates, vk::ImageTiling tiling,
-		    vk::FormatFeatureFlags features) const noexcept;
+        vk::Format findSupportedFormat(
+          const std::vector<vk::Format> &candidates,
+          vk::ImageTiling tiling,
+          vk::FormatFeatureFlags features) const noexcept;
 
-		uvec2 maxImage2DSize() const noexcept;
+        uvec2 maxImage2DSize() const noexcept;
 
-		inline const Context &       context() const noexcept;
-		inline const PhysicalDevice &physicalDevice() const noexcept;
-		inline FamilyQueueIndices    familyQueuesIndices() const noexcept;
-		inline PipelineCache &       pipelineCache() noexcept;
-		inline const PipelineCache & pipelineCache() const noexcept;
+        inline const Context &context() const noexcept;
+        inline const PhysicalDevice &physicalDevice() const noexcept;
+        inline FamilyQueueIndices familyQueuesIndices() const noexcept;
+        inline PipelineCache &pipelineCache() noexcept;
+        inline const PipelineCache &pipelineCache() const noexcept;
 
-		inline const vk::Device &vkDevice() const noexcept;
-		inline const vk::Queue & vkGraphicsQueue() const noexcept;
-		inline const vk::Queue & vkComputeQueue() const noexcept;
-		inline const vk::Queue & vkTransfertQueue() const noexcept;
+        inline const vk::Device &vkDevice() const noexcept;
+        inline const vk::Queue &vkGraphicsQueue() const noexcept;
+        inline const vk::Queue &vkComputeQueue() const noexcept;
+        inline const vk::Queue &vkTransfertQueue() const noexcept;
 
-	private:
-		void createLogicalDevice();
-		void updateQueueData(window::NativeHandle handle);
-		void createCommandPools();
+    private:
+        void createLogicalDevice();
+        void updateQueueData(window::NativeHandle handle);
+        void createCommandPools();
 
-		FamilyQueueIndices m_family_queue_indices;
+        FamilyQueueIndices m_family_queue_indices;
 
-		UniqueHandle<vk::Device> m_logical_device;
-		vk::Queue                m_graphics_queue;
-		vk::Queue                m_compute_queue;
-		vk::Queue                m_transfert_queue;
+        UniqueHandle<vk::Device> m_logical_device;
+        vk::Queue m_graphics_queue;
+        vk::Queue m_compute_queue;
+        vk::Queue m_transfert_queue;
 
-		std::array<UniqueHandle<vk::CommandPool>, 3> m_command_pools;
+        std::array<UniqueHandle<vk::CommandPool>, 3> m_command_pools;
 
-		PhysicalDevice m_physical_device;
-		PipelineCache  m_pipeline_cache;
+        PhysicalDevice m_physical_device;
+        PipelineCache m_pipeline_cache;
 
-		const Context &m_context;
-		const Device & m_parent;
-	};
-}
+        const Context &m_context;
+        const Device &m_parent;
+    };
+} // namespace storm::engine
 
 #include "DeviceImpl.inl"

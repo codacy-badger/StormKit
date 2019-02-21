@@ -9,24 +9,24 @@
 #include <variant>
 
 namespace storm::engine {
-	class UniformBuffer;
-	class Texture;
-	struct UniformBufferBinding {
-		const HardwareBuffer *buffer;
-		std::uint32_t        binding;
-		std::size_t          size;
-		std::ptrdiff_t       offset;
-		Shader::Stage        stages;
-	};
+    class UniformBuffer;
+    class Texture;
+    struct UniformBufferBinding {
+        const HardwareBuffer *buffer;
+        std::uint32_t binding;
+        std::size_t size;
+        std::ptrdiff_t offset;
+        Shader::Stage stages;
+    };
 
-	struct TextureBinding {
-		const Texture *texture;
-		std::uint32_t  binding;
-	};
+    struct TextureBinding {
+        const Texture *texture;
+        std::uint32_t binding;
+    };
 
-	using Binding = std::variant<UniformBufferBinding, TextureBinding>;
+    using Binding = std::variant<UniformBufferBinding, TextureBinding>;
 
-	struct BindingState {
-		std::vector<Binding> bindings;
-	};
-}
+    struct BindingState {
+        std::vector<Binding> bindings;
+    };
+} // namespace storm::engine

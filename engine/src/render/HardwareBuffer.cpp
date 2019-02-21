@@ -10,8 +10,7 @@ using namespace storm::engine;
 /////////////////////////////////////
 /////////////////////////////////////
 HardwareBuffer::HardwareBuffer(const Device &device, Description description)
-	: m_impl{device, std::move(description)} {
-
+      : m_impl{device, std::move(description)} {
 }
 
 /////////////////////////////////////
@@ -29,35 +28,35 @@ HardwareBuffer &HardwareBuffer::operator=(HardwareBuffer &&) = default;
 /////////////////////////////////////
 /////////////////////////////////////
 void HardwareBuffer::reset() {
-	m_impl->reset();
+    m_impl->reset();
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
 void HardwareBuffer::setData(const std::byte *data, std::size_t size, std::ptrdiff_t offset) {
-	m_impl->setData(data, size, offset);
+    m_impl->setData(data, size, offset);
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
 std::byte *HardwareBuffer::map() {
-	return m_impl->map();
+    return m_impl->map();
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
 std::byte *HardwareBuffer::map(std::size_t size, std::ptrdiff_t offset) {
-	return m_impl->map(size, offset);
+    return m_impl->map(size, offset);
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
 void HardwareBuffer::unmap() {
-	m_impl->unmap();
+    m_impl->unmap();
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
 const HardwareBuffer::Description &HardwareBuffer::description() {
-	return m_impl->description();
+    return m_impl->description();
 }

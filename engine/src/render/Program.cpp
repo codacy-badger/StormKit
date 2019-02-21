@@ -9,7 +9,8 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-Program::Program(const Device &device) : m_impl {device} {}
+Program::Program(const Device &device) : m_impl{device} {
+}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -26,15 +27,17 @@ Program &Program::operator=(Program &&) = default;
 /////////////////////////////////////
 /////////////////////////////////////
 void Program::addShaderModule(const Shader &module) {
-	m_impl->addShaderModule(module);
+    m_impl->addShaderModule(module);
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
 const std::vector<const Shader *> &Program::shaderModules() const noexcept {
-	return m_impl->shaderModules();
+    return m_impl->shaderModules();
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
-void Program::link() { m_impl->link(); }
+void Program::link() {
+    m_impl->link();
+}

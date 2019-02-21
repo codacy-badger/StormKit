@@ -10,52 +10,51 @@
 #include <vector>
 
 namespace storm::engine {
-	class SceneTree : public NodeObserver {
-	public:
-		SUR_Object(SceneTree)
+    class SceneTree : public NodeObserver {
+    public:
+        SUR_Object(SceneTree)
 
-		    using TreeNodeList = std::vector<tools::TreeNode::Index>;
+          using TreeNodeList = std::vector<tools::TreeNode::Index>;
 
-		explicit SceneTree(const Device &device);
-		~SceneTree() override;
+        explicit SceneTree(const Device &device);
+        ~SceneTree() override;
 
-		void onNotified(NodeEvent event, NodePayload &&payload) override;
+        void onNotified(NodeEvent event, NodePayload &&payload) override;
 
-		void exportSceneTree(const _std::filesystem::path &   filepath,
-		    std::function<std::string_view(std::string_view)> colorize_node)
-		    const noexcept;
+        void exportSceneTree(
+          const _std::filesystem::path &filepath,
+          std::function<std::string_view(std::string_view)> colorize_node) const noexcept;
 
-		void traverse(MeshList &mesh_list);
+        void traverse(MeshList &mesh_list);
 
-	private:
-		struct State {
-			mat4 projection = mat4 {1.f};
-			mat4 view       = mat4 {1.f};
+    private:
+        struct State {
+            mat4 projection = mat4{1.f};
+            mat4 view       = mat4{1.f};
 
-			mat4 model = mat4 {1.f};
-			mat4 inverted_model;
+            mat4 model = mat4{1.f};
+            mat4 inverted_model;
 
-			std::int64_t mesh_id = -1;
-		};
+            std::int64_t mesh_id = -1;
+        };
 
-		void traverseSubTree(tools::TreeNode::Index index, MeshList &mesh_list);
-		void addNode(NodePayload &&payload);
-		void removeNode(NodePayload &&payload);
-		void updateNode(NodePayload &&payload);
+        void traverseSubTree(tools::TreeNode::Index index, MeshList &mesh_list);
+        void addNode(NodePayload &&payload);
+        void removeNode(NodePayload &&payload);
+        void updateNode(NodePayload &&payload);
 
-		SceneNodeArray findFirstUpdatedNodes(const SceneNode &node);
+        SceneNodeArray findFirstUpdatedNodes(const SceneNode &node);
 
-		// inline bool isTransformNode(const SceneNode &node) const noexcept {
-		// return static_cast<TransformNode&>(node.get()); }
+        // inline bool isTransformNode(const SceneNode &node) const noexcept {
+        // return static_cast<TransformNode&>(node.get()); }
 
-		std::reference_wrapper<const Device> m_device;
+        std::reference_wrapper<const Device> m_device;
 
-		tools::Tree m_tree;
+        tools::Tree m_tree;
 
-		std::unordered_map<tools::TreeNode::Index, SceneNode::RefW>
-		                                                  m_graph_tree_link;
-		std::unordered_map<tools::TreeNode::Index, State> m_states;
-	};
-}
+        std::unordered_map<tools::TreeNode::Index, SceneNode::RefW> m_graph_tree_link;
+        std::unordered_map<tools::TreeNode::Index, State> m_states;
+    };
+} // namespace storm::engine
 
 #include "SceneTree.inl"

@@ -6,38 +6,31 @@
 #include <vector>
 
 namespace storm::reflection {
-	class ReflectableManager final
-	    : public storm::core::Singleton<ReflectableManager> {
-	public:
-		explicit ReflectableManager() = default;
+    class ReflectableManager final : public storm::core::Singleton<ReflectableManager> {
+    public:
+        explicit ReflectableManager() = default;
 
-		void registerReflectableFunction(
-		    std::unique_ptr<FunctionBase> &&reflectable) {
-			m_functions.emplace_back(std::move(reflectable));
-		}
+        void registerReflectableFunction(std::unique_ptr<FunctionBase> &&reflectable) {
+            m_functions.emplace_back(std::move(reflectable));
+        }
 
-		template <typename ReturnType, typename... Params>
-		ReturnType reflect(
-		    const std::string &function_name, Params &&... params) {
-			for (const auto &reflectable : m_functions) {
-				if (reflectable->name() == function_name) {
-					auto reflected
-					    = dynamic_cast<Function<ReturnType(Params...)> *>(
-					        reflectable.get());
+        template<typename ReturnType, typename... Params>
+        ReturnType reflect(const std::string &function_name, Params &&... params) {
+            for(const auto &reflectable : m_functions) {
+                if(reflectable->name() == function_name) {
+                    auto reflected =
+                      dynamic_cast<Function<ReturnType(Params...)> *>(reflectable.get());
 
-					if (!reflected)
-						throw IncorrectParametersSignatureException(
-						    function_name);
+                    if(!reflected) throw IncorrectParametersSignatureException(function_name);
 
-					return reflected->operator()(
-					    std::forward<Params>(params)...);
-				}
-			}
+                    return reflected->operator()(std::forward<Params>(params)...);
+                }
+            }
 
-			throw NotRegisteredException(function_name);
-		}
+            throw NotRegisteredException(function_name);
+        }
 
-	private:
-		std::vector<std::unique_ptr<FunctionBase>> m_functions;
-	};
-}
+    private:
+        std::vector<std::unique_ptr<FunctionBase>> m_functions;
+    };
+} // namespace storm::reflection

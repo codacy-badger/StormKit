@@ -7,16 +7,13 @@
 #include <storm/engine/vulkan/ContextImpl.hpp>
 
 namespace storm::engine {
-	inline const ContextSettings &ContextImpl::settings() const noexcept {
-		return m_context_settings;
-	}
+    inline const ContextSettings &ContextImpl::settings() const noexcept {
+        return m_context_settings;
+    }
 
-	inline const vk::DispatchLoaderDynamic &ContextImpl::dispatcher() const
-	    noexcept {
-		return m_dispatcher;
-	}
+    inline const vk::DispatchLoaderDynamic &ContextImpl::dispatcher() const noexcept {
+        return m_dispatcher;
+    }
 
-	inline const vk::Instance &ContextImpl::instance() const noexcept {
-		return m_instance.get();
-	}
-}
+    inline const vk::Instance &ContextImpl::instance() const noexcept { return m_instance.get(); }
+} // namespace storm::engine

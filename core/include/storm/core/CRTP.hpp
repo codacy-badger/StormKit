@@ -10,18 +10,16 @@
 /// \module core
 namespace storm::core {
 
-	/// Utility class for makeing CRTP
-	template <typename T, template <typename> class crtp_type>
-	struct CRTP {
+    /// Utility class for makeing CRTP
+    template<typename T, template<typename> class crtp_type>
+    struct CRTP {
 
-		/// \group getters
-		/// \return the underlying class type
-		constexpr inline T &underlying() { return static_cast<T &>(*this); }
+        /// \group getters
+        /// \return the underlying class type
+        constexpr inline T &underlying() { return static_cast<T &>(*this); }
 
-		/// \group getters
-		/// \return the underlying class type
-		constexpr inline T const &underlying() const {
-			return static_cast<T const &>(*this);
-		}
-	};
-}
+        /// \group getters
+        /// \return the underlying class type
+        constexpr inline T const &underlying() const { return static_cast<T const &>(*this); }
+    };
+} // namespace storm::core

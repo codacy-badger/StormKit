@@ -4,27 +4,26 @@
 
 #pragma once
 
-#include <storm/engine/graphics/ResourceBase.hpp>
 #include <storm/engine/render/CommandBuffer.hpp>
 #include <storm/engine/render/Framebuffer.hpp>
 #include <storm/engine/render/RenderPass.hpp>
 
 namespace storm::engine {
-	struct BeginTaskData {
-		ResourceBase::ID meshdata_buffer;
-		ResourceBase::ID camera_buffer;
-		ResourceBase::ID backbuffer;
-	};
-
-	struct ForwardRenderTaskData {
-		ResourceBase::ID meshdata_buffer;
-		ResourceBase::ID camera_buffer;
-        ResourceBase::ID color_output;
-        ResourceBase::ID depth_output;
+    struct BeginTaskData {
+        // ResourceBase::ID meshdata_buffer;
+        // ResourceBase::ID camera_buffer;
+        // ResourceBase::ID backbuffer;
     };
 
-	struct SubmitTaskData {
-		ResourceBase::ID meshdata_buffer;
-		ResourceBase::ID backbuffer;
-	};
-}
+    struct ForwardRenderTaskData {
+        // ResourceBase::ID meshdata_buffer;
+        // ResourceBase::ID camera_buffer;
+        // ResourceBase::ID backbuffer;
+        // ResourceBase::ID depth_output;
+    };
+
+    struct SubmitTaskData {
+        // ResourceBase::ID meshdata_buffer;
+        // ResourceBase::ID backbuffer;
+    };
+} // namespace storm::engine

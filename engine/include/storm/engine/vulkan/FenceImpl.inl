@@ -7,7 +7,5 @@
 #include <storm/engine/vulkan/FenceImpl.hpp>
 
 namespace storm::engine {
-	inline const vk::Fence &FenceImpl::vkFence() const noexcept {
-		return m_fence.get();
-	}
-}
+    inline const vk::Fence &FenceImpl::vkFence() const noexcept { return m_fence.get(); }
+} // namespace storm::engine

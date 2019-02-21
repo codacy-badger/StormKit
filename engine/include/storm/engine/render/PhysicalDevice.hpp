@@ -10,20 +10,20 @@
 #include <storm/engine/render/Utils.hpp>
 
 namespace storm::engine {
-	class PhysicalDeviceImpl;
-	class PhysicalDevice : public core::NonCopyable {
-	public:
-		~PhysicalDevice();
+    class PhysicalDeviceImpl;
+    class PhysicalDevice : public core::NonCopyable {
+    public:
+        ~PhysicalDevice();
 
-		PhysicalDevice(PhysicalDevice &&);
-		PhysicalDevice &operator=(PhysicalDevice &&);
+        PhysicalDevice(PhysicalDevice &&);
+        PhysicalDevice &operator=(PhysicalDevice &&);
 
-		IMPLEMENTATION(PhysicalDeviceImpl)
-	private:
-		explicit PhysicalDevice();
+        IMPLEMENTATION(PhysicalDeviceImpl)
+    private:
+        explicit PhysicalDevice();
 
-		core::Pimpl<PhysicalDeviceImpl, false> m_impl;
+        core::Pimpl<PhysicalDeviceImpl, false> m_impl;
 
-		friend class ContextImpl;
-	};
-}
+        friend class ContextImpl;
+    };
+} // namespace storm::engine

@@ -7,9 +7,9 @@
 #include <storm/engine/graphics/Vertex.hpp>
 
 namespace storm::engine {
-	struct Geometry {
-		VertexArrayProxy vertices;
-		IndexArrayProxy  indices;
-		VertexInputState vertex_state;
-	};
-}
+    struct Geometry {
+        VertexArrayProxy vertices;
+        IndexArrayProxy indices;
+        VertexInputState vertex_state;
+    };
+} // namespace storm::engine

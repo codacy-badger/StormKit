@@ -8,26 +8,25 @@
 #include <storm/engine/graphics/Mesh.hpp>
 
 namespace storm::engine {
-	class MeshList : public core::NonCopyable {
-	public:
-		using MeshVec = std::vector<MeshInstance>;
-		explicit MeshList();
-		~MeshList();
+    class MeshList : public core::NonCopyable {
+    public:
+        using MeshVec = std::vector<MeshInstance>;
+        explicit MeshList();
+        ~MeshList();
 
-		MeshList(MeshList &&);
-		MeshList &operator=(MeshList &&);
+        MeshList(MeshList &&);
+        MeshList &operator=(MeshList &&);
 
-		inline std::pair<std::uint64_t, std::reference_wrapper<MeshInstance>>
-		                     addMesh();
-		inline MeshInstance &mesh(std::uint64_t id);
+        inline std::pair<std::uint64_t, std::reference_wrapper<MeshInstance>> addMesh();
+        inline MeshInstance &mesh(std::uint64_t id);
 
-		inline void clear();
+        inline void clear();
 
-		inline const MeshVec &meshes() const noexcept;
+        inline const MeshVec &meshes() const noexcept;
 
-	private:
-		MeshVec m_meshes;
-	};
-}
+    private:
+        MeshVec m_meshes;
+    };
+} // namespace storm::engine
 
 #include "MeshList.inl"

@@ -9,10 +9,8 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-RenderPass::RenderPass(const Device &device)
-	: m_impl {device}
-{}
-
+RenderPass::RenderPass(const Device &device) : m_impl{device} {
+}
 
 /////////////////////////////////////
 /////////////////////////////////////
@@ -25,29 +23,29 @@ RenderPass::RenderPass(RenderPass &&) = default;
 /////////////////////////////////////
 /////////////////////////////////////
 std::size_t RenderPass::addSubPass(RenderPass::SubPass &&subpass) {
-	return m_impl->addSubPass(std::move(subpass));
+    return m_impl->addSubPass(std::move(subpass));
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
 void RenderPass::setFramebuffer(Framebuffer &framebuffer) {
-	m_impl->setFramebuffer(framebuffer);
+    m_impl->setFramebuffer(framebuffer);
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
 const Framebuffer *RenderPass::framebuffer() const noexcept {
-	return m_impl->framebuffer();
+    return m_impl->framebuffer();
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
 void RenderPass::build() {
-	m_impl->build();
+    m_impl->build();
 }
 
 /////////////////////////////////////
 /////////////////////////////////////
 bool RenderPass::isBuilt() const noexcept {
-	return m_impl->isBuilt();
+    return m_impl->isBuilt();
 }

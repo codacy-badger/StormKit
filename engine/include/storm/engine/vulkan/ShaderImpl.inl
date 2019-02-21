@@ -7,13 +7,11 @@
 #include "ShaderImpl.hpp"
 
 namespace storm::engine {
-	inline Shader::Stage ShaderImpl::stage() const noexcept { return m_stage; }
+    inline Shader::Stage ShaderImpl::stage() const noexcept { return m_stage; }
 
-	inline const std::vector<std::byte> &ShaderImpl::source() const noexcept {
-		return m_source;
-	}
+    inline const std::vector<std::byte> &ShaderImpl::source() const noexcept { return m_source; }
 
-	inline const vk::ShaderModule &ShaderImpl::vkShaderModule() const noexcept {
-		return m_shader_module.get();
-	}
-}
+    inline const vk::ShaderModule &ShaderImpl::vkShaderModule() const noexcept {
+        return m_shader_module.get();
+    }
+} // namespace storm::engine

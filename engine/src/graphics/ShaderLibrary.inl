@@ -7,8 +7,7 @@
 #include "ShaderLibrary.hpp"
 
 namespace storm::engine {
-	inline const std::vector<std::byte> &ShaderLibrary::getSource(
-	    std::string_view name) {
-		return m_sources[name];
-	}
-}
+    inline const std::vector<std::byte> &ShaderLibrary::getSource(std::string_view name) {
+        return m_sources[ name ];
+    }
+} // namespace storm::engine

@@ -8,24 +8,24 @@
 #include <storm/engine/vulkan/UniqueHandle.hpp>
 
 namespace storm::engine {
-	class Device;
-	class FenceImpl {
-	public:
-		explicit FenceImpl(const Device &device);
-		~FenceImpl();
+    class Device;
+    class FenceImpl {
+    public:
+        explicit FenceImpl(const Device &device);
+        ~FenceImpl();
 
-		FenceImpl(FenceImpl &&);
+        FenceImpl(FenceImpl &&);
 
-		void wait(std::uint64_t timeout);
-		void reset();
+        void wait(std::uint64_t timeout);
+        void reset();
 
-		inline const vk::Fence &vkFence() const noexcept;
+        inline const vk::Fence &vkFence() const noexcept;
 
-	private:
-		UniqueHandle<vk::Fence> m_fence;
+    private:
+        UniqueHandle<vk::Fence> m_fence;
 
-		const Device &m_device;
-	};
-}
+        const Device &m_device;
+    };
+} // namespace storm::engine
 
 #include "FenceImpl.inl"

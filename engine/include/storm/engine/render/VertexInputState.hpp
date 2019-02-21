@@ -9,24 +9,24 @@
 #include <vector>
 
 namespace storm::engine {
-	struct VertexInputAttribute {
-		std::uint32_t binding;
-		Format        type;
-		std::uint32_t location;
-		std::size_t   offset;
-	};
+    struct VertexInputAttribute {
+        std::uint32_t binding;
+        Format type;
+        std::uint32_t location;
+        std::size_t offset;
+    };
 
-	struct VertexInputBinding {
-		std::uint32_t   binding;
-		std::size_t     stride;
-		VertexInputRate rate;
-	};
+    struct VertexInputBinding {
+        std::uint32_t binding;
+        std::size_t stride;
+        VertexInputRate rate;
+    };
 
-	using VertexInputAttributes = std::vector<VertexInputAttribute>;
-	using VertexInputBindings   = std::vector<VertexInputBinding>;
+    using VertexInputAttributes = std::vector<VertexInputAttribute>;
+    using VertexInputBindings   = std::vector<VertexInputBinding>;
 
-	struct VertexInputState {
-		VertexInputAttributes attributes;
-		VertexInputBindings   bindings;
-	};
-}
+    struct VertexInputState {
+        VertexInputAttributes attributes;
+        VertexInputBindings bindings;
+    };
+} // namespace storm::engine

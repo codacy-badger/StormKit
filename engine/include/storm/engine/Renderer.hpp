@@ -7,7 +7,7 @@
 
 class Renderer {
 public:
-	Renderer();
+    Renderer();
 };
 
 #endif // RENDERER_HPP

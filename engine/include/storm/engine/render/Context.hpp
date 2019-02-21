@@ -10,21 +10,21 @@
 #include <storm/engine/render/PhysicalDevice.hpp>
 
 namespace storm::engine {
-	class ContextImpl;
-	class Context : public core::NonCopyable {
-	public:
-		explicit Context(ContextSettings settings);
-		~Context();
+    class ContextImpl;
+    class Context : public core::NonCopyable {
+    public:
+        explicit Context(ContextSettings settings);
+        ~Context();
 
-		Context(Context &&);
-		Context &operator=(Context &&);
+        Context(Context &&);
+        Context &operator=(Context &&);
 
-		PhysicalDevice bestPhysicalDevice();
+        PhysicalDevice bestPhysicalDevice();
 
-		const ContextSettings &settings();
+        const ContextSettings &settings();
 
-		IMPLEMENTATION(ContextImpl)
-	private:
-		core::Pimpl<ContextImpl> m_impl;
-	};
-}
+        IMPLEMENTATION(ContextImpl)
+    private:
+        core::Pimpl<ContextImpl> m_impl;
+    };
+} // namespace storm::engine

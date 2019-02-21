@@ -5,26 +5,26 @@
 #pragma once
 
 #include <storm/core/Pimpl.hpp>
-#include <storm/window/Window.hpp>
 #include <storm/engine/render/ForwardDeclarations.hpp>
-#include <storm/engine/render/Utils.hpp>
 #include <storm/engine/render/FrameToken.hpp>
+#include <storm/engine/render/Utils.hpp>
+#include <storm/window/Window.hpp>
 
 namespace storm::engine {
-	class SurfaceImpl;
-	class Surface {
-	public:
-		explicit Surface(const Device &device, const window::Window &window);
-		~Surface();
+    class SurfaceImpl;
+    class Surface {
+    public:
+        explicit Surface(const Device &device, const window::Window &window);
+        ~Surface();
 
-		Surface(Surface &&);
-		Surface &operator=(Surface &&);
+        Surface(Surface &&);
+        Surface &operator=(Surface &&);
 
-		FrameToken nextFrame();
-		void present(Framebuffer &framebuffer, const FrameToken &token);
+        FrameToken nextFrame();
+        void present(Framebuffer &framebuffer, const FrameToken &token);
 
-		IMPLEMENTATION(SurfaceImpl)
-	private:
-		core::Pimpl<SurfaceImpl> m_impl;
-	};
-}
+        IMPLEMENTATION(SurfaceImpl)
+    private:
+        core::Pimpl<SurfaceImpl> m_impl;
+    };
+} // namespace storm::engine

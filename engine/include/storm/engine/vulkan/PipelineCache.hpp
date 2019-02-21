@@ -12,50 +12,45 @@
 #include <unordered_map>
 
 namespace storm::engine {
-	class Program;
-	struct PipelineCacheKey {
-		const Program *            program;
-		const RenderPass *         render_pass;
-		const RenderPass::SubPass *subpass;
+    class Program;
+    struct PipelineCacheKey {
+        const Program *program;
+        const RenderPass *render_pass;
+        const RenderPass::SubPass *subpass;
 
-		bool operator==(const PipelineCacheKey &other) const noexcept;
-	};
-}
+        bool operator==(const PipelineCacheKey &other) const noexcept;
+    };
+} // namespace storm::engine
 
 namespace std {
-	template <>
-	struct hash<storm::engine::PipelineCacheKey> {
-		std::size_t operator()(
-		    const storm::engine::PipelineCacheKey &key) const {
-			auto hash = std::hash<const storm::engine::RenderPass *> {}(
-			    key.render_pass);
-			storm::core::hash_combine(
-			    hash, std::hash<const storm::engine::RenderPass::SubPass *> {}(
-			              key.subpass));
-			storm::core::hash_combine(hash,
-			    std::hash<const storm::engine::Program *> {}(key.program));
+    template<>
+    struct hash<storm::engine::PipelineCacheKey> {
+        std::size_t operator()(const storm::engine::PipelineCacheKey &key) const {
+            auto hash = std::hash<const storm::engine::RenderPass *>{}(key.render_pass);
+            storm::core::hash_combine(
+              hash, std::hash<const storm::engine::RenderPass::SubPass *>{}(key.subpass));
+            storm::core::hash_combine(
+              hash, std::hash<const storm::engine::Program *>{}(key.program));
 
-			return hash;
-		}
-	};
-}
+            return hash;
+        }
+    };
+} // namespace std
 
 namespace storm::engine {
-	class PipelineCache : public storm::core::NonCopyable {
-	public:
-		explicit PipelineCache();
-		~PipelineCache();
+    class PipelineCache : public storm::core::NonCopyable {
+    public:
+        explicit PipelineCache();
+        ~PipelineCache();
 
-		PipelineCache(PipelineCache &&);
-		PipelineCache &operator=(PipelineCache &&);
+        PipelineCache(PipelineCache &&);
+        PipelineCache &operator=(PipelineCache &&);
 
-		void add(
-		    const PipelineCacheKey &key, UniqueHandle<vk::Pipeline> &&pipeline);
-		bool                has(const PipelineCacheKey &key) const;
-		const vk::Pipeline &acquire(const PipelineCacheKey &key) const;
+        void add(const PipelineCacheKey &key, UniqueHandle<vk::Pipeline> &&pipeline);
+        bool has(const PipelineCacheKey &key) const;
+        const vk::Pipeline &acquire(const PipelineCacheKey &key) const;
 
-	private:
-		std::unordered_map<PipelineCacheKey, UniqueHandle<vk::Pipeline>>
-		    m_pipeline_cache;
-	};
-}
+    private:
+        std::unordered_map<PipelineCacheKey, UniqueHandle<vk::Pipeline>> m_pipeline_cache;
+    };
+} // namespace storm::engine

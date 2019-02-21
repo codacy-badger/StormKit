@@ -8,17 +8,17 @@
 #include <storm/image/Image.hpp>
 
 namespace storm::engine {
-	struct Material {
-		using Texture    = std::reference_wrapper<image::Image>;
-		using TextureOpt = std::optional<Texture>;
+    struct Material {
+        using Texture    = std::reference_wrapper<image::Image>;
+        using TextureOpt = std::optional<Texture>;
 
-		core::RGBColorF diffuse;
-		core::RGBColorF ambiant;
-		core::RGBColorF specular;
+        core::RGBColorF diffuse;
+        core::RGBColorF ambiant;
+        core::RGBColorF specular;
 
-		TextureOpt diffuse_map  = std::nullopt;
-		TextureOpt ambiant_map  = std::nullopt;
-		TextureOpt specular_map = std::nullopt;
-		TextureOpt normal_map   = std::nullopt;
-	};
-}
+        TextureOpt diffuse_map  = std::nullopt;
+        TextureOpt ambiant_map  = std::nullopt;
+        TextureOpt specular_map = std::nullopt;
+        TextureOpt normal_map   = std::nullopt;
+    };
+} // namespace storm::engine

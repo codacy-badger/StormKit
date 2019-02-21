@@ -12,33 +12,33 @@
 #include <storm/image/Image.hpp>
 
 namespace storm::engine {
-	class TextureImpl;
-	class Texture {
-	public:
-		Unique_Object(Texture)
+    class TextureImpl;
+    class Texture {
+    public:
+        Unique_Object(Texture)
 
-		struct Description {
-            std::size_t     mip_level;
-            ColorFormat     format;
-            uvec3           size;
-            ImageUsageFlag  image_usage  = ImageUsageFlag::SAMPLED;
+          struct Description {
+            std::uint32_t mip_level;
+            ColorFormat format;
+            uvec3 size;
+            ImageUsageFlag image_usage   = ImageUsageFlag::SAMPLED;
             ImageAspectFlag image_aspect = ImageAspectFlag::COLOR;
-            ImageLayout     image_layout = ImageLayout::TRANSFERT_DST_OPTIMAL;
-		};
+            ImageLayout image_layout     = ImageLayout::TRANSFERT_DST_OPTIMAL;
+        };
 
-		explicit Texture(const Device &device, Description description);
-		~Texture();
+        explicit Texture(const Device &device, Description description);
+        ~Texture();
 
-		Texture(Texture &&);
-		Texture &operator=(Texture &&);
+        Texture(Texture &&);
+        Texture &operator=(Texture &&);
 
         void setImage(image::Image image);
 
-		const Texture::Description &description() const noexcept;
-		const image::Image &        image() const noexcept;
+        const Texture::Description &description() const noexcept;
+        const image::Image &image() const noexcept;
 
-		IMPLEMENTATION(TextureImpl)
-	private:
-		core::Pimpl<TextureImpl> m_impl;
-	};
-}
+        IMPLEMENTATION(TextureImpl)
+    private:
+        core::Pimpl<TextureImpl> m_impl;
+    };
+} // namespace storm::engine

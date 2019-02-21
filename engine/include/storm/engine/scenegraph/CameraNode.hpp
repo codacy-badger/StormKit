@@ -4,45 +4,45 @@
 #include <storm/engine/scenegraph/SceneNode.hpp>
 
 namespace storm::engine {
-	class STORM_PUBLIC CameraNode : public SceneNode {
-	public:
-		SUR_Object(CameraNode)
+    class STORM_PUBLIC CameraNode : public SceneNode {
+    public:
+        SUR_Object(CameraNode)
 
-		    struct Camera {
-			mat4 view;
-			mat4 projection;
+          struct Camera {
+            mat4 view;
+            mat4 projection;
 
-			bool is_view_dirty;
-			bool is_projection_dirty;
-		};
+            bool is_view_dirty;
+            bool is_projection_dirty;
+        };
 
-		using DataType = Camera;
+        using DataType = Camera;
 
-		~CameraNode() override;
+        ~CameraNode() override;
 
-		CameraNode(CameraNode &&);
-		CameraNode &operator=(CameraNode &&);
+        CameraNode(CameraNode &&);
+        CameraNode &operator=(CameraNode &&);
 
-		inline const mat4 &view() const noexcept;
-		inline void        setView(mat4 view) noexcept;
+        inline const mat4 &view() const noexcept;
+        inline void setView(mat4 view) noexcept;
 
-		inline const mat4 &projection() const noexcept;
-		inline void        setProjection(mat4 projection) noexcept;
+        inline const mat4 &projection() const noexcept;
+        inline void setProjection(mat4 projection) noexcept;
 
-		inline const DataType &data() const noexcept;
+        inline const DataType &data() const noexcept;
 
-		void commit() noexcept;
+        void commit() noexcept;
 
-	protected:
-		explicit CameraNode(Scene &graph);
+    protected:
+        explicit CameraNode(Scene &graph);
 
-		DirtyType dirtyValue() const noexcept override;
+        DirtyType dirtyValue() const noexcept override;
 
-		friend class Scene;
+        friend class Scene;
 
-	private:
-		DataType m_camera;
-	};
-}
+    private:
+        DataType m_camera;
+    };
+} // namespace storm::engine
 
 #include "CameraNode.inl"

@@ -15,9 +15,9 @@ namespace py = pybind11;
 using namespace storm::tools;
 
 PYBIND11_MODULE(tools, tools_module) {
-	tools_module.doc() = "Stormkit C++ tools module python binding";
+    tools_module.doc() = "Stormkit C++ tools module python binding";
 
-	initState(tools_module);
-	initTree(tools_module);
-	tools_module.attr("__version__") = STORM_VERSION;
+    initState(tools_module);
+    initTree(tools_module);
+    tools_module.attr("__version__") = STORM_VERSION;
 }

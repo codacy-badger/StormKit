@@ -11,23 +11,23 @@
 #include <storm/image/Image.hpp>
 
 namespace storm::engine {
-	struct MeshInstance {
-		HardwareBuffer::Ptr vertex_buffer;
-		std::size_t       vertex_count = 0u;
-		VertexInputState  vertex_state;
+    struct MeshInstance {
+        HardwareBuffer::Ptr vertex_buffer;
+        std::size_t vertex_count = 0u;
+        VertexInputState vertex_state;
 
-		HardwareBuffer::Ptr index_buffer;
-		std::size_t      index_count   = 0u;
-		bool             large_indices = false;
+        HardwareBuffer::Ptr index_buffer;
+        std::size_t index_count = 0u;
+        bool large_indices      = false;
 
-		Material material;
-		// Transform transform;
+        Material material;
+        // Transform transform;
 
-		mat4 projection;
-		mat4 view;
-		mat4 model;
-		mat4 inverted_transform;
+        mat4 projection;
+        mat4 view;
+        mat4 model;
+        mat4 inverted_transform;
 
-		std::uint32_t id;
-	};
-}
+        std::uint32_t id;
+    };
+} // namespace storm::engine

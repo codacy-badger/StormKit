@@ -9,11 +9,11 @@
 #include <initializer_list>
 
 namespace storm::engine {
-	static constexpr const auto FORWARD_RENDER_VERT_SRC = {
+    static constexpr const auto FORWARD_RENDER_VERT_SRC = {
 #include "shaders/forward_render.vert"
-	};
+    };
 
-	static constexpr const auto FORWARD_RENDER_FRAG_SRC = {
+    static constexpr const auto FORWARD_RENDER_FRAG_SRC = {
 #include "shaders/forward_render.frag"
-	};
-}
+    };
+} // namespace storm::engine

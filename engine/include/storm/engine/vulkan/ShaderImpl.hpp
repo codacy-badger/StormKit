@@ -8,32 +8,37 @@
 #include <storm/engine/vulkan/UniqueHandle.hpp>
 
 namespace storm::engine {
-	class ShaderImpl {
-	public:
-		explicit ShaderImpl(const Device &device, Shader::Stage stage,
-		    const _std::filesystem::path &path);
-		explicit ShaderImpl(const Device &device, Shader::Stage stage,
-		    const std::byte *data, std::size_t size);
-		~ShaderImpl();
+    class ShaderImpl {
+    public:
+        explicit ShaderImpl(
+          const Device &device,
+          Shader::Stage stage,
+          const _std::filesystem::path &path);
+        explicit ShaderImpl(
+          const Device &device,
+          Shader::Stage stage,
+          const std::byte *data,
+          std::size_t size);
+        ~ShaderImpl();
 
-		ShaderImpl(ShaderImpl &&);
+        ShaderImpl(ShaderImpl &&);
 
-		inline Shader::Stage                 stage() const noexcept;
-		inline const std::vector<std::byte> &source() const noexcept;
+        inline Shader::Stage stage() const noexcept;
+        inline const std::vector<std::byte> &source() const noexcept;
 
-		inline const vk::ShaderModule &vkShaderModule() const noexcept;
+        inline const vk::ShaderModule &vkShaderModule() const noexcept;
 
-	private:
-		void loadFromFile(const _std::filesystem::path &path);
-		void loadFromMemory(const std::byte *data, std::size_t size);
+    private:
+        void loadFromFile(const _std::filesystem::path &path);
+        void loadFromMemory(const std::byte *data, std::size_t size);
 
-		Shader::Stage          m_stage;
-		std::vector<std::byte> m_source;
+        Shader::Stage m_stage;
+        std::vector<std::byte> m_source;
 
-		UniqueHandle<vk::ShaderModule> m_shader_module;
+        UniqueHandle<vk::ShaderModule> m_shader_module;
 
-		const Device &m_device;
-	};
-}
+        const Device &m_device;
+    };
+} // namespace storm::engine
 
 #include "ShaderImpl.inl"

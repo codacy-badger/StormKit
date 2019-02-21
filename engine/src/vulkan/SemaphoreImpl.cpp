@@ -10,14 +10,12 @@ using namespace storm::engine;
 
 /////////////////////////////////////
 /////////////////////////////////////
-SemaphoreImpl::SemaphoreImpl(const Device &device) : m_device {device} {
-	const auto semaphore_create_info = vk::SemaphoreCreateInfo {};
+SemaphoreImpl::SemaphoreImpl(const Device &device) : m_device{device} {
+    const auto semaphore_create_info = vk::SemaphoreCreateInfo{};
 
-	m_semaphore = m_device.implementation().vkDevice().createSemaphoreUnique(
-	    semaphore_create_info);
+    m_semaphore = m_device.implementation().vkDevice().createSemaphoreUnique(semaphore_create_info);
 
-	storm::DLOG("Renderer (vulkan)"_module, "Semaphore allocated at %{1}",
-	    &m_semaphore.get());
+    storm::DLOG("Renderer (vulkan)"_module, "Semaphore allocated at %{1}", &m_semaphore.get());
 }
 
 /////////////////////////////////////

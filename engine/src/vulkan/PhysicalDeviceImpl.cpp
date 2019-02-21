@@ -9,11 +9,10 @@ using namespace storm::engine;
 /////////////////////////////////////
 /////////////////////////////////////
 PhysicalDeviceImpl::PhysicalDeviceImpl(vk::PhysicalDevice device)
-    : m_physical_device {std::move(device)} {
-	m_physical_device_properties = m_physical_device.getProperties();
-	m_physical_device_features   = m_physical_device.getFeatures();
-	m_physical_device_memory_properties
-	    = m_physical_device.getMemoryProperties();
+      : m_physical_device{std::move(device)} {
+    m_physical_device_properties        = m_physical_device.getProperties();
+    m_physical_device_features          = m_physical_device.getFeatures();
+    m_physical_device_memory_properties = m_physical_device.getMemoryProperties();
 }
 
 /////////////////////////////////////
@@ -26,5 +25,4 @@ PhysicalDeviceImpl::PhysicalDeviceImpl(PhysicalDeviceImpl &&) = default;
 
 /////////////////////////////////////
 /////////////////////////////////////
-PhysicalDeviceImpl &PhysicalDeviceImpl::operator=(PhysicalDeviceImpl &&)
-    = default;
+PhysicalDeviceImpl &PhysicalDeviceImpl::operator=(PhysicalDeviceImpl &&) = default;

@@ -11,11 +11,11 @@
 #include <storm/engine/render/Types.hpp>
 
 namespace std {
-	HASH_FUNC(storm::engine::PipelineState)
-	HASH_FUNC(storm::engine::VertexInputState)
-	HASH_FUNC(storm::engine::VertexInputAttribute)
-	HASH_FUNC(storm::engine::VertexInputBinding)
-	HASH_FUNC(storm::engine::UniformBufferBinding)
-	HASH_FUNC(storm::engine::TextureBinding)
-	HASH_FUNC(storm::engine::BindingState)
-}
+    HASH_FUNC(storm::engine::PipelineState)
+    HASH_FUNC(storm::engine::VertexInputState)
+    HASH_FUNC(storm::engine::VertexInputAttribute)
+    HASH_FUNC(storm::engine::VertexInputBinding)
+    HASH_FUNC(storm::engine::UniformBufferBinding)
+    HASH_FUNC(storm::engine::TextureBinding)
+    HASH_FUNC(storm::engine::BindingState)
+} // namespace std
