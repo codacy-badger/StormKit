@@ -10,6 +10,7 @@ env:
 matrix:
   include:
     - os: linux
+      dist: xenial
       addons:
         apt:
           sources:
@@ -32,11 +33,11 @@ matrix:
             - libxrandr-dev
             - vulkan
       env:
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && INFO=linux-C++17-gcc-7-release"
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && INFO=linux-C++17-gcc-7-release-xenial
       script:
         - cmake --version
-        - mkdir build-linux-C++17-gcc-7-release
-        - cd build-linux-C++17-gcc-7-release
+        - mkdir build-linux-C++17-gcc-7-release-xenial
+        - cd build-linux-C++17-gcc-7-release-xenial
         - cmake -DCMAKE_CXX_COMPILER=$COMPILER -DCMAKE_BUILD_TYPE=Release ..
         - cmake -E time cmake --build .
 
